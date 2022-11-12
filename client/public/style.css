@@ -1,0 +1,453 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Lovers+Quarrel&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+  }
+  html {
+    font-size: 62.5%;
+    /* scroll-behavior: smooth; */
+    /* 1rem = 10px */
+    overflow-x: hidden;
+  }
+  body {
+    overflow-x: hidden;
+     scrollbar-color: rgb(98 84 243);
+      scrollbar-width: thin;
+  }
+  body::-webkit-scrollbar {
+    width: 1.5rem;
+  }
+  body::-webkit-scrollbar-track {
+     background-color: rgb(24 24 29);
+  }
+  body::-webkit-scrollbar-thumb {
+   color:  #FFFFFF;
+    background: #fff;
+      border: 5px solid transparent;
+      border-radius: 9px;
+      background-clip: content-box;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+     font-family: "Work Sans", sans-serif;
+  }
+  h1 {
+    
+    font-size: 6rem;
+    font-weight: 900;
+  }
+   h2 {
+     
+     font-size: 4.4rem;
+     font-weight: 300;
+     white-space: normal;
+    
+    }
+  h3 {
+    font-size: 1.8rem;
+    font-weight: 400;
+  }
+  p, button {
+    
+    font-size: 1.65rem;
+    line-height: 1.5;
+    font-weight:400;
+  }
+  a {
+    text-decoration: none;
+  }
+  li {
+    list-style: none;
+  }
+.header{
+  padding: 0 2.8rem;
+    background: linear-gradient(90deg, #1D1E20 0%, #053BC7 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    text-align: center;
+}
+.logoName{
+    color: #fff;
+    font-family: 'Lovers Quarrel', cursive;
+    font-size: 4em;
+    display: inline;
+}
+.logoImage{
+  font-size: 35px;
+  padding-right: 0.5em;
+  color: #fff;
+}
+.searchBar{
+    width: 30em;
+    padding: 5px;
+    border: 3px solid #CABCBC;
+    border-radius: 5px;
+}
+
+.searchBtn{
+    padding: 2.5px 30px;
+    padding-bottom: 5px;
+    background: #A6EB15;
+    border-radius: 5px;
+    border: none;
+    margin: 8px;
+    margin-left: 10px;
+    font-weight: 550;
+    font-family: 'Inter', sans-serif;
+}
+.loginBtn{
+    background: #408CFF;
+    color: #FFFFFF;
+}
+.homeHeading{
+    display: flex;
+    background: #1D1E20;
+}
+.homeHeading p{
+    color: #FFFFFF;
+    padding: 0px 30px;
+    padding-top: 10px;
+    font-size: 14px;
+}
+.headerSection{
+    color:#FFFFFF;
+    font-family: 'Inter';
+    background-image: repeating-linear-gradient(90deg, #3323EA 0%, rgba(68, 54, 232, 0.896895) 24.43%, rgba(217, 217, 217, 0) 100%), url('/images/coverImg.png');
+    padding: 2% 5%;
+}
+
+.headerSection-p{
+    font-size: 32px;
+    font-weight: 600;
+}
+.allHeaderCard{
+    display: flex;
+    justify-content: flex-start;
+}
+.headerCard{
+    background: rgba(23, 58, 149, 0.6);
+    box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    font-weight: 700;
+    width: 20%;
+}
+.headerCardhead{
+  padding-bottom: 30px;
+}
+.Ellipse{
+    display: inline;
+    background: #A6EB15;
+    padding: 3px 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1D1E20;
+}
+.headerCardHead{
+    display: inline;
+    padding-left: 20px;
+    font-size: 18px;
+    font-weight: 700;
+}
+.headerCardDes{
+    margin-left: 5px;
+    width: 95%;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+}
+.headerSection button{
+    margin-left: 0px;
+    margin-top: 40px;
+    padding: 10px 25px;
+    border-radius: 20px;
+}
+.sellWithUs{
+  background: #D9D9D9;
+  background-image: url("/images/sellWithUs.svg");
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  color: #1D1E20;
+  padding-bottom: 30px;
+}
+.sellWithUs h3{
+  text-align: center;
+  color: #0457D4;;
+  font-weight: 700;
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+.sellWithUs p{
+  text-align: center;
+  margin: auto;
+  width: 80%;
+  font-size: 14px;
+  font-weight: 400;
+  
+}
+.sellWithUs ul{
+  margin-top: 90px;
+  margin-left: 30px;
+}
+.sellWithUs li{
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0457D4;
+}
+.sellWithUs li span{
+  margin-right: 15px;
+}
+.getStartedBtn{
+  margin: 50px 0 0 45px;
+  background: #3646DA;
+  border-radius: 15px;
+  padding: 15px 100px;
+  border: none;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* Login page css */
+
+.log-sign-main{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #282c34;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.login {
+  width: 400px;
+  background: #fff;
+  border: 1px solid #dddfe2;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  border-radius: 8px;
+  padding: 1rem;
+  align-items: center;
+  text-align: center;
+}
+.log-sign-main h1{
+  color:#1D1E20;
+}
+.login > input {
+  border-radius: 8px;
+  border: 2px solid #dddfe2;
+  outline: none;
+  color: #1d2129;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  width: 92%;
+  font-size: 1rem;
+}
+
+.button {
+  background: linear-gradient(90deg, #1D1E20 0%, #053BC7 100%);
+  border: 1px solid #1877f2;
+  color: #fff;
+  font-size: 1.25rem;
+  padding: 0.5rem 0px;
+  margin: 0.5rem 0;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Sign up Css */
+
+.register {
+  width: 400px;
+  background: #fff;
+  border: 1px solid #dddfe2;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  border-radius: 8px;
+  padding: 1rem;
+  align-items: center;
+  text-align: center;
+}
+
+.register > input {
+  border-radius: 8px;
+  border: 2px solid #dddfe2;
+  outline: none;
+  color: #1d2129;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  width: 92%;
+  font-size: 1rem;
+}
+#phoneNrValidation{
+  display: none;
+  color: #ff0000;
+}
+.register > .button {
+  background: #1877f2;
+  border: 1px solid #1877f2;
+  color: #fff;
+  font-size: 1.25rem;
+  padding:  0.5rem 14.5rem;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* product card  */
+.bsplay{
+  float: right;
+  margin-top: 12px;
+  margin-right: 10px;
+}
+.popularBidding-h1{
+  font-weight: 700;
+  font-size: 32px; 
+  color: #0457D4;
+  padding-left: 2.3rem;
+  display: inline
+}
+.productCard{
+  width: 277.0362243652344px;
+  min-height: 415.5543518066406px;
+  border-radius: 10px;
+  padding-bottom: 4px;
+  color: #545A63;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 3px 3px 10px grey;
+  margin-top: 20px;
+}
+.productCard .productImage{
+  height: 276.1127624511719px;
+  width: 100%;
+  border-radius: 10px;
+}
+.productCard h3{
+  font-family: 'Inter';
+  font-style: normal;
+  font-size: 19px;
+  font-weight: 600;
+  color: #545A63;
+}
+.currentBid{
+  font-family: 'Inter';
+  font-style: normal;
+  font-size: 22px;
+  font-weight: 600;
+  color: #279301;
+  margin-left: 5px;
+}
+.productCard .location{
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 17px;
+/* identical to box height */
+color: #545A63;
+}
+.productCard button{
+  background: #3646DA;
+  border-radius: 10px;
+  font-weight: 400;
+font-size: 12px;
+  color: #FFFFFF;
+  padding: 5px 25px;
+  border: transparent;
+}
+.productCard .info{
+  display: inline;
+}
+.productCard span{
+  margin-left: 15px;
+}
+.footer{
+  background: #1D1E20;
+  padding: 30px;
+  padding-top: 7.5px;
+}
+.account h3{
+  font-weight: 700;
+  font-size: 36px;
+  color: #3646DA;
+}
+.footer h5{
+  color: #A6EB15;
+  font-size: 20px;
+  padding-bottom: 35px;
+  padding-top: 10px;
+}
+.footer li{
+  font-size: 15px;
+}
+.footerBottom p{
+  color: #fff;
+  font-size: 12px;
+  padding: 0 10px;
+}
+.singleproduct{
+  background: #1D1E20;
+  color: #FFFFFF;
+}
+.carousel{
+  background: #1D1E20;
+}
+.singleproducthr{
+  border: 6px solid transparent;
+  border-image-source: linear-gradient(90deg, #076EE7 9.78%, #E00000 85.02%);
+  border-bottom: none;
+  border-image-slice: 30;
+  border-image-repeat: stretch;  
+}
+.fullHeight{
+  height: 100vh;
+  background: #1D1E20;
+}
+@media only screen and (max-width: 600px) {
+  .header{
+    display: block;
+    position: static;
+    height: auto;
+  }
+  .searchBar{
+    width: 100%;
+  }
+  .searchBtn{
+    margin: 8px;
+  }
+  .footerBottom{
+    display: block;
+    text-align: center;
+  }
+  .footerBottom p{
+    display: block;
+  }
+  .homeHeading{
+    display: block;
+  }
+  .homeHeading-p{
+    padding: 0px;
+    padding-left: 20px;
+    padding-bottom: 4px;
+  }
+  .popularBidding-h1{
+    padding-left: 0;
+  }
+  .sellWithUs{
+    text-align: center;
+  }
+  .getStartedBtn{
+    margin-left: 0;
+  }
+  .sellWithUs ul{
+    text-align: left;
+  }
+}
