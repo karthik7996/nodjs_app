@@ -7,13 +7,15 @@ exports.update = async (req, res) => {
   try {
 
     const phoneNrExist = await User.findOne({phoneNr});
-    if (phoneNrExist) {
+    console.log(phoneNrExist)
+    if (phoneNrExist && phoneNrExist._id != _id) {
       return res.status(400).json({
         error: 'This Phone Number already exist',
       });
     }
 
-    await User.findByIdAndUpdate({_id: _id}, {name, phoneNr, address, email, location});
+    const user = await User.findByIdAndUpdate({_id: _id}, {name, phoneNr, address, email, location});
+    role = user.role
     res.json({
       message: 'Profile Updated Sucessfully!',
     });

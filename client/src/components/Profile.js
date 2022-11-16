@@ -255,11 +255,12 @@ const Profile = () => {
             }
             else if (phoneNr.match(str)){
               const _id = pre_user._id;
+              const role = pre_user.role
                 const data = {_id,  name, phoneNr, address, email, location}
                profileUpdate(data)
                .then (response => {
                 console.log('Axios profile update success', response)
-                setLocalStorage("user", user);
+                setLocalStorage("user", {role, ...data});
                })
                .catch(err => {
                 console.log('Axios profile update error', err)
