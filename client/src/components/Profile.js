@@ -2,14 +2,8 @@ import React, {useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {profileUpdate } from '../api/auth';
 import isEmpty from 'validator/lib/isEmpty';
-import { createCategory, getCategories } from '../api/category'
-import { createProduct } from '../api/product'
 import {getLocalStorage} from "../helpers/localStorage"
 import {setLocalStorage} from "../helpers/localStorage"
-import {BsArrowRightSquare} from "react-icons/bs"
-import {VscUnverified} from "react-icons/vsc"
-import Camera from "./Camera";
-
 
 const AdminDashboard = () => {
 
@@ -280,25 +274,6 @@ const Profile = () => {
   return (
     <>
     <AdminDashboard />
-    <div className="verify rounded-bottom-lg bg-success text-white text-center h2  p-2"><VscUnverified/><p className="text-monospace pl-2 pr-5">Verify Your Identity</p> <BsArrowRightSquare onClick={handleisShown} className="verfiyArrow"/></div>
-   {isShown &&
-   <div className="container mt-5" >
-      <div className="row justify-content-md-center" style={{color: "black", backgroundImage: "-webkit-linear-gradient(75deg, #e7ecfd 45%,#80b3ff 40%)"}}>
-          <div className="col-md-6 text-center pb-3 border border-secondary rounded pt-3" >
-          <Camera />
-          </div>
-          <div class="col-md-6 pt-5 border border-secondary rounded">
-            <p className="pb-3 font-weight-light h2">Upload your Government Id for verfication purpose</p>
-                <div class="custom-file mb-5">
-                    <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" autofocus/>
-                    <label class="custom-file-label" for="inputGroupFile04"></label>
-                </div>
-            </div>
-          </div> 
-          <div className="text-center mt-5">
-          <button type="button" class="btn-lg btn-outline-success">Submit</button>
-          </div>
-    </div>}
 <div className="container rounded bg-white mt-5 mb-5" style={{color: "black", backgroundImage: "-webkit-linear-gradient(65deg, #e7ecfd 45%,#80b3ff 40%)"}}>
     <div className="row">
         <div className="col-md-6">

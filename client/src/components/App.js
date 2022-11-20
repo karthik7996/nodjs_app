@@ -7,6 +7,7 @@ import Signin from "./Signin";
 import NotFound from "./NotFound";
 import UserDashboard from "./UserDashboard";
 import AdminDashboard from "./AdminDashboard";
+import AdminUpdateProduct from "./AdminUpdateProduct";
 import Profile from "./Profile";
 import SingleProduct from "./SingleProduct";
 import Product from "./Product";
@@ -24,6 +25,7 @@ const App = () => (
         <Route path="/profile" element={<Profile />}/>
         <Route path="/products" element={<Product />}/>
         <Route path="/singleproduct" element={<SingleProduct/>}/>
+        <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
         <Route path="*" element = {<NotFound/>} />
       </Routes>
     </main>
