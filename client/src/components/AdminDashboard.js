@@ -1,9 +1,12 @@
 import React, {useState, useEffect} from 'react'
+import {Link} from 'react-router-dom'
+import moment from 'moment';
 import isEmpty from 'validator/lib/isEmpty';
 import { createCategory, getCategories } from '../api/category'
-import { createProduct } from '../api/product'
+import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/product'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
+
 
 const AdminDashboard = () => {
 
@@ -11,6 +14,7 @@ const AdminDashboard = () => {
 
   const [category , setCategory] = useState('')
   const [categories, setCategories] = useState('')
+  const [products, setProduct] = useState('')
 
   const [productData, setProductData] = useState({
     productImage: null,
@@ -21,7 +25,9 @@ const AdminDashboard = () => {
     productQuantity: '',
   })
 
-  const {productImage, productName, productDescription, productPrice, productCategory, productQuantity} = productData;
+
+
+  const {productImage, productName, productDescription, productPrice, productCategory, year} = productData;
 
   const handleProductImage = (e) => {
     console.log(e.target.files[0])
@@ -34,7 +40,7 @@ const AdminDashboard = () => {
 
   const handleProductSubmit = (e) => {
     e.preventDefault();
-    if (productImage === null || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(productQuantity)) {
+    if (productImage === null || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
       console.log('Please fill all fields')
     } else {
       let formData = new FormData();
@@ -43,7 +49,7 @@ const AdminDashboard = () => {
       formData.append('productDescription', productDescription);
       formData.append('productPrice', productPrice);
       formData.append('productCategory', productCategory);
-      formData.append('productQuantity', productQuantity);
+      formData.append('year', year);
       console.log([...formData])
       createProduct(formData)
       .then(response => {
@@ -53,7 +59,7 @@ const AdminDashboard = () => {
           productDescription: '',
           productPrice: '',
           productCategory: '',
-          productQuantity: '',
+          year: '',
         })
       })
       .catch(err => {
@@ -62,6 +68,7 @@ const AdminDashboard = () => {
     }
     console.log(productData)
   }
+
 
   useEffect(() => {
     loadCategories()
@@ -78,6 +85,49 @@ const AdminDashboard = () => {
       console.log('loadCategories error', error)
     }
     )
+  }
+
+  useEffect(() => {
+    loadProducts()
+  }, [loading])
+
+  const loadProducts = async () => {
+    await getProduct()
+    .then((response) => {
+      setProduct(response.data)
+      console.log('products', response.data)
+    }
+    )
+    .catch((error) => {
+      console.log('loadProducts error', error)
+    }
+    )
+  }
+
+  const destroy = async (productId) => {
+    setLoading(true)
+    await deleteProduct(productId)
+    .then((response) => {
+      setLoading(false)
+      console.log('deleteProduct response', response)
+    })
+    .catch((error) => {
+      setLoading(false)
+      console.log('deleteProduct error', error)
+    })
+  }
+
+  const update = async (productId) => {
+    setLoading(true)
+    await updateProduct(productId)
+    .then((response) => {
+      setLoading(false)
+      console.log('updateProduct response', response)
+    })
+    .catch((error) => {
+      setLoading(false)
+      console.log('updateProduct error', error)
+    })
   }
 
 
@@ -221,8 +271,8 @@ const AdminDashboard = () => {
                   </select>
                 </div>
                 <div className="form-group col-md-6">
-                <label htmlFor="recipient-name" className="col-form-label">Product Quantity:</label>
-                <input name='productQuantity' value={productQuantity} onChange={handleProductChange} type="number" min='0' className="form-control" id="recipient-name" />
+                <label htmlFor="recipient-name" className="col-form-label">Product Year:</label>
+                <input name='year' value={year} onChange={handleProductChange} type="number" min='0' className="form-control" id="recipient-name" />
               </div>
               </div>
           </div>
@@ -236,6 +286,37 @@ const AdminDashboard = () => {
     </div>
   )
 
+  const showProducts = () => (
+    <div className="row">
+      <div className="col-md-12">
+        <h2 className="text-center">Total {products.length} products</h2>
+        <hr />
+        { products && products.map((p, i) => (
+          <div className="card mb-3" key={i}>
+            <div className="row no-gutters">
+              <div className="col-md-4">
+                <img src= {require(`./uploads/${p.fileName}`)} className="card-img" alt={p.productName} />
+              </div>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title">{p.productName}</h5>
+                  <p className="card-text">{p.productDescription}</p>
+                  <p className="card-text"><small className="text-muted">Category: {p.productCategory.name}</small></p>
+                  <p className="card-text"><small className="text-muted">year: {p.year}</small></p>
+                  <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p>
+                  <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
+                  <p className="card-text"><small className="text-muted">Last updated: {moment(p.updatedAt).fromNow()}</small></p>
+                  <Link to={`/admin/product/update/${p._id}`} className="btn btn-outline-warning btn-sm mr-2">Update</Link>
+                  <button onClick={() => destroy(p._id)} className="btn btn-outline-danger btn-sm">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
   return (
     <section>
       
@@ -243,6 +324,7 @@ const AdminDashboard = () => {
       {showActionBtns()}
       {showCategoryModal()}
       {showProductModal()}
+      {showProducts()}
 
     </section>
   )

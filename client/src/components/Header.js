@@ -37,6 +37,7 @@ const Header = ({navigate}) => {
 
     {isAuthenticated() && isAuthenticated().role === "user" && (
       <div>
+      <NavLink to="/user/dashboard">Dashboard</NavLink>
       <NavLink to="/profile"><CgProfile style={{marginRight: "0.5em",color:"white", fontSize: "3em"}}/></NavLink>
 
     <button className='loginBtn searchBtn' onClick={handleLogout}>Logout</button>
@@ -45,6 +46,7 @@ const Header = ({navigate}) => {
 
     {isAuthenticated() && isAuthenticated().role === "admin" && (
       <>
+      <NavLink to="/admin/dashboard">Dashboard</NavLink>
       <NavLink to="/profile"><CgProfile style={{marginRight: "0.5em",color:"white", fontSize: "3em"}}/></NavLink>
     <button className='loginBtn searchBtn' onClick={handleLogout}>Logout</button>
       </>

@@ -30,11 +30,8 @@ const Home = () => {
             <h1 className="popularBidding-h1">Popular Biddings</h1>
             <NavLink className ="bsplay" to="/"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
             </div>
-            <div className="row" style={{display: "flex", justifyContent: "space-around"}}>
-                <ProductCard key="1" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="2" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="3" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="4" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
+            <div>
+                <ProductCard />
             </div>
         </section>
         <div className='sellWithUs'>
@@ -55,20 +52,14 @@ const Home = () => {
         </div>
         <section style={{padding: "20px"}}>
             <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>SealtheDeal Selects</h1>            
-            <div className="row" style={{display: "flex", justifyContent: "space-around"}}>
-                <ProductCard key="1" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="2" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="3" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="4" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
+            <div>
+                <ProductCard />
             </div>
         </section>
         <section style={{padding: "20px"}}>
             <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>New Arrivals</h1>            
-            <div className="row" style={{display: "flex", justifyContent: "space-around"}}>
-                <ProductCard key="1" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="2" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="3" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="4" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
+            <div>
+                <ProductCard/>
             </div>
         </section>
         <div className='account text-center  border-top'>
