@@ -16,6 +16,7 @@ exports.update = async (req, res) => {
 
     const user = await User.findByIdAndUpdate({_id: _id}, {name, phoneNr, address, email, location});
     role = user.role
+    accStatus = user.accStatus
     res.json({
       message: 'Profile Updated Sucessfully!',
     });

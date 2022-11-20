@@ -66,10 +66,10 @@ exports.signinController = async (req, res) => {
       if (err) {
         console.log('jwt error', err);
       }
-      const { _id, role, name, email, phoneNr, location, address} = user;
+      const { _id, accStatus,role, name, email, phoneNr, location, address, } = user;
       return res.json({
         token,
-        user: { _id, role, name, email, phoneNr, location,address },
+        user: { _id, accStatus, role, name, email, phoneNr, location,address },
       });
     });
 

@@ -55,18 +55,9 @@ const Home = () => {
             <button className='getStartedBtn'>Get Started</button>
         </div>
         <section style={{padding: "20px"}}>
-<<<<<<< HEAD
             <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>BidOnBuy Selects</h1>            
-            <div className="row" style={{display: "flex", justifyContent: "space-around"}}>
-                <ProductCard key="1" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="2" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="3" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-                <ProductCard key="4" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
-=======
-            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>SealtheDeal Selects</h1>            
             <div>
                 <ProductCard />
->>>>>>> 6a74283fa4833edcb0145c3cd6b2f284acb568b3
             </div>
         </section>
         <section style={{padding: "20px"}}>
