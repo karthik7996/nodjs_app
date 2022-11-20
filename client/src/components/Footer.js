@@ -8,7 +8,7 @@ const Footer = () => {
   <footer className="row row-cols-1 row-cols-sm-2 row-cols-md-6" style={{paddingBottom: "100px"}}>
     <div className="col mb-3">
     <p className="logoImage"><TbHeartHandshake/></p>
-    <p className="logoName" >Seal the Deal</p>
+    <p className="logoName" >Bid On Buy</p>
     </div>
 
     <div className="col">
@@ -59,7 +59,7 @@ const Footer = () => {
     </div>
   </footer>
    <div className='footerBottom d-flex flex-wrap justify-content-around '>
-    <p>Copyright @ 2022 SealTheDeal All Rights Reserved</p>
+    <p>Copyright @ 2022 BidOnBuy All Rights Reserved</p>
     <p>Site Map</p>
     <p>Contact Us</p>
     <p>Sell a Vehicle</p>

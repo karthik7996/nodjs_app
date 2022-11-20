@@ -2,12 +2,16 @@ import React from 'react'
 import { NavLink } from 'react-router-dom';
 import HeaderCard from './HeaderCard'
 import {FaGreaterThan} from "react-icons/fa"
-import {BsPlayFill} from "react-icons/bs";
 import ProductCard from './ProductCard';
 import Footer from './Footer';
 const Home = () => {
   return (
     <div>
+        <div class="ticker-title" >
+        <span>BidOnBuy.com its a platform to connect buyers and sellers</span>
+        <span>BidOnBuy.com its a platform to connect buyers and sellers</span>
+        <span>BidOnBuy.com its an platform to connect buyers and sellers</span>
+        </div>
         <div className='homeHeading'>
             <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
             <NavLink><p className="homeHeading-p">Auction</p></NavLink>
@@ -54,7 +58,7 @@ const Home = () => {
             <button className='getStartedBtn'>Get Started</button>
         </div>
         <section style={{padding: "20px"}}>
-            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>SealtheDeal Selects</h1>            
+            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>BidOnBuy Selects</h1>            
             <div className="row" style={{display: "flex", justifyContent: "space-around"}}>
                 <ProductCard key="1" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>
                 <ProductCard key="2" src = "/images/washingMachine.png" title="Samsung Washing Machine" currentBid="₹ 8000.00" location="Bangalore"/>

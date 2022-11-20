@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
+  accStatus: {
+    type: Boolean,
+    default: false
+  },
   role: {
     type: String,
     default: "basic"

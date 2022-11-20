@@ -451,3 +451,30 @@ font-size: 12px;
     text-align: left;
   }
 }
+
+.ticker-title{
+  width: 2500px;
+  color: #FFFFFF;
+  font-size: 16px;
+  background-color: #1D1E20;
+}
+.ticker-title > * {
+  display: inline-block;
+  margin-right: 150px;
+  animation: title 3s infinite linear;
+}
+
+@keyframes title {
+  0% {transform: translateX(0);}
+  100% {transform: translateX(-233px);}
+}
+.verify p{
+  display: inline-block;
+}
+.verfiyArrow:hover{
+  transform: scale(1.25);
+}
+.border-dashed{
+  border-style: dashed;
+  border-width: 1px;
+}
