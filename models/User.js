@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const {ObjectId} = mongoose.Schema;
 const UserSchema = new mongoose.Schema({
   accStatus: {
     type: Boolean,
@@ -30,12 +30,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   location: {type: String},
-  tokens: [{
-    token: {
-        type: String,
-        required: true
-    }
-  }],    
+  products: [{type: ObjectId}],
   address: {type: String}, 
 }, { timestamps: true });
 

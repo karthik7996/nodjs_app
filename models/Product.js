@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 const {ObjectId} = mongoose.Schema;
 
 const ProductSchema = mongoose.Schema({
+    userId: {type: ObjectId, required: true},
     fileName: { type: String, required: true },
-    productName: { type: String, required: true, trim: true, maxlength: 32 },
+    productName: { type: String, required: true, trim: true},
     productPrice: { type: Number, required: true },
-    productDescription: { type: String, required: true, trim: true, maxlength: 2000 },
+    productDescription: { type: String, required: true, trim: true},
     productCategory: { type: ObjectId, ref:'Category', required: true },
     year: { type: String, required: true }
 }, { timestamps: true });
