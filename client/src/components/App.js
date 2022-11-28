@@ -24,7 +24,7 @@ const App = () => (
         <Route path="/admin/dashboard" element = {<AdminDashboard/>} />
         <Route path="/profile" element={<Profile />}/>
         <Route path="/products" element={<Product />}/>
-        <Route path="/singleproduct" element={<SingleProduct/>}/>
+        <Route path="/singleproduct/:productId" element={<SingleProduct/>}/>
         <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
         <Route path="*" element = {<NotFound/>} />
       </Routes>

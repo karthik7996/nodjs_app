@@ -68,9 +68,9 @@ console.log(data);
   }
 
   const showSigninForm = () => (
-              <div className='log-sign-main'>
+              <div className='log-sign-main border-top'>
                   <div className="login">
-                  <h1 className="text-center" style={{fontFamily: "'Lovers Quarrel', cursive"}}>BidOnBuy</h1>
+                  <h1 className="text-center" style={{fontFamily: "'Open Sans', cursive"}}>BidOnBuy</h1>
                     {error && showErrorMessage(error)}
                     {loading && <div className="text-center pb-4">{showLoading()}</div>}
                     <form onSubmit={handleSubmit}>
@@ -82,7 +82,7 @@ console.log(data);
                         {/* <label className="form-label" htmlFor="form3Example4cg">Password</label> */}
                       </div>
                       <div className="d-flex justify-content-center">
-                        <button type="submit" className="btn btn-block button" style={{margin: "10px 0px"}}>Login</button>
+                        <button type="submit" className="btn btn-block button" style={{margin: "10px 0px"}}><span className='glow'>Login</span></button>
                       </div>
                       <p className="text-center text-muted mt-2 mb-0">Don't have a account? <Link to='/signup' className="fw-bold text-body" style={{fontSize: "16px", fontWeight: "700"}}><u>Register here</u></Link></p>
                     </form>

@@ -24,8 +24,28 @@ export const getProduct = async () => {
   const response = await axios.get('/api/product', config);
   return response;
 }
-
-
+export const getSingleProduct = async (id) => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }
+  const response = await axios.get(`/api/product/${id}` , config);
+  return response;
+}
+export const getUserProduct = async () => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }
+  const response = await axios.get('/api/product/user', config);
+  return response;
+}
 
 
 export const deleteProduct = async (id) => {

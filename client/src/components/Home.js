@@ -16,7 +16,7 @@ const Home = () => {
             <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
             <NavLink><p className="homeHeading-p">Auction</p></NavLink>
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
-            <NavLink><p className="homeHeading-p" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
+            <NavLink><p className="homeHeading-p pt-3" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
         </div>
         <div className='headerSection'>
             <p className="headerSection-p">100% Safe And Free Auctions</p>
@@ -32,7 +32,7 @@ const Home = () => {
         <section style={{padding: "20px"}}>
             <div>
             <h1 className="popularBidding-h1">Popular Biddings</h1>
-            <NavLink className ="bsplay" to="/"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
+            <NavLink className ="bsplay" to="/products"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
             </div>
             <div>
                 <ProductCard />

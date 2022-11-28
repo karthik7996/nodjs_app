@@ -83,14 +83,14 @@ const handleCheck = (e) =>{
   }
 
   const showSignupForm = () => (
-    <section className="vh-100 bg-image" style={{backgroundColor: "#282c34"}}>
+    <section className="vh-100 bg-image border-top" style={{backgroundImage: "linear-gradient(90deg, #1D1E20 0%,  #053BC7 100%)", backgroundSize: "cover"}}>
         <div className="mask d-flex align-items-center h-100">
           <div className="container h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
               <div className="col-12 col-md-9 col-lg-7 col-xl-6">
                 <div className="card" style={{borderRadius: '15px'}}>
                   <div className="card-body p-5">
-                  <h1 className="text-center" style={{fontFamily: "'Lovers Quarrel', cursive"}}>BidOnBuy</h1>
+                  <h1 className="text-center" style={{fontFamily: "'open Sans', cursive"}}>BidOnBuy</h1>
                     {success && showErrorMessage(success)}
                     {error && showErrorMessage(error)}
                     {loading && ( <div className="text-center pb-4">{showLoading()}</div> )}

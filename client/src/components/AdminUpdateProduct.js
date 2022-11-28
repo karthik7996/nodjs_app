@@ -93,14 +93,6 @@ const AdminUpdateProduct = ({ match }) => {
     console.log('productQuantity', productQuantity)
   }
 
-
-
-
-  
-
-
-
-
   return (
     <div className="container">
       <div className="row">

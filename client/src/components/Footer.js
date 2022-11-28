@@ -8,7 +8,7 @@ const Footer = () => {
   <footer className="row row-cols-1 row-cols-sm-2 row-cols-md-6" style={{paddingBottom: "100px"}}>
     <div className="col mb-3">
     <p className="logoImage"><TbHeartHandshake/></p>
-    <p className="logoName" >Bid On Buy</p>
+    <p className="logoName" >BidOnBuy</p>
     </div>
 
     <div className="col">

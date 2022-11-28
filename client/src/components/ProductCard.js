@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Link} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 import moment from 'moment';
 import isEmpty from 'validator/lib/isEmpty';
 import { createCategory, getCategories } from '../api/category'
@@ -8,7 +8,7 @@ import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 
 const ProductCard = () => {
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const [category , setCategory] = useState('')
@@ -52,7 +52,7 @@ const ProductCard = () => {
     }
     )
   }
-  
+
   const showProducts = () => (
     
 
@@ -69,7 +69,7 @@ const ProductCard = () => {
               <p>{p.productCategory.name}</p>
             </div>
             <div style={{margin: "10px", position:'absolute', bottom:'5px'}}>
-                <button>Bid higher</button> 
+                <button onClick={()=>navigate(`/singleproduct/${p._id}`)}>Bid higher</button> 
                 <img src="images/i_icon.svg" className="info" style={{position:'absolute', right:'-142px'}} />
             </div>
           </div>

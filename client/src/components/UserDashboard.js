@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import moment from 'moment';
 import isEmpty from 'validator/lib/isEmpty';
 import { createCategory, getCategories } from '../api/category'
-import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/product'
+import { createProduct, getUserProduct, deleteProduct, updateProduct } from '../api/product'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 
@@ -91,7 +91,7 @@ const AdminDashboard = () => {
   }, [loading])
 
   const loadProducts = async () => {
-    await getProduct()
+    await getUserProduct()
     .then((response) => {
       setProduct(response.data)
       console.log('products', response.data)
