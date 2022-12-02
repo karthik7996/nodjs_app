@@ -64,8 +64,8 @@ const ProductCard = () => {
           <img src= {require(`./uploads/${p.fileName}`)} className="card-img" alt={p.productName} />
             <div style={{padding: "0 10px"}}>
               <h3>{p.productName}</h3>
-              <p>Current Bid: <span className='currentBid'>{p.productPrice}</span></p>
-              <p className='descP'>{p.productDescription}</p>
+              <p>Current Bid: <span className='currentBid'>Rs {p.productPrice}</span></p>
+              {/* <p className='descP'>{p.productDescription}</p> */}
               <p>{p.productCategory.name}</p>
             </div>
             <div style={{margin: "10px", position:'absolute', bottom:'5px'}}>

@@ -43,7 +43,7 @@ export const getUserProduct = async () => {
     //   'Content-Type': 'application/json',
     // },
   }
-  const response = await axios.get('/api/product/user', config);
+  const response = await axios.get('/api/product/currentUser', config);
   return response;
 }
 

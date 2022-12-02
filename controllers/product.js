@@ -75,7 +75,6 @@ exports.readSingle = async (req, res) => {
 }
 
 exports.readCurrentUserProduct = async (req, res) => {
-
   try {
     const {_id} = req.user
     let products = await Product.find({userId: _id}).populate('productCategory', 'name')

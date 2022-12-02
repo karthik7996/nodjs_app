@@ -7,7 +7,7 @@ import { createProduct, getUserProduct, deleteProduct, updateProduct } from '../
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 
-const AdminDashboard = () => {
+const UserDashboard = () => {
 
   const [loading, setLoading] = useState(false);
 
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
         <div className="row">
           <div className="col-md-6">
             <h1>
-            <i class="fa-solid fa-house"> Dashboard</i>
+            <i className="fa-solid fa-house"> Dashboard</i>
             </h1>
           </div>
         </div>
@@ -268,4 +268,4 @@ const AdminDashboard = () => {
   )
 }
 
-export default AdminDashboard
+export default UserDashboard
