@@ -126,7 +126,7 @@ const handleCheck = (e) =>{
                         </label>
                       </div>
                       <div className="d-flex justify-content-center">
-                        <button type="submit" className="btn btn-block button">Register</button>
+                        <button type="submit" className="btn btn-block button text-white glow font-weight-bold">Register</button>
                       </div>
                       <p className="text-center text-muted mt-2 mb-0">Already have an account? <Link to='/signin' className="fw-bold text-body"><u style={{fontSize: "16px", fontWeight: "700"}}>Login here</u></Link></p>
                     </form>

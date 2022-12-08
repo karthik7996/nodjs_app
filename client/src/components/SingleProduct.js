@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink, useParams } from 'react-router-dom';
+import { Navigate, NavLink, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { createCategory, getCategories } from '../api/category'
-import {FaGreaterThan} from "react-icons/fa";
 import { getSingleProduct } from '../api/product'
+import {placeBid} from '../api/bid'
+import { isAuthenticated} from '../helpers/auth';
 const SingleProduct = () => {
-
+  const navigate = useNavigate();
   const productId = useParams()
 console.log(productId)
   const [loading, setLoading] = useState(false);
@@ -27,6 +29,25 @@ console.log(productId)
     )
   }
 
+  const bid = async(e) =>{
+    e.preventDefault();
+    if(!isAuthenticated()){
+      navigate("/signin");
+    }
+    else{
+    const amount = document.getElementById("amount").value;
+    await placeBid(productId.productId,{amount:amount})
+    .then((response) => {
+      console.log(response.data.message)
+      document.getElementById("amount").value = null;
+    }
+    )
+    .catch((error) => {
+      console.log('loadProducts error', error)
+    }
+    )
+  }
+  }
   useEffect(() => {
     loadCategories()
   }, [loading])
@@ -44,7 +65,8 @@ console.log(productId)
     )
   }
 
-  return (<div className='fullHeight'>
+  return (
+  <><div className='fullHeight'>
     <div className='homeHeading'>
             <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
             <NavLink><p className="homeHeading-p">Auction</p></NavLink>
@@ -87,18 +109,43 @@ console.log(productId)
           <div className="d-flex justify-content-around">
               <p>{p.productCategory.name}</p> 
               <p>Delhi</p>
-              <p>{p.year} Years</p>
+              <p>{p.year}</p>
           </div>
           <p className="singleproducthr" ></p>
           <p className="text-secondary">Minimum bid</p>
           <p className='h1 font-weight-bold'>Rs {p.productPrice}</p>
           <div className='text-center pt-5 pb-5'>
-            <button className='btn btn-primary btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3'>Place a bid</button>
+            <button className='btn btn-primary btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3' data-toggle='modal' data-target='#bidProduct' >Place a bid</button>
           </div>
         </div>
     </div>
   }
     </div>
+    <div class="modal fade" id="bidProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog" >
+    <div class="modal-content" style={{backgroundColor: "#1D1E20", color:"#fff"}}>
+      <div class="modal-header">
+        <h5 class="modal-title h1" id="exampleModalLabel">{p.productName}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style={{color:"#fff"}}>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="input-group input-group-lg">
+  <div class="input-group-prepend border-white border-right ">
+    <span class="input-group-text" id="inputGroup-sizing-lg" style={{backgroundColor: "#1D1E20", color:"#fff"}}>Amount in Rupees</span>
+  </div>
+  <input type="Number" id ="amount" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" min="1"/>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-lg btn-outline-secondary" data-dismiss="modal" >Close</button>
+        <button class="btn btn-lg btn-outline-primary" onClick={bid} data-dismiss="modal">Place Bid</button>
+      </div>
+    </div>
+  </div>
+</div>
+</>
   )
 }
 

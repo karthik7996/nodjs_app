@@ -59,7 +59,7 @@ const Profile = () => {
           <Camera />
           </div>
           <div class="col-md-6 pt-5 border border-secondary rounded">
-            <p className="pb-3 font-weight-light h2">Upload your Government Id for verfication purpose</p>
+            <p className="pb-3 font-weight-light h2">Upload your Government Id for verfication purpose were <span className="font-weight-bold">address</span> is reflected</p>
                 <div class="custom-file mb-5">
                     <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" autofocus/>
                     <label class="custom-file-label" for="inputGroupFile04">Choose file</label>

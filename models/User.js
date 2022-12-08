@@ -19,6 +19,11 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     match: /.+\@.+\..+/,
   },
+  onBid:[{
+    productId: ObjectId,
+    bidAmount: Number,
+  }
+],
   phoneNr:  {
     type: String,
     required: true,

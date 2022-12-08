@@ -6,15 +6,20 @@ import { createCategory, getCategories } from '../api/category'
 import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/product'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
-
+import {MdDashboard} from "react-icons/md"
+import {getUserBid} from '../api/bid'
 
 const AdminDashboard = () => {
-
   const [loading, setLoading] = useState(false);
-
+  const [hideshow, setHideShow] = useState(true)
   const [category , setCategory] = useState('')
   const [categories, setCategories] = useState('')
   const [products, setProduct] = useState('')
+  const [bidProducts, setBidProducts] = useState('')
+  const [used, setUsed] = useState('new');
+  function usedChange(e){
+   setUsed(document.getElementById("usedAndNew").value)
+  }
 
   const [productData, setProductData] = useState({
     productImage: null,
@@ -23,6 +28,7 @@ const AdminDashboard = () => {
     productPrice: '',
     productCategory: '',
     productQuantity: '',
+    year: 'New'
   })
 
 
@@ -104,6 +110,22 @@ const AdminDashboard = () => {
     )
   }
 
+  useEffect(() => {
+    loadBidProducts()
+  }, [loading])
+
+  const loadBidProducts = async () => {
+    await getUserBid()
+    .then((response) => {
+      setBidProducts(response.data.bidProducts)
+      console.log('products', response.data.bidProducts)
+    }
+    )
+    .catch((error) => {
+      console.log('loadProducts error', error)
+    }
+    )
+  }
   const destroy = async (productId) => {
     setLoading(true)
     await deleteProduct(productId)
@@ -154,14 +176,17 @@ const AdminDashboard = () => {
 
   }
 
+  function setBid_Products(){
+    setHideShow(!hideshow)
+  }
 
   const showHeader = () => (
-    <div className="bg-dark text-white py-4">
-      <div className="container">
+    <div className="bg-light text-black pl-5 pt-3">
+      <div className="container-fluid">
         <div className="row">
           <div className="col-md-6">
             <h1>
-            <i class="fa-solid fa-house"> Dashboard</i>
+            <i class="fa-solid pl-5" style={{fontFamily: "'Poppins', sans-serif"}}><MdDashboard className='mr-3 rotate'/>Admin Dashboard</i>
             </h1>
           </div>
         </div>
@@ -184,8 +209,8 @@ const AdminDashboard = () => {
             </button>
           </div>
           <div className="col-md-4 my-1">
-            <button className="btn btn-outline-success btn-block">
-              <i className="fa-solid fa-wallet"></i> View Orders
+            <button className="btn btn-outline-success btn-block" onClick={setBid_Products}>
+            <i className="fa-solid fa-wallet"></i>   {hideshow ? "Your Biding" : "Your Uploads"  }
             </button>
           </div>
         </div>
@@ -272,13 +297,18 @@ const AdminDashboard = () => {
                 </div>
                 <div className="form-group col-md-6">
                 <label htmlFor="recipient-name" className="col-form-label">Product Year:</label>
-                <input name='year' value={year} onChange={handleProductChange} type="number" min='0' className="form-control" id="recipient-name" />
+                <select class="form-control" id= "usedAndNew"onChange={usedChange}>
+                  <option value="new" >New</option>
+                  <option value="old">Old</option>
+                </select>
+                { used == "old" &&
+                <input name='year' value={year} onChange={handleProductChange} type="number" min='1' className="form-control mt-3" id="recipient-name" placeholder='How many years old?'/>}
               </div>
               </div>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" className="btn btn-primary">Add Product</button>
+            <button type="submit" className="btn btn-primary" data-dismiss="modal">Add Product</button>
           </div>
         </form>
         </div>
@@ -316,7 +346,24 @@ const AdminDashboard = () => {
       </div>
     </div>
   )
-
+  const showBidProducts = ()=>(
+    <div className="container-fluid pl-5 pt-3 text-center ">
+      <div className='row text-center'>
+      {bidProducts && bidProducts.map((bidProduct) =>(
+        <div className="card text-left mr-5 " style={{width: "28rem"}}>
+          <img src={require(`./uploads/${bidProduct.fileName}`)} className="card-img-top w-100" alt="" height="270px"/>
+          <div className="card-body pb-2">
+            <h5 className="card-title h1">{bidProduct.productName}</h5>
+            <p className="card-text text-muted"> Your Bid Amount: <span className='font-weight-bold pl-3'>Rs {bidProduct.bidAmount}</span></p>
+            <span className='mr-4 h3 text-muted align-middle'>Status</span><button type="button" class="btn btn-lg btn-outline-warning">pending</button>
+            <p className='pt-3'><Link to={`/singleproduct/${bidProduct.productId}`} className="btn btn-lg scale btn-outline-primary float-left">Change Bid</Link>
+            <button type="button" class="btn btn-lg scale btn-outline-danger float-right">Cancel</button></p>
+          </div>
+        </div>
+        ))}
+      </div>
+    </div>
+  )
   return (
     <section>
       
@@ -324,8 +371,8 @@ const AdminDashboard = () => {
       {showActionBtns()}
       {showCategoryModal()}
       {showProductModal()}
-      {showProducts()}
-
+      {hideshow && showProducts()}
+      {!hideshow && showBidProducts()}
     </section>
   )
 }

@@ -6,9 +6,12 @@ import { createCategory, getCategories } from '../api/category'
 import { createProduct, getUserProduct, deleteProduct, updateProduct } from '../api/product'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
+import Alert from './Alert';
+import {getLocalStorage} from "../helpers/localStorage"
+import {MdDashboard} from "react-icons/md"
 
 const UserDashboard = () => {
-
+  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [category , setCategory] = useState('')
@@ -62,7 +65,7 @@ const UserDashboard = () => {
         })
       })
       .catch(err => {
-        console.log(err)
+        setErrorMessage(err.response.data.error);
       })      
     }
     console.log(productData)
@@ -131,12 +134,12 @@ const UserDashboard = () => {
 
 
   const showHeader = () => (
-    <div className="bg-dark text-white py-4">
-      <div className="container">
+    <div className="bg-light text-black pl-5 pt-3">
+      <div className="container-fluid">
         <div className="row">
           <div className="col-md-6">
             <h1>
-            <i className="fa-solid fa-house"> Dashboard</i>
+            <i class="fa-solid pl-5" style={{fontFamily: "'Poppins', sans-serif"}}><MdDashboard className='mr-3 rotate'/>Dashboard</i>
             </h1>
           </div>
         </div>
@@ -164,7 +167,9 @@ const UserDashboard = () => {
   )
 
   const showProductModal = () => (
+   
     <div className="modal fade" id="addProductModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     {getLocalStorage("user").accStatus }? <Alert alert = 'Please verify from profile section before you upload any product' />: {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
         <form onSubmit={handleProductSubmit}>
@@ -221,7 +226,9 @@ const UserDashboard = () => {
         </form>
         </div>
       </div>
+    }
     </div>
+    
   )
 
   const showProducts = () => (
@@ -257,8 +264,8 @@ const UserDashboard = () => {
 
   return (
     <section>
-      
       {showHeader()}
+      {errorMessage && <Alert alert = {errorMessage}/>}
       {showActionBtns()}
       {/* {showCategoryModal()} */}
       {showProductModal()}

@@ -82,7 +82,7 @@ console.log(data);
                         {/* <label className="form-label" htmlFor="form3Example4cg">Password</label> */}
                       </div>
                       <div className="d-flex justify-content-center">
-                        <button type="submit" className="btn btn-block button" style={{margin: "10px 0px"}}><span className='glow'>Login</span></button>
+                        <button type="submit" className="btn btn-block button glow" style={{margin: "10px 0px"}}><span className='font-weight-bold text-white'>Login</span></button>
                       </div>
                       <p className="text-center text-muted mt-2 mb-0">Don't have a account? <Link to='/signup' className="fw-bold text-body" style={{fontSize: "16px", fontWeight: "700"}}><u>Register here</u></Link></p>
                     </form>

@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const profileRoutes = require('./routes/profile');
+const bidRoutes = require('./routes/bid');
 app.use(
   cors({
       credentials: true,
@@ -29,7 +30,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/profile', profileRoutes);
-
+app.use('/api/bid', bidRoutes);
 app.use('/uploads', express.static('uploads'));
 
 connectDB();

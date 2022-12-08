@@ -9,6 +9,7 @@ import {TbHeartHandshake} from "react-icons/tb"
 import {CgProfile} from "react-icons/cg"
 import { Collapse } from "bootstrap"
 import {MdDashboard} from "react-icons/md"
+import {GiSplitCross} from "react-icons/gi"
 const Header = ({navigate}) => {
 
   var [toggle, setToggle] = useState(false);
@@ -28,8 +29,8 @@ const Header = ({navigate}) => {
   }
   const showNavigation  = () => (
     <>
-    <NavLink to="/" >
-        <p className="logoName"><span className="logoImage"><TbHeartHandshake/></span>BidOnBuy</p>
+    <NavLink to="/" className="text-decoration-none">
+        <p className="logoName glow"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy<sub className="h6 font-weight-lighter" >Powered&nbsp;by&nbsp;sarvatmaninfotech</sub></p>
     </NavLink>
     <form>
         <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...'/>
@@ -37,11 +38,11 @@ const Header = ({navigate}) => {
       </form>
     {!isAuthenticated() && (
       <div>
-      <NavLink to="/signup">
-    <button className='searchBtn'>Register</button>
+      <NavLink to="/signin">
+    <button className='searchBtn scale'>Login | Register</button>
     </NavLink>
-    <NavLink to="/signin">
-    <button className='loginBtn searchBtn'>Login</button>
+    <NavLink to="/signup">
+    <button className='loginBtn searchBtn scale'><GiSplitCross className="mr-2"/>Sell</button>
     </NavLink>
       </div>
 
