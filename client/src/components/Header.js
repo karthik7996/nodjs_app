@@ -16,6 +16,7 @@ const Header = ({navigate}) => {
     
   useEffect(() => {
     if(isAuthenticated()){
+      console.log(isAuthenticated())
       var myCollapse = document.getElementById('collapseTarget')
       var bsCollapse = new Collapse(myCollapse, {toggle: false})
       toggle ? bsCollapse.show() : bsCollapse.hide()
@@ -30,7 +31,7 @@ const Header = ({navigate}) => {
   const showNavigation  = () => (
     <>
     <NavLink to="/" className="text-decoration-none">
-        <p className="logoName glow"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy<sub className="h6 font-weight-lighter" >Powered&nbsp;by&nbsp;sarvatmaninfotech</sub></p>
+        <p className="logoName"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy<sub className="h6 font-weight-lighter" >Powered&nbsp;by&nbsp;sarvatmaninfotech</sub></p>
     </NavLink>
     <form>
         <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...'/>
@@ -42,7 +43,7 @@ const Header = ({navigate}) => {
     <button className='searchBtn scale'>Login | Register</button>
     </NavLink>
     <NavLink to="/signup">
-    <button className='loginBtn searchBtn scale'><GiSplitCross className="mr-2"/>Sell</button>
+    <button className='loginBtn searchBtn sellHover'><GiSplitCross className="mr-2"/>Sell</button>
     </NavLink>
       </div>
 

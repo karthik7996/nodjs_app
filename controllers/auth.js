@@ -17,6 +17,7 @@ exports.signupController = async (req, res) => {
 
     const newUser =  new User();
     newUser.role = "user";
+    newUser.accStatus = false;
     newUser.name = name;
     newUser.email = email;
     newUser.phoneNr = phoneNr;

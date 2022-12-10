@@ -8,6 +8,57 @@ exports.placeBid = async (req, res) => {
     const {amount} = req.body
     console.log(_id,amount)
     try {
+        // checking user account status
+      const status = await User.findOne({_id})
+        if (!status.accStatus){
+          return res.status(400).json({
+            error: 'Please verify from profile section before you Bid any product'
+          });
+        }
+
+      // code for user already bided
+      const userAlreadyBid = await Product.findOne({_id: productId}).select({ bidder: {$elemMatch: {bidderId: _id}}});
+        if(userAlreadyBid.bidder.length ===1){
+          const findproduct_ = await Product.findOne({_id: productId})
+          let max1 = 0
+          console.log(findproduct_)
+          findproduct_.bidder.forEach(function (arrayItem) {
+            if (max1 < arrayItem.bidAmount){
+                max1 = arrayItem.bidAmount
+            }   
+        })
+        console.log(max1)
+        if (amount<= max1){
+          return res.status(400).json({
+            error: 'Your Bid amount must be greater than previous Bidder'
+          });
+        }
+          userAlreadyBid.bidder[0].bidAmount = amount;
+          await userAlreadyBid.save();
+          let user = await User.findOne({_id}).select({ onBid: {$elemMatch: {productId: productId}}});
+          user.onBid[0].bidAmount = amount;
+          await user.save();
+          res.status(200).json({
+            message: 'Bid Amount successfull updated'
+        })
+        return ;
+      }
+      // when user first time biding the product
+      // finding maximum bid
+      const findproduct = await Product.findOne({_id: productId})
+      let max = 0
+      findproduct.bidder.forEach(function (arrayItem) {
+        if (max < arrayItem.bidAmount){
+            max = arrayItem.bidAmount
+        }
+    })
+    console.log(max)
+    if (amount<= max){
+      return res.status(400).json({
+        error: 'Your Bid amount must be greater than previous Bidder'
+      });
+    }
+    // this code execute when amount is greater than previous Bidder
       let product = await Product.findOneAndUpdate({_id: productId},{$push: {bidder: {bidderId: _id, bidAmount: amount}}})
       let user = await User.findOneAndUpdate({_id},{$push: {onBid: {productId: productId, bidAmount: amount}}})
       console.log(product)

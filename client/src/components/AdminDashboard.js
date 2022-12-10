@@ -8,6 +8,9 @@ import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 import {MdDashboard} from "react-icons/md"
 import {getUserBid} from '../api/bid'
+import {getLocalStorage} from "../helpers/localStorage"
+import Alert from './Alert';
+import {CgProfile} from "react-icons/cg"
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -17,6 +20,20 @@ const AdminDashboard = () => {
   const [products, setProduct] = useState('')
   const [bidProducts, setBidProducts] = useState('')
   const [used, setUsed] = useState('new');
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (messsage, type) =>{
+    setAlert({
+      msg: messsage,
+      type: type
+    })
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000)
+  }
+
+
+
   function usedChange(e){
    setUsed(document.getElementById("usedAndNew").value)
   }
@@ -47,7 +64,7 @@ const AdminDashboard = () => {
   const handleProductSubmit = (e) => {
     e.preventDefault();
     if (productImage === null || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
-      console.log('Please fill all fields')
+      showAlert('Please fill all fields', "danger")
     } else {
       let formData = new FormData();
       formData.append('productImage', productImage);
@@ -69,7 +86,7 @@ const AdminDashboard = () => {
         })
       })
       .catch(err => {
-        console.log(err)
+        showAlert(err.response.data.error, "danger")
       })      
     }
     console.log(productData)
@@ -204,13 +221,13 @@ const AdminDashboard = () => {
             </button>
           </div>
           <div className="col-md-4 my-1">
-            <button className="btn btn-outline-warning btn-block" data-toggle='modal' data-target='#addProductModal'>
+            <button className="btn btn-outline-warning btn-block" data-toggle='modal' data-target='#addProductModal' >
               <i className="fas fa-plus-circle"></i> Add Product
             </button>
           </div>
           <div className="col-md-4 my-1">
             <button className="btn btn-outline-success btn-block" onClick={setBid_Products}>
-            <i className="fa-solid fa-wallet"></i>   {hideshow ? "Your Biding" : "Your Uploads"  }
+            <i class="fa-sharp fa-solid fa-arrow-up-right-from-square"></i>   {hideshow ? "Your Biding" : "Your Uploads"  }
             </button>
           </div>
         </div>
@@ -232,7 +249,7 @@ const AdminDashboard = () => {
           </div>
           <div className="modal-body">
               <div className="form-group">
-                <label htmlFor="recipient-name" className="col-form-label">Category Name:</label>
+                <label htmlFor="recipient-name" className="col-form-label" >Category Name:</label>
                 <input type="text" className="form-control" id="recipient-name" 
                 name='category' 
                 value={category} 
@@ -247,9 +264,20 @@ const AdminDashboard = () => {
         </form>
         </div>
       </div> 
+      
     </div>
   )
-
+let accStatus = getLocalStorage("user").accStatus
+function accStatusCheck(){
+  console.log("hey")
+  if (!accStatus){
+    showAlert('Please verify from profile section before you upload any product', "danger")
+    return <div></div>
+}
+else {
+  return true
+}
+}
   const showProductModal = () => (
     <div className="modal fade" id="addProductModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div className="modal-dialog" role="document">
@@ -308,7 +336,7 @@ const AdminDashboard = () => {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" className="btn btn-primary" data-dismiss="modal">Add Product</button>
+            <button type="submit" className="btn btn-primary" >Add Product</button>
           </div>
         </form>
         </div>
@@ -327,18 +355,35 @@ const AdminDashboard = () => {
               <div className="col-md-4">
                 <img src= {require(`./uploads/${p.fileName}`)} className="card-img" alt={p.productName} />
               </div>
-              <div className="col-md-8">
+              <div className="col-md-4">
                 <div className="card-body">
                   <h5 className="card-title">{p.productName}</h5>
                   <p className="card-text">{p.productDescription}</p>
                   <p className="card-text"><small className="text-muted">Category: {p.productCategory.name}</small></p>
                   <p className="card-text"><small className="text-muted">year: {p.year}</small></p>
-                  <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p>
+                  {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}
                   <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
                   <p className="card-text"><small className="text-muted">Last updated: {moment(p.updatedAt).fromNow()}</small></p>
-                  <Link to={`/admin/product/update/${p._id}`} className="btn btn-outline-warning btn-sm mr-2">Update</Link>
-                  <button onClick={() => destroy(p._id)} className="btn btn-outline-danger btn-sm">Delete</button>
+                  <Link to={`/admin/product/update/${p._id}`} className="btn btn-outline-warning btn-sm mr-2 scale">Update</Link>
+                  <button onClick={() => destroy(p._id)} className="btn btn-outline-danger btn-sm scale">Delete</button>
                 </div>
+              </div>
+              <div className='col-md-4 mt-4'>
+                { p.bidder.length>0 ? p.bidder.map((b, i) => (
+                    <div className='d-flex justify-content-between'>
+                      <div style={{width: "50px"}}>
+                      <span className="mr-3 align-top h2">{i+1}</span>
+                      <CgProfile className="text-black h1 float-right" />
+                      </div>
+                      <p className="ml-3 flex-grow-1 align-self-center h5">Bid Amount: ₹<strong>{b.bidAmount}</strong></p>
+                      <div>
+                        <button type="button" class="btn btn-outline-success mr-3 scale">Accept</button>
+                        <button type="button" class="btn btn-outline-danger mr-3 scale">Reject</button>
+                      </div>
+                    </div>
+                ))
+                : <p className='text-black ml-3'>No bidder yet...hope you will soon find a good bidder</p>
+                }
               </div>
             </div>
           </div>
@@ -366,7 +411,7 @@ const AdminDashboard = () => {
   )
   return (
     <section>
-      
+     <Alert alert={alert}/>
       {showHeader()}
       {showActionBtns()}
       {showCategoryModal()}

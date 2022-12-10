@@ -80,7 +80,7 @@ const ProductCard = () => {
           </Tooltip>
         )}
         placement="bottom"
-      ><img src="images/i_icon.svg" className="info " style={{position:'absolute', right:'-142px'}}/>
+      ><img src="images/i_icon.svg" className="info scale" style={{position:'absolute', right:'-142px'}}/>
       </OverlayTrigger>
                 
             </div>

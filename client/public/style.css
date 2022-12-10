@@ -175,16 +175,17 @@
     border-radius: 20px;
 }
 .sellWithUs{
-  background: #D9D9D9;
-  background-image: url("/images/sellWithUs.svg");
-  background-position: right bottom;
-  background-repeat: no-repeat;
-  color: #1D1E20;
+  /* background: #D9D9D9; */
+  background-image: url("/images/Animatebackground.svg");
+  /* background-position: right bottom;
+  background-repeat: no-repeat; */
+  color: #fff;
   padding-bottom: 30px;
 }
 .sellWithUs h3{
   text-align: center;
-  color: #0457D4;;
+  letter-spacing: 2px;
+  /* color: #0457D4;; */
   font-weight: 700;
   font-size: 36px;
   margin-bottom: 30px;
@@ -205,7 +206,7 @@
   margin-bottom: 20px;
   font-size: 16px;
   font-weight: 500;
-  color: #0457D4;
+  /* color: #0457D4; */
 }
 .sellWithUs li span{
   margin-right: 15px;
@@ -557,4 +558,19 @@ font-size: 12px;
 
 .tooltip.bs-tooltip-bottom .arrow:before {
   border-right-color: linear-gradient(90deg, #1D1E20 0%, #053BC7 100%) !important;
+}
+.sellHover{
+  transition: background 0.5s ease-in-out;
+}
+.sellHover:hover{
+  background: radial-gradient(105.07% 105.07% at 17.04% 0%, rgba(0, 186, 226, 0.88) 0.67%, rgba(0, 0, 0, 0) 100%), radial-gradient(97.83% 97.83% at 77.8% 100%, rgba(0, 77, 226, 0.88) 0.67%, rgba(0, 0,0,0)100%);
+  border:rgba(0, 186, 226, 0.88)
+}
+.vertical-scrollable>.row {
+  position: absolute;
+  top: 120px;
+  bottom: 100px;
+  left: 180px;
+  width: 50%;
+  overflow-y: scroll;
 }

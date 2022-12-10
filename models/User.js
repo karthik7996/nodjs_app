@@ -3,11 +3,9 @@ const {ObjectId} = mongoose.Schema;
 const UserSchema = new mongoose.Schema({
   accStatus: {
     type: Boolean,
-    default: false
   },
   role: {
     type: String,
-    default: "basic"
   },
   name: {
     type: String,

@@ -5,7 +5,22 @@ import { createCategory, getCategories } from '../api/category'
 import { getSingleProduct } from '../api/product'
 import {placeBid} from '../api/bid'
 import { isAuthenticated} from '../helpers/auth';
+import Alert from './Alert';
+import isEmpty from 'validator/lib/isEmpty';
 const SingleProduct = () => {
+
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (messsage, type) =>{
+    setAlert({
+      msg: messsage,
+      type: type
+    })
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000)
+  }
+
   const navigate = useNavigate();
   const productId = useParams()
 console.log(productId)
@@ -35,18 +50,25 @@ console.log(productId)
       navigate("/signin");
     }
     else{
+    if (isEmpty(document.getElementById("amount").value)){
+      showAlert('Please fill Bid amount', "danger")
+    }
+    else{
     const amount = document.getElementById("amount").value;
     await placeBid(productId.productId,{amount:amount})
     .then((response) => {
       console.log(response.data.message)
+      showAlert(response.data.message, "success")
       document.getElementById("amount").value = null;
     }
     )
     .catch((error) => {
-      console.log('loadProducts error', error)
+      showAlert(error.response.data.error, "danger")
+      document.getElementById("amount").value = null;
     }
     )
   }
+}
   }
   useEffect(() => {
     loadCategories()
@@ -66,7 +88,8 @@ console.log(productId)
   }
 
   return (
-  <><div className='fullHeight'>
+  <><Alert alert={alert}/>
+  <div className='fullHeight'>
     <div className='homeHeading'>
             <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
             <NavLink><p className="homeHeading-p">Auction</p></NavLink>
@@ -97,7 +120,7 @@ console.log(productId)
 </div>
         <div className='col-sm col-md-4 border border-white text-left pt-3'>
           <p className='h1'>{p.productName}</p>
-          <p className='text-secondary pt-2'>Minimum bid<span className="ml-4 text-white font-weight-bold" >Rs. {p.productPrice}</span></p>
+          {/* <p className='text-secondary pt-2'>Minimum bid<span className="ml-4 text-white font-weight-bold" >Rs. {p.productPrice}</span></p> */}
           <p className='border-bottom text-center pt-3 pb-3'>Details</p>
           <hr />
           <p>{p.productDescription}</p>
@@ -112,8 +135,8 @@ console.log(productId)
               <p>{p.year}</p>
           </div>
           <p className="singleproducthr" ></p>
-          <p className="text-secondary">Minimum bid</p>
-          <p className='h1 font-weight-bold'>Rs {p.productPrice}</p>
+          {/* <p className="text-secondary">Minimum bid</p>
+          <p className='h1 font-weight-bold'>Rs {p.productPrice}</p> */}
           <div className='text-center pt-5 pb-5'>
             <button className='btn btn-primary btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3' data-toggle='modal' data-target='#bidProduct' >Place a bid</button>
           </div>

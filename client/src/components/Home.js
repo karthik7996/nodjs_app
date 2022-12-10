@@ -39,8 +39,8 @@ const Home = () => {
             </div>
         </section>
         <div className='sellWithUs'>
-            <img src="/images/layered.svg" alt="layered imgage"style={{width: "100%"}}/>
-            <h3>Sell With Us</h3>
+            {/* <img src="/images/layered.svg" alt="layered imgage"style={{width: "100%"}}/> */}
+            <h3 className='pt-5'>Sell With Us</h3>
             <p>Lörem ipsum kontral ninat där andrafiering teravis. Bioska poligram. Dår kontradat liksom väliga, un oaktat dingar. Dosk niligen till prende, prenyn supravision. Loba renas liksom dedån i ankarbarn. 
                 Fahönyren nodände. Spegt semiska och nymåktigt. Anter spevåde fälingar: spedat räns. Muska ira seminade våtonat. Onoren eurobävning ser. 
                 Muska terasade gekåssa. Mining rev, och nenas, ekartad. Soska mar i kvasigisk. Har tev segt. Divisade autogt plus fydöhet presk. 
@@ -52,7 +52,7 @@ const Home = () => {
                 <li><span>✓</span>24 X 7 support</li>
                 <li><span>✓</span>Access to over 175,000 products</li>
             </ul>
-            <button className='getStartedBtn'>Get Started</button>
+            <button className='getStartedBtn sellHover'>Get Started</button>
         </div>
         <section style={{padding: "20px"}}>
             <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>BidOnBuy Selects</h1>            

@@ -13,7 +13,17 @@ import {MdDashboard} from "react-icons/md"
 const UserDashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
+  const showAlert = (messsage, type) =>{
+    setAlert({
+      msg: messsage,
+      type: type
+    })
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000)
+  }
   const [category , setCategory] = useState('')
   const [categories, setCategories] = useState('')
   const [products, setProduct] = useState('')
@@ -43,7 +53,7 @@ const UserDashboard = () => {
   const handleProductSubmit = (e) => {
     e.preventDefault();
     if (productImage === null || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
-      console.log('Please fill all fields')
+      showAlert('Please fill all fields', "danger")
     } else {
       let formData = new FormData();
       formData.append('productImage', productImage);
@@ -65,7 +75,7 @@ const UserDashboard = () => {
         })
       })
       .catch(err => {
-        setErrorMessage(err.response.data.error);
+        showAlert(err.response.data.error, "danger")
       })      
     }
     console.log(productData)
@@ -169,7 +179,7 @@ const UserDashboard = () => {
   const showProductModal = () => (
    
     <div className="modal fade" id="addProductModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-     {getLocalStorage("user").accStatus }? <Alert alert = 'Please verify from profile section before you upload any product' />: {
+    {/* { `${!getLocalStorage("user").accStatus}` ? `${showAlert('Please verify from profile section before you upload any product', "danger")}`:  */}
       <div className="modal-dialog" role="document">
         <div className="modal-content">
         <form onSubmit={handleProductSubmit}>
@@ -226,7 +236,8 @@ const UserDashboard = () => {
         </form>
         </div>
       </div>
-    }
+    
+    {/* } */}
     </div>
     
   )
@@ -265,7 +276,7 @@ const UserDashboard = () => {
   return (
     <section>
       {showHeader()}
-      {errorMessage && <Alert alert = {errorMessage}/>}
+      <Alert alert = {alert}/>
       {showActionBtns()}
       {/* {showCategoryModal()} */}
       {showProductModal()}
