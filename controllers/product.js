@@ -92,6 +92,12 @@ exports.readCurrentUserProduct = async (req, res) => {
 exports.delete = async (req, res) => {
   const { id } = req.params
   try {
+    const users =  await User.find();
+    users.map(async (user)=>{
+    const bidProduct = user.onBid.filter(products=>products.productId != id)
+      user.onBid = bidProduct
+      await user.save();
+    })
     let product = await
       Product
         .findByIdAndDelete(id)

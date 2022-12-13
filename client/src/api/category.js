@@ -22,4 +22,13 @@ export const getCategories = async () => {
   }
   const response = await axios.get('/api/category', config)
   return response;
+}
+export const getProductByCategory = async (categoryName) => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+  }
+  console.log(categoryName)
+  const response = await axios.get(`/api/category/${categoryName}`, config)
+  return response;
   }

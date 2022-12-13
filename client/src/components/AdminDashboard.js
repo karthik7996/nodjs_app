@@ -369,9 +369,10 @@ else {
                 </div>
               </div>
               <div className='col-md-4 mt-4'>
-                { p.bidder.length>0 ? p.bidder.map((b, i) => (
+                { p.bidder.length>0 ? p.bidder.reverse().map((b, i) => (
+                  i<5 &&
                     <div className='d-flex justify-content-between'>
-                      <div style={{width: "50px"}}>
+                      <div style={{width: "65px"}}>
                       <span className="mr-3 align-top h2">{i+1}</span>
                       <CgProfile className="text-black h1 float-right" />
                       </div>
@@ -399,8 +400,8 @@ else {
           <img src={require(`./uploads/${bidProduct.fileName}`)} className="card-img-top w-100" alt="" height="270px"/>
           <div className="card-body pb-2">
             <h5 className="card-title h1">{bidProduct.productName}</h5>
-            <p className="card-text text-muted"> Your Bid Amount: <span className='font-weight-bold pl-3'>Rs {bidProduct.bidAmount}</span></p>
-            <span className='mr-4 h3 text-muted align-middle'>Status</span><button type="button" class="btn btn-lg btn-outline-warning">pending</button>
+            <p className="card-text text-muted"> Your Bid Amount: <span className='font-weight-bold pl-3'>₹ {bidProduct.bidAmount}</span></p>
+            <span className='mr-4 h3 text-muted align-middle'>Status</span><button type="button" class="btn btn-lg btn-outline-warning" disabled>pending</button>
             <p className='pt-3'><Link to={`/singleproduct/${bidProduct.productId}`} className="btn btn-lg scale btn-outline-primary float-left">Change Bid</Link>
             <button type="button" class="btn btn-lg scale btn-outline-danger float-right">Cancel</button></p>
           </div>

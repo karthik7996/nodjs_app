@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Lovers+Quarrel&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import 'react-bootstrap-sidebar-menu/dist/sidebar-menu.scss';
+
+
 * {
     margin: 0;
     padding: 0;
@@ -447,6 +451,18 @@ font-size: 12px;
   border-image-slice: 30;
   border-image-repeat: stretch;  
 }
+pre{
+  display: block;
+  font-family: monospace;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  border-radius: 4px;
+}
 .fullHeight{
   height: 100vh;
   background: #1D1E20;
@@ -566,11 +582,52 @@ font-size: 12px;
   background: radial-gradient(105.07% 105.07% at 17.04% 0%, rgba(0, 186, 226, 0.88) 0.67%, rgba(0, 0, 0, 0) 100%), radial-gradient(97.83% 97.83% at 77.8% 100%, rgba(0, 77, 226, 0.88) 0.67%, rgba(0, 0,0,0)100%);
   border:rgba(0, 186, 226, 0.88)
 }
-.vertical-scrollable>.row {
+
+.sidenavbody {
+  font-family: "Lato", sans-serif;
+  transition: background-color .5s;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 9999999999999999;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav Navlink {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav Navlink:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
   position: absolute;
-  top: 120px;
-  bottom: 100px;
-  left: 180px;
-  width: 50%;
-  overflow-y: scroll;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav NavLink {font-size: 18px;}
 }

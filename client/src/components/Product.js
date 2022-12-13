@@ -11,6 +11,7 @@ const product = () => {
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
             <NavLink><p className="homeHeading-p pt-3" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
         </div>
+        
         <div className="row pl-5" >
         <ProductCard />
         </div>

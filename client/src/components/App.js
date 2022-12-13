@@ -11,7 +11,7 @@ import AdminUpdateProduct from "./AdminUpdateProduct";
 import Profile from "./Profile";
 import SingleProduct from "./SingleProduct";
 import Product from "./Product";
-
+import CategoryProduct from "./CategoryProduct"
 const App = () => ( 
   <BrowserRouter>
     <Header /> 
@@ -25,6 +25,7 @@ const App = () => (
         <Route path="/profile" element={<Profile />}/>
         <Route path="/products" element={<Product />}/>
         <Route path="/singleproduct/:productId" element={<SingleProduct/>}/>
+        <Route path="/category/:categoryName" element={<CategoryProduct/>}/>
         <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
         <Route path="*" element = {<NotFound/>} />
       </Routes>

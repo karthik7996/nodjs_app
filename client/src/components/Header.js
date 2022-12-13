@@ -77,7 +77,7 @@ const Header = ({navigate}) => {
   </>)}
     </>
   )
-  return <MainHeader id="header" className="header">{showNavigation()}</MainHeader>
+  return <MainHeader id="header" className="header" style={{position:"relative", zIndex:"20"}}>{showNavigation()}</MainHeader>
 }
 const MainHeader = styled.header` 
 `;

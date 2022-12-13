@@ -4,7 +4,9 @@ import HeaderCard from './HeaderCard'
 import {FaGreaterThan} from "react-icons/fa"
 import ProductCard from './ProductCard';
 import Footer from './Footer';
+import Navbar from './Sidebar';
 const Home = () => {
+
   return (
     <div>
         <div class="ticker-title" >
@@ -18,13 +20,14 @@ const Home = () => {
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
             <NavLink><p className="homeHeading-p pt-3" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
         </div>
+ <Navbar/>
         <div className='headerSection'>
-            <p className="headerSection-p">100% Safe And Free Auctions</p>
+            {/* <p className="headerSection-p">100% Safe And Free Auctions</p> */}
             <div className="allHeaderCard row">
-                <HeaderCard serial="1" heading="Register" info="Sign up on our site to start bidding."/>
+                <HeaderCard serial="1" heading="Register" info="Sign up on our site to start bidding." />
                 <HeaderCard serial="2" heading="Find" info="Find from more than 30,000 products."/>
                 <HeaderCard serial="3" heading="Bid" info="Start bidding, bid highest, contact seller"/>
-            </div>
+            </div> 
         <NavLink to="/signup">
             <button className='searchBtn'>Register to Start Bidding<span style={{marginRight: "20px"}}></span><FaGreaterThan /></button>
         </NavLink>
