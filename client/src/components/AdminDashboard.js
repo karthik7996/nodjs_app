@@ -12,7 +12,7 @@ import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
 //changes for verification
-import { acceptVerification, allVerifications } from "../api/auth";
+import { acceptVerification, allVerifications,deleteVerification } from "../api/auth";
 
 
 const AdminDashboard = () => {
@@ -608,6 +608,17 @@ const showProductModal = () => (
                           }}
                         >
                           Accept
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            deleteVerification(p._id).then(function (data) {
+                              setPendingVerification(data.data);
+                              showPendingVerifications();
+                            });
+                          }}
+                        >
+                          Reject
                         </button>
                       </td>
                     </tr>

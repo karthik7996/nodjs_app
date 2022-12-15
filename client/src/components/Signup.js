@@ -83,7 +83,7 @@ const handleCheck = (e) =>{
   }
 
   const showSignupForm = () => (
-    <section className="border-top pt-5" style={{background: "linear-gradient(90deg, #1D1E20 0%,  #053BC7 100%)"}}>
+    <section className="border-top pt-5 text-dark" style={{background: "linear-gradient(90deg, #1D1E20 0%,  #053BC7 100%)"}}>
         <div className="mask d-flex align-items-center h-100">
           <div className="container h-100 mb-5">
             <div className="row d-flex justify-content-center align-items-center h-100">

@@ -16,6 +16,7 @@ exports.createVerification = async (req, res) => {
 
     const verification = await verificationModel.create({
       user_id: req.user._id,
+      status: false,
       profileImage: {
         public_id: upload1.public_id,
         url: upload1.secure_url,
@@ -45,13 +46,24 @@ exports.allVerifications = async (req, res) => {
 
 exports.acceptVerification = async (req, res) => {
   let verification = await verificationModel.findOne({
-    user_id: req.params.userId,
+    user_id: req.params.userId
   });
   verification.status = true;
   await verification.save();
   let user = await User.findOne({ _id: req.params.userId });
   user.accStatus = true;
   await user.save();
+  let data = await verificationModel
+    .find({ status: false })
+    .populate("user_id");
+  res.status(201).json(data);
+};
+
+exports.deleteVerification = async (req, res) => {
+  console.log(req.params.id)
+  let updatedData = await verificationModel.findOneAndDelete({
+    _id: req.params.id
+  });
   let data = await verificationModel
     .find({ status: false })
     .populate("user_id");

@@ -77,3 +77,19 @@ export const acceptVerification = async (userId) => {
   );
   return response;
 };
+
+export const deleteVerification = async (verificationId) => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axios.get(
+    `/api/profile/delete/verification/${verificationId}`,
+    config
+  );
+  return response;
+};

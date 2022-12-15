@@ -23,4 +23,9 @@ router.post(
     authenticateJWT,
     verficationController.acceptVerification
   );
+  router.get(
+    "/delete/verification/:id",
+    authenticateJWT,
+    verficationController.deleteVerification
+  );
 module.exports = router;
