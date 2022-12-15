@@ -3,7 +3,16 @@ const {ObjectId} = mongoose.Schema;
 
 const ProductSchema = mongoose.Schema({
     userId: {type: ObjectId, required: true},
-    fileName: { type: String, required: true },
+    images: [
+        {
+          public_id: {
+            type: String,
+          },
+          url: {
+            type: String,
+          },
+        },]
+    ,
     productName: { type: String, required: true, trim: true},
     bidder:[{
         bidderId: ObjectId,

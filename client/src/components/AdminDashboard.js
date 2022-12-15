@@ -11,6 +11,9 @@ import {getUserBid} from '../api/bid'
 import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
+//changes for verification
+import { acceptVerification, allVerifications } from "../api/auth";
+
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -19,8 +22,12 @@ const AdminDashboard = () => {
   const [categories, setCategories] = useState('')
   const [products, setProduct] = useState('')
   const [bidProducts, setBidProducts] = useState('')
+  const [images, setImages] = useState([]);
   const [used, setUsed] = useState('new');
   const [alert, setAlert] = useState(null);
+  //changes for verification
+  const [showVeri, setShowVeri] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState([]);
 
   const showAlert = (messsage, type) =>{
     setAlert({
@@ -39,60 +46,100 @@ const AdminDashboard = () => {
   }
 
   const [productData, setProductData] = useState({
-    productImage: null,
     productName: '',
     productDescription: '',
     productPrice: '',
     productCategory: '',
-    productQuantity: '',
     year: 'New'
   })
 
 
 
-  const {productImage, productName, productDescription, productPrice, productCategory, year} = productData;
+  const {productName, productDescription, productPrice, productCategory, year} = productData;
 
   const handleProductImage = (e) => {
-    console.log(e.target.files[0])
-    setProductData({...productData, productImage: e.target.files[0]})
-  }
+    // setProductData({ ...productData, productImage: e.target.files[0] });
+    const imageMimeType = /image\/(png|jpg|jpeg|jfif|webp)/i;
+    const files = Array.from(e.target.files);
+    setImages([]);
+    files.forEach((file) => {
+      if (!file.type.match(imageMimeType)) {
+        alert("Image type is not valid");
+        e.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImages((old) => [...old, reader.result]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    console.log(images)
+  };
+
+  // const handleProductImage = (e) => {
+  //   console.log(e.target.files[0])
+  //   setProductData({...productData, productImage: e.target.files[0]})
+  // }
 
   const handleProductChange = (e) => {
     setProductData({...productData, [e.target.name]: e.target.value})
+    console.log(productData)
   }
 
   const handleProductSubmit = (e) => {
+    console.log("submitted");
     e.preventDefault();
-    if (productImage === null || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
+    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
       showAlert('Please fill all fields', "danger")
     } else {
       let formData = new FormData();
-      formData.append('productImage', productImage);
-      formData.append('productName', productName);
-      formData.append('productDescription', productDescription);
-      formData.append('productPrice', productPrice);
-      formData.append('productCategory', productCategory);
-      formData.append('year', year);
-      console.log([...formData])
-      createProduct(formData)
-      .then(response => {
-        setProductData({
-          productImage: null,
-          productName: '',
-          productDescription: '',
-          productPrice: '',
-          productCategory: '',
-          year: '',
+      let productImage = [];
+      console.log(images);
+      images.forEach((i) => {
+        productImage.push(i);
+      });
+
+      // formData.append("productName", productName);
+      // formData.append("productDescription", productDescription);
+      // formData.append("productPrice", productPrice);
+      // formData.append("productCategory", productCategory);
+      // formData.append("year", year);
+      console.log(formData);
+      createProduct({
+        productName,
+        productDescription,
+        productPrice,
+        productCategory,
+        productImage,
+        year}
+      )
+        .then((response) => {
+          setProductData({
+            productName: "",
+            productDescription: "",
+            productPrice: "",
+            productCategory: "",
+            year: "",
+          });
         })
-      })
       .catch(err => {
         showAlert(err.response.data.error, "danger")
       })      
     }
     console.log(productData)
   }
+  //changes for verification
+  let loadVerifications = () => {
+    allVerifications().then(function (data) {
+      console.log(data.data);
+      setPendingVerification(data.data);
 
-
+      setShowVeri(!showVeri);
+    });
+  };
   useEffect(() => {
     loadCategories()
   }, [loading])
@@ -198,7 +245,7 @@ const AdminDashboard = () => {
   }
 
   const showHeader = () => (
-    <div className="bg-light text-black pl-5 pt-3">
+    <div className="bg-dark text-light pl-5 pt-3">
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-6">
@@ -212,7 +259,7 @@ const AdminDashboard = () => {
   )
 
   const showActionBtns = () => (
-    <div className="bg-light my-2">
+    <div className="bg-dark my-2 pt-3 pb-3">
       <div className="container">
         <div className="row pb3">
           <div className="col-md-4 my-1">
@@ -228,6 +275,15 @@ const AdminDashboard = () => {
           <div className="col-md-4 my-1">
             <button className="btn btn-outline-success btn-block" onClick={setBid_Products}>
             <i class="fa-sharp fa-solid fa-arrow-up-right-from-square"></i>   {hideshow ? "Your Biding" : "Your Uploads"  }
+            </button>
+          </div>
+          
+          <div className="col-md-4 my-1">
+            <button
+              className="btn btn-outline-warning btn-block"
+              onClick={loadVerifications}
+            >
+              {showVeri ? "Products" : "Pending verifications"}
             </button>
           </div>
         </div>
@@ -278,82 +334,173 @@ else {
   return true
 }
 }
-  const showProductModal = () => (
-    <div className="modal fade" id="addProductModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
+const showProductModal = () => (
+  <div
+    className="modal fade"
+    id="addProductModal"
+    tabIndex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog" role="document">
+      <div className="modal-content">
         <form onSubmit={handleProductSubmit}>
           <div className="modal-header bg-warning text-white">
-            <h5 className="modal-title" id="exampleModalLabel">Add New Product</h5>
-            <button type="button" className="close text-white" data-dismiss="modal" aria-label="Close">
+            <h5 className="modal-title" id="exampleModalLabel">
+              Add New Product
+            </h5>
+            <button
+              type="button"
+              className="close text-white"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div className="modal-body">
+            <div className="form-group mb-3">
+              <label htmlFor="recipient-name" className="col-form-label">
+                Upload Image
+              </label>
+              <input
+                name="productImage"
+                onChange={handleProductImage}
+                class="form-control"
+                type="file"
+                id="formFile"
+                accept="image/*"
+                multiple
+              />
+            </div>
 
-              <div className="form-group mb-3">
-                <label htmlFor="recipient-name" className="col-form-label">Upload Image</label>
-                <input name='productImage'onChange={handleProductImage} class="form-control" type="file" id="formFile"/>
+            <div className="form-group">
+              <label htmlFor="recipient-name" className="col-form-label">
+                Product Name:
+              </label>
+              <input
+                type="text"
+                name="productName"
+                value={productName}
+                onChange={handleProductChange}
+                className="form-control"
+                id="recipient-name"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="recipient-name" className="col-form-label">
+                Product Minimum Bid:
+              </label>
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">
+                  ₹
+                </span>
+                <input
+                  name="productPrice"
+                  value={productPrice}
+                  onChange={handleProductChange}
+                  type="text"
+                  className="form-control"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
               </div>
-
-              <div className="form-group">
-                <label htmlFor="recipient-name" className="col-form-label">Product Name:</label>
-                <input type="text" name='productName' value={productName} onChange={handleProductChange} className="form-control" id="recipient-name" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="recipient-name" className="col-form-label">
+                Product Description:
+              </label>
+              <textarea
+                name="productDescription"
+                value={productDescription}
+                onChange={handleProductChange}
+                type="text"
+                className="form-control"
+                id="recipient-name"
+                rows="3"
+              ></textarea>
+            </div>
+            <div className="form-row" id="recipient-name">
+              <div className="form-group col-md-6">
+                <label htmlFor="recipient-name" className="col-form-label">
+                  Product Category:
+                </label>
+                <select
+                  name="productCategory"
+                  onChange={handleProductChange}
+                  className="custom-select mr-sm-2"
+                >
+                  <option value="" selected>
+                    Choose Category
+                  </option>
+                  {categories &&
+                    categories.map((c, i) => (
+                      <option key={i} value={c._id}>
+                        {c.name}
+                      </option>
+                    ))}
+                </select>
               </div>
-              <div className="form-group">
-                <label htmlFor="recipient-name" className="col-form-label">Product Minimum Bid:</label>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">₹</span>
-                  <input name='productPrice' value={productPrice} onChange={handleProductChange} type="text" className="form-control" aria-label="Username" aria-describedby="basic-addon1"/>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="recipient-name" className="col-form-label">Product Description:</label>
-                <textarea name='productDescription' value={productDescription} onChange={handleProductChange} type="text" className="form-control" id="recipient-name" rows = '3' ></textarea>
-              </div>
-              <div className="form-row" id="recipient-name">
-                <div className="form-group col-md-6">
-                  <label htmlFor="recipient-name" className="col-form-label">Product Category:</label>
-                  <select name='productCategory' onChange={handleProductChange} className="custom-select mr-sm-2">
-                    <option value='' selected>Choose Category</option>
-                     {
-                      categories && categories.map((c, i) => (
-                        <option key={i} value={c._id}>{c.name}</option>
-                      ))
-                     }
-                  </select>
-                </div>
-                <div className="form-group col-md-6">
-                <label htmlFor="recipient-name" className="col-form-label">Product Year:</label>
-                <select class="form-control" id= "usedAndNew"onChange={usedChange}>
-                  <option value="new" >New</option>
+              <div className="form-group col-md-6">
+                <label htmlFor="recipient-name" className="col-form-label">
+                  Product Year:
+                </label>
+                <select
+                  class="form-control"
+                  id="usedAndNew"
+                  onChange={usedChange}
+                >
+                  <option value="new">New</option>
                   <option value="old">Old</option>
                 </select>
-                { used == "old" &&
-                <input name='year' value={year} onChange={handleProductChange} type="number" min='1' className="form-control mt-3" id="recipient-name" placeholder='How many years old?'/>}
+                {used == "old" && (
+                  <input
+                    name="year"
+                    value={year}
+                    onChange={handleProductChange}
+                    type="number"
+                    min="1"
+                    className="form-control mt-3"
+                    id="recipient-name"
+                    placeholder="How many years old?"
+                  />
+                )}
               </div>
-              </div>
+            </div>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" className="btn btn-primary" >Add Product</button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+            >
+              Add Product
+            </button>
           </div>
         </form>
-        </div>
       </div>
     </div>
-  )
+  </div>
+);
+
 
   const showProducts = () => (
-    <div className="row">
+    <div className="row text-white bg-dark">
       <div className="col-md-12">
         <h2 className="text-center">Total {products.length} products</h2>
         <hr />
         { products && products.map((p, i) => (
-          <div className="card mb-3" key={i}>
+          <div className="card mb-3 bg-dark border" key={i}>
             <div className="row no-gutters">
               <div className="col-md-4">
-                <img src= {require(`./uploads/${p.fileName}`)} className="card-img" alt={p.productName} />
+              <img src= {p.images[0].url} className="card-img" alt={p.productName} />
               </div>
               <div className="col-md-4">
                 <div className="card-body">
@@ -393,11 +540,11 @@ else {
     </div>
   )
   const showBidProducts = ()=>(
-    <div className="container-fluid pl-5 pt-3 text-center ">
+    <div className="container-fluid pl-5 pt-3 text-center text-white">
       <div className='row text-center'>
       {bidProducts && bidProducts.map((bidProduct) =>(
         <div className="card text-left mr-5 " style={{width: "28rem"}}>
-          <img src={require(`./uploads/${bidProduct.fileName}`)} className="card-img-top w-100" alt="" height="270px"/>
+          <img src= {bidProduct.images[0].url} className="card-img-top w-100" alt={bidProduct.productName} height="270px"/>
           <div className="card-body pb-2">
             <h5 className="card-title h1">{bidProduct.productName}</h5>
             <p className="card-text text-muted"> Your Bid Amount: <span className='font-weight-bold pl-3'>₹ {bidProduct.bidAmount}</span></p>
@@ -410,6 +557,68 @@ else {
       </div>
     </div>
   )
+
+  const showPendingVerifications = () => (
+    <div className="row text-white">
+      <div className="col-md-12">
+        <h2 className="text-center fs-6" style={{ fontFamily: "Gilroy" }}>
+          {pendingVerification.length} Pending verification
+        </h2>
+        <hr />
+        <div className="container text-white">
+          {pendingVerification.length === 0 ? (
+            "Nothing Pending here !!"
+          ) : (
+            <table className="table text-white">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Aadhar Card</th>
+                  <th scope="col">Profile Image</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingVerification &&
+                  pendingVerification.map((p, i) => (
+                    <tr>
+                      <th scope="row">{i + 1}</th>
+                      <td>{p.user_id.name}</td>
+                      <td>
+                        <a href={p.aadhar.url} target="_blank">
+                          View Image
+                        </a>
+                      </td>
+                      <td>
+                        <a href={p.profileImage.url} target="_blank">
+                          View Image
+                        </a>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-success"
+                          onClick={() => {
+                            acceptVerification(p.user_id._id).then(function (
+                              data
+                            ) {
+                              setPendingVerification(data.data);
+                              showPendingVerifications();
+                            });
+                          }}
+                        >
+                          Accept
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  );
   return (
     <section>
      <Alert alert={alert}/>
@@ -417,8 +626,8 @@ else {
       {showActionBtns()}
       {showCategoryModal()}
       {showProductModal()}
-      {hideshow && showProducts()}
-      {!hideshow && showBidProducts()}
+      {showVeri ? showPendingVerifications() : hideshow && showProducts()}
+      {!showVeri && !hideshow && showBidProducts()}
     </section>
   )
 }

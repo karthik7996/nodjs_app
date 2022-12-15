@@ -62,8 +62,8 @@ const ProductCard = () => {
     //product card
     <div className="row ">
         { products && products.map((p, i) => (
-          <div style={{position:'relative'}} className='productCard'>
-          <img src= {require(`./uploads/${p.fileName}`)} className="card-img" alt={p.productName} />
+          <div style={{position:'relative'}} className='productCard border border-light'>
+          <img src= {p.images[0].url} className="card-img" alt={p.productName} />
             <div style={{padding: "0 10px"}}>
               <h3>{p.productName}</h3>
               {/* <p>Current Bid: <span className='currentBid'>Rs {p.productPrice}</span></p> */}

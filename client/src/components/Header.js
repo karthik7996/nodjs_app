@@ -31,7 +31,7 @@ const Header = ({navigate}) => {
   const showNavigation  = () => (
     <>
     <NavLink to="/" className="text-decoration-none">
-        <p className="logoName"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy<sub className="h6 font-weight-lighter" >Powered&nbsp;by&nbsp;sarvatmaninfotech</sub></p>
+        <p className="logoName"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy</p>
     </NavLink>
     <form>
         <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...'/>
@@ -54,10 +54,10 @@ const Header = ({navigate}) => {
       <p>
         <button className="btn btn-primary btn-lg" onClick={() => setToggle(toggle => !toggle)}>{  getLocalStorage("user").name}</button>
       </p> 
-      <div className="collapse" id="collapseTarget" >
+      <div className="collapse bg-white rounded text-dark" id="collapseTarget" style={{position: "absolute", top:"70px", right: "0"}}>
         <div  className="d-flex flex-column align-items-start">
-          <NavLink className="pt-2 pl-3 pb-3 scale" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em",color:"white", fontSize: "1.5em"}}/>Profile</NavLink>
-          <NavLink  className="pl-3 pb-3 scale" to="/user/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
+          <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Profile</NavLink>
+          <NavLink  className="pl-3 pb-3 scale text-dark" to="/user/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
           <button className='loginBtn searchBtn scale' onClick={handleLogout}>Logout</button>
         </div>
       </div> 
@@ -67,10 +67,10 @@ const Header = ({navigate}) => {
       <p>
         <button className="btn-primary btn-lg" onClick={() => setToggle(toggle => !toggle)}>{  getLocalStorage("user").name}</button>
       </p> 
-      <div className="collapse" id="collapseTarget" >
+      <div className="collapse bg-white rounded text-dark" id="collapseTarget" style={{position: "absolute", top:"70px", right: "0"}}>
           <div className="d-flex flex-column align-items-start">
-          <NavLink className="pt-2 pl-3 pb-3 scale" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em",color:"white", fontSize: "1.5em"}}/> Profile</NavLink>
-          <NavLink className="pl-3 pb-3 scale" to="/admin/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
+          <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em", fontSize: "1.5em"}}/> Profile</NavLink>
+          <NavLink className="pl-3 pb-3 scale text-dark" to="/admin/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
           <button className='loginBtn searchBtn scale' onClick={handleLogout}>Logout</button>
           </div>
       </div>

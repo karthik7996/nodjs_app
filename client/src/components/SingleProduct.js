@@ -5,6 +5,8 @@ import { createCategory, getCategories } from '../api/category'
 import { getSingleProduct } from '../api/product'
 import {placeBid} from '../api/bid'
 import { isAuthenticated} from '../helpers/auth';
+import Carousel from "react-material-ui-carousel";
+
 import Alert from './Alert';
 import isEmpty from 'validator/lib/isEmpty';
 const SingleProduct = () => {
@@ -96,29 +98,34 @@ console.log(productId)
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
             <NavLink><p className="homeHeading-p" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
         </div>
-        { p && <div className = "row singleproduct">
-    <div id="carouselExampleInterval" class="col-sm-12 col-md-8 carousel slide border border-white p-5 pr-0" data-ride="carousel">
-  <div className="carousel-inner">
-    <div className="carousel-item active" data-interval="2000" style={{height: "87vh", maxWidth: "100%"}}>
-      <img src={require(`./uploads/${p.fileName}`)} class="d-block w-100 rounded" alt={p.productName} style={{width:"100%", height: "100%"}}/>
-    </div>
-    <div class="carousel-item" data-interval="2000">
-      <img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80" class="d-block w-100 rounded" alt="..." />
-    </div>
-    <div class="carousel-item" data-interval="2000">
-      <img src="https://images.unsplash.com/photo-1626806787426-5910811b6325?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" class="d-block w-100 rounded" alt="..." />
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon"  aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
-        <div className='col-sm col-md-4 border border-white text-left pt-3'>
+        { p && <div className = "row singleproduct h-90 m-1">
+        <div className="carousel col col-md-8 p-3 border rounded" style={{ height: "100%", width: "50%" }}>
+              <Carousel className="d-flex justify-content-center align-items-center flex-column">
+                {p.images &&
+                  p.images.map((e, i) => (
+                    <div
+                      className="image-holder d-flex align-items-center justify-content-center"
+                      style={{
+                        height: "70vh",
+                        width: "100%",
+                        objectFit: "cover",
+                      }}
+                      key={e.url}
+                    >
+                      <img
+                        style={{
+                          height: "100%",
+                          widht: "100%",
+                          objectFit: "cover",
+                        }}
+                        src={e.url}
+                        alt={`${i} image`}
+                      />
+                    </div>
+                  ))}
+              </Carousel>
+            </div>
+        <div className='col-sm col-md-4 border rounded border-white text-left pt-3'>
           <p className='h1'>{p.productName}</p>
           {/* <p className='text-secondary pt-2'>Minimum bid<span className="ml-4 text-white font-weight-bold" >Rs. {p.productPrice}</span></p> */}
           <p className='border-bottom text-center pt-3 pb-3'>Details</p>

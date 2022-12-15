@@ -82,7 +82,7 @@ exports.readUserBid = async (req, res) => {
       const item = {
           productId: bidItem.productId,
           productName: product.productName,
-          fileName: product.fileName,
+          images: product.images,
           bidAmount: bidItem.bidAmount,
       }
           bidProducts.push(item);
