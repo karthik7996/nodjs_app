@@ -62,13 +62,13 @@ const ProductCard = () => {
     //product card
     <div className="row ">
         { products && products.map((p, i) => (
-          <div style={{position:'relative'}} className='productCard border border-light'>
+          <div style={{position:'relative'}} className='productCard border border-white border-top-0'>
           <img src= {p.images[0].url} className="card-img" alt={p.productName} />
             <div style={{padding: "0 10px"}}>
-              <h3>{p.productName}</h3>
+              <h3 className='mt-3'>{p.productName}</h3>
               {/* <p>Current Bid: <span className='currentBid'>Rs {p.productPrice}</span></p> */}
               {/* <p className='descP'>{p.productDescription}</p> */}
-              <p>{p.productCategory.name}</p>
+              <p className='mt-3'>{p.productCategory.name}</p>
             </div>
             <div style={{margin: "10px", position:'absolute', bottom:'5px'}}>
                 <button className="scale" onClick={()=>navigate(`/singleproduct/${p._id}`)}>Bid higher</button> 

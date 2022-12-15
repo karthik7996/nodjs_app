@@ -336,7 +336,7 @@ else {
 }
 const showProductModal = () => (
   <div
-    className="modal fade"
+    className="modal fade text-dark"
     id="addProductModal"
     tabIndex="-1"
     role="dialog"
@@ -517,7 +517,7 @@ const showProductModal = () => (
               </div>
               <div className='col-md-4 mt-4'>
                 { p.bidder.length>0 ? p.bidder.reverse().map((b, i) => (
-                  i<5 &&
+                  i<10 &&
                     <div className='d-flex justify-content-between'>
                       <div style={{width: "65px"}}>
                       <span className="mr-3 align-top h2">{i+1}</span>

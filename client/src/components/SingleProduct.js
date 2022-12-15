@@ -98,8 +98,8 @@ console.log(productId)
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
             <NavLink><p className="homeHeading-p" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
         </div>
-        { p && <div className = "row singleproduct h-90 m-1">
-        <div className="carousel col col-md-8 p-3 border rounded" style={{ height: "100%", width: "50%" }}>
+        { p && <div className = "row singleproduct h-90 m-1 border border-bottom-0">
+        <div className="carousel col col-md-8 p-3 border rounded border-bottom-0" style={{ height: "100%", width: "50%" }}>
               <Carousel className="d-flex justify-content-center align-items-center flex-column">
                 {p.images &&
                   p.images.map((e, i) => (
@@ -125,7 +125,7 @@ console.log(productId)
                   ))}
               </Carousel>
             </div>
-        <div className='col-sm col-md-4 border rounded border-white text-left pt-3'>
+        <div className='col-sm col-md-4 border rounded border-white text-left pt-3 border-bottom-0'>
           <p className='h1'>{p.productName}</p>
           {/* <p className='text-secondary pt-2'>Minimum bid<span className="ml-4 text-white font-weight-bold" >Rs. {p.productPrice}</span></p> */}
           <p className='border-bottom text-center pt-3 pb-3'>Details</p>
