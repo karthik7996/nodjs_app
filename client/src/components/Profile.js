@@ -105,6 +105,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { profileUpdate, verification } from "../api/auth";
 import isEmpty from "validator/lib/isEmpty";
+import validator from 'validator'
 import { getLocalStorage } from "../helpers/localStorage";
 import { setLocalStorage } from "../helpers/localStorage";
 import { BsArrowRightSquare } from "react-icons/bs";
@@ -135,10 +136,10 @@ const Profile = () => {
   const PostData = async (e) => {
     e.preventDefault();
     const { name, phoneNr, address, email, location } = user;
-    var str = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
-    if (isEmpty(name) || isEmpty(phoneNr) || isEmpty(location)) {
+    // var str = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+    if (isEmpty(name) || isEmpty(email) || isEmpty(location)) {
       alert("Please fill all required field");
-    } else if (phoneNr.match(str)) {
+    } else if (validator.isEmail(email)) {
       const _id = pre_user._id;
       const role = pre_user.role;
       const accStatus = pre_user.accStatus;
@@ -155,7 +156,6 @@ const Profile = () => {
   };
   let verifySubmitHandler = (e) => {
     e.preventDefault();
-    console.log("hello");
     if (cameraUrl && aadhar) {
       console.log(cameraUrl);
       console.log(aadhar);
@@ -203,8 +203,8 @@ const Profile = () => {
               </div>
               <div class="col-md-6 pt-5 border border-secondary rounded">
                 <p className="pb-3 font-weight-light h2">
-                  Upload your Government Id for verfication purpose were{" "}
-                  <span className="font-weight-bold">address</span> is reflected
+                  Upload your 
+                  <span className="font-weight-bold">Aadhar Card</span>
                 </p>
                 <div class="custom-file mb-5">
                   <input
@@ -272,7 +272,7 @@ const Profile = () => {
               </div>
               <div className="row mt-3">
                 <div className="col-md-12">
-                  <label className="labels mb-2 h4">Mobile Number**</label>
+                  <label className="labels mb-2 h4">Mobile Number</label>
                   <input
                     type="text"
                     className="form-control"
@@ -280,15 +280,8 @@ const Profile = () => {
                     name="phoneNr"
                     value={user.phoneNr}
                     onChange={handleChange}
-                    onClick={() =>
-                      (document.getElementById(
-                        "phoneNrValidation"
-                      ).style.display = "none")
-                    }
-                    required
                   />
                 </div>
-                <p id="phoneNrValidation">Not a valid phone number</p>
                 <div className="col-md-12 mt-2">
                   <label className="labels mb-2 mt-2 h4">Address</label>
                   <input
@@ -305,12 +298,19 @@ const Profile = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter email id"
+                    placeholder="Enter email id**"
                     name="email"
                     value={user.email}
                     onChange={handleChange}
+                    onClick={() =>
+                      (document.getElementById(
+                        "phoneNrValidation"
+                      ).style.display = "none")
+                    }
+                    required
                   />
                 </div>
+                <p id="phoneNrValidation">Not a valid Email</p>
               </div>
               <div className="row mt-3">
                 <div className="col-md-12">

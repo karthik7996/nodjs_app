@@ -43,19 +43,17 @@ const Home = () => {
         </section>
         <div className='sellWithUs'>
             {/* <img src="/images/layered.svg" alt="layered imgage"style={{width: "100%"}}/> */}
-            <h3 className='pt-5'>Sell With Us</h3>
-            <p>Lörem ipsum kontral ninat där andrafiering teravis. Bioska poligram. Dår kontradat liksom väliga, un oaktat dingar. Dosk niligen till prende, prenyn supravision. Loba renas liksom dedån i ankarbarn. 
-                Fahönyren nodände. Spegt semiska och nymåktigt. Anter spevåde fälingar: spedat räns. Muska ira seminade våtonat. Onoren eurobävning ser. 
-                Muska terasade gekåssa. Mining rev, och nenas, ekartad. Soska mar i kvasigisk. Har tev segt. Divisade autogt plus fydöhet presk. 
-                Prektiga relig biporade. Monebel gerade. Prekrogehet sovår farade gagedås. Snurrmästare bilanyl benat antest. Krorat euska suprakemi. 
-                Multina ontofiering, i ovände, och reana nefyfan. Stenonådat visogt. Popung antenar respektive div i realaskapet fävanat.
-            </p>
+            <h3 className='pt-5'>Advertise with us</h3>
+            <p className="mb-4">Promote your bussiness on Bidonbuy. Reach millions of customer on bid on buy.</p>
+            <p>Customers come to us site for seeling and buying goods across from wide range which including cars, homes, mobiles, furniture. Advertising with us is aunique opportunity to reach a huge global audience in a creative and compelling way. We present your brand's message in a bigger, bolder, and more beautiful way</p>
             <ul>
                 <li><span>✓</span>No Hidden Charge</li>
                 <li><span>✓</span>24 X 7 support</li>
                 <li><span>✓</span>Access to over 175,000 products</li>
             </ul>
+            <NavLink to="/signup">
             <button className='getStartedBtn sellHover'>Get Started</button>
+            </NavLink>
         </div>
         <section style={{padding: "20px"}}>
             <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>BidOnBuy Selects</h1>            

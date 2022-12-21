@@ -8,10 +8,10 @@ exports.signupController = async (req, res) => {
   const { name, email, phoneNr,password , location } = req.body;
 
   try {
-    const user = await User.findOne({  phoneNr });
+    const user = await User.findOne({  email });
     if (user) {
       return res.status(400).json({
-        error: 'This phone Number is already exist',
+        error: 'This email is already exist',
       });
     }
 
@@ -41,19 +41,19 @@ exports.signupController = async (req, res) => {
 
 exports.signinController = async (req, res) => {
   console.log(req.body);
-  const { phoneNr, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ phoneNr });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({
-        error: 'User with that phone Number does not exist. Please signup',
+        error: 'User with that email does not exist. Please signup',
       });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(400).json({
-        error: 'Phone Number and password do not match',
+        error: 'Email and password do not match',
       });
     }
 

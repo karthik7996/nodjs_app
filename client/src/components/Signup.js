@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import isEmpty from 'validator/lib/isEmpty';
 import equals from 'validator/lib/equals';
+import validator from 'validator'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 import {signup } from '../api/auth';
@@ -11,15 +12,15 @@ import { setAuthentication, isAuthenticated } from '../helpers/auth';
 const Signup = () => {
 
   let navigate = useNavigate();
-  let str = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/
+  // let str = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/
 const [check, setCheck] = useState(false);
 const handleCheck = (e) =>{
   setCheck(!check);
 }
   useEffect(() => {
-    if (isAuthenticated() && isAuthenticated().role === 1) {
+    if (isAuthenticated() && isAuthenticated().role === 'admin') {
       navigate('/admin/dashboard');
-    } else if (isAuthenticated() && isAuthenticated().role === 0) {
+    } else if (isAuthenticated() && isAuthenticated().role === 'user') {
       navigate('/user/dashboard');
     } else
     navigate('/signup');
@@ -46,11 +47,16 @@ const handleCheck = (e) =>{
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (isEmpty(name) || isEmpty(phoneNr) || isEmpty(location)|| isEmpty(password) || isEmpty(password2)|| check) {
+    if (isEmpty(name) || isEmpty(email) || isEmpty(location)|| isEmpty(password) || isEmpty(password2)|| check) {
       setFormData({ ...formData, error: 'Fill all required fields' })
-    } else if (!phoneNr.match(str)) {
-      setFormData({ ...formData, error: 'Invalid phone Number' })
-    } else if (!equals(password, password2)) {
+    } 
+    else if (!validator.isEmail(email)){
+       setFormData({ ...formData, error: 'Enter a valid Email address' })
+    }
+    // else if (!phoneNr.match(str)) {
+    //   setFormData({ ...formData, error: 'Invalid phone Number' })
+    // } 
+    else if (!equals(password, password2)) {
       setFormData({ ...formData, error: 'Passwords do not match' })
     } else {
       const { name, email, password } = formData;
@@ -100,12 +106,12 @@ const handleCheck = (e) =>{
                         <label className="form-label" htmlFor="form3Example1cg">Your Name**</label>
                       </div>
                       <div className="form-outline mb-2">
-                        <input name='email' value={email} onChange = {handleChange} type="email" id="form3Example3cg" placeholder='Enter Email' className="form-control form-control-lg" />
-                        <label className="form-label" htmlFor="form3Example3cg">Your Email</label>
+                        <input name='email' value={email} onChange = {handleChange} type="email" id="form3Example3cg" placeholder='Enter Email' className="form-control form-control-lg" required/>
+                        <label className="form-label" htmlFor="form3Example3cg">Your Email**</label>
                       </div>
                       <div className="form-outline mb-2">
-                      <input type="text" name='phoneNr' value={phoneNr} placeholder='Phone Number' onChange={handleChange} className="form-control form-control-lg" required/>
-                        <label className="form-label" htmlFor="form3Example3cg">Your Phone Number**</label>
+                      <input type="text" name='phoneNr' value={phoneNr} placeholder='Phone Number' onChange={handleChange} className="form-control form-control-lg" />
+                        <label className="form-label" htmlFor="form3Example3cg">Your Phone Number</label>
                       </div>
                       <div className="form-outline mb-2">
                         <input name='password' value={password} onChange = {handleChange} type="password" id="form3Example4cg" placeholder='Password' className="form-control form-control-lg" required/>

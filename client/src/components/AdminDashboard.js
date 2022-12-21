@@ -7,13 +7,12 @@ import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 import {MdDashboard} from "react-icons/md"
-import {getUserBid} from '../api/bid'
+import {getUserBid, acceptBid} from '../api/bid'
 import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
 //changes for verification
 import { acceptVerification, allVerifications,deleteVerification } from "../api/auth";
-
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -182,7 +181,7 @@ const AdminDashboard = () => {
     await getUserBid()
     .then((response) => {
       setBidProducts(response.data.bidProducts)
-      console.log('products', response.data.bidProducts)
+      console.log('your bided products', response.data.bidProducts)
     }
     )
     .catch((error) => {
@@ -490,8 +489,22 @@ const showProductModal = () => (
   </div>
 );
 
+const callAcceptBid= (e)=>{
+  const obj = Object.assign({}, e.target.value.split(","))
+  acceptBid(obj)
+  .then(response => {
+    showAlert(response.data.message, "success")
+  })
+  .catch(error => {
+    console.log(error)
+  })
 
-  const showProducts = () => (
+}
+const callRejectBid= (e)=>{
+  
+  console.log("rejectBid",e.target)
+}
+const showProducts = () => (
     <div className="row text-white bg-dark">
       <div className="col-md-12">
         <h2 className="text-center">Total {products.length} products</h2>
@@ -525,8 +538,8 @@ const showProductModal = () => (
                       </div>
                       <p className="ml-3 flex-grow-1 align-self-center h5">Bid Amount: ₹<strong>{b.bidAmount}</strong></p>
                       <div>
-                        <button type="button" class="btn btn-outline-success mr-3 scale">Accept</button>
-                        <button type="button" class="btn btn-outline-danger mr-3 scale">Reject</button>
+                        <button type="button" className="btn btn-outline-success mr-3 scale" onClick={callAcceptBid} value={[b.bidderId,p._id]}>Accept</button>
+                        <button type="button" className="btn btn-outline-danger mr-3 scale" onClick={callRejectBid} value={b.bidderId}>Reject</button>
                       </div>
                     </div>
                 ))
@@ -597,7 +610,7 @@ const showProductModal = () => (
                       </td>
                       <td>
                         <button
-                          className="btn btn-success"
+                          className="btn btn-success mr-5"
                           onClick={() => {
                             acceptVerification(p.user_id._id).then(function (
                               data

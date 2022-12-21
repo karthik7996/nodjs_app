@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
+    unique: true,
     match: /.+\@.+\..+/,
   },
   onBid:[{
@@ -26,7 +27,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique: true
 },
   password: {
     type: String,
@@ -35,6 +35,18 @@ const UserSchema = new mongoose.Schema({
   location: {type: String},
   products: [{type: ObjectId}],
   address: {type: String}, 
+  notification: [
+    { 
+      type: new mongoose.Schema(
+        {
+          sellerId: ObjectId,
+          productId: ObjectId,
+          productName: String,
+        },
+        {timestamps:true}
+      )
+    }
+  ],
 }, { timestamps: true });
 
 

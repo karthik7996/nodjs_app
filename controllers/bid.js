@@ -98,3 +98,29 @@ exports.readUserBid = async (req, res) => {
     console.log(error)
   }
 }
+
+exports.acceptBid = async (req, res) => {
+  const bidderId = req.body[0];
+  const productId = req.body[1];
+  const {_id} = req.user
+  const product = await Product.findOne({_id: productId})
+  let user = await User.findOne({_id:bidderId}).select({ notification: {$elemMatch: {productId: productId}}});
+  if(user.notification.length ===1){
+  return res.status(200).json({
+    message: 'Acceptance message already sent to this Bidder'
+  })
+  }
+  await User.findOneAndUpdate({_id: bidderId},{$push: {notification: {sellerId: _id, productId: productId,productName: product.productName}}})
+  res.status(200).json({
+    message: 'Bid acceptance message sent successfully to Bidder'
+})
+}
+exports.readNotification = async (req, res) => {
+  const {_id} = req.user;
+  const user = await User.findOne({_id})
+  const notification = user.notification;
+  console.log(user)
+  res.status(200).json({
+    notification
+  })
+}

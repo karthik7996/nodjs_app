@@ -12,7 +12,9 @@ import Profile from "./Profile";
 import SingleProduct from "./SingleProduct";
 import Product from "./Product";
 import CategoryProduct from "./CategoryProduct"
-const App = () => ( 
+import Notification from "./Notification"
+const App = () => {
+  return (
   <BrowserRouter>
     <Header /> 
     <main>
@@ -27,12 +29,13 @@ const App = () => (
         <Route path="/singleproduct/:productId" element={<SingleProduct/>}/>
         <Route path="/category/:categoryName" element={<CategoryProduct/>}/>
         <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
+        <Route path="/notification" element={<Notification/>}/>
         <Route path="*" element = {<NotFound/>} />
       </Routes>
     </main>
 
   </BrowserRouter> 
-);
-
+  );
+  }
 
 export default App;

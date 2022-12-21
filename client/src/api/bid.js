@@ -18,3 +18,26 @@ export const getUserBid = async () => {
   const response = await axios.get('/api/bid', config);
   return response;
 }
+
+export const acceptBid = async (data) => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }
+  const response = await axios.post('/api/bid',data, config);
+  return response;
+}
+export const getNotification = async () => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }
+  const response = await axios.get('/api/bid/notification', config);
+  return response;
+}

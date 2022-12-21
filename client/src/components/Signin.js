@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { showErrorMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 import isEmpty from 'validator/lib/isEmpty';
+import validator from 'validator'
 import { signin } from '../api/auth';
 import { setAuthentication, isAuthenticated } from '../helpers/auth';
 
@@ -10,7 +11,7 @@ import { setAuthentication, isAuthenticated } from '../helpers/auth';
 const Signin = () => {
   
   let navigate = useNavigate();
-  let str = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/
+  // let str = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/
 
   useEffect(() => {
     if (isAuthenticated() && isAuthenticated().role === "admin") {
@@ -22,13 +23,13 @@ const Signin = () => {
   }, [navigate]);
 
   const [formData, setFormData] = useState({
-    phoneNr: '',
+    email: '',
     password: '',
     error: '',
     loading: false,
   })
 
-  const { phoneNr, password, error, loading } = formData;
+  const { email, password, error, loading } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value, error: "" })
@@ -38,13 +39,18 @@ const Signin = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    if ( isEmpty(phoneNr) || isEmpty(password) ) {
+    if ( isEmpty(email) || isEmpty(password) ) {
       setFormData({ ...formData, error: 'All fields are required' })
-    } else if (!phoneNr.match(str)) {
-      setFormData({ ...formData, error: 'Invalid phone Number' })
-    } else {
-      const { phoneNr, password } = formData;
-      const data = {  phoneNr, password };
+    } 
+    else if (!validator.isEmail(email)){
+      setFormData({ ...formData, error: 'Enter a valid Email address' })
+   }
+    //else if (!phoneNr.match(str)) {
+    //   setFormData({ ...formData, error: 'Invalid phone Number' })
+    // } 
+    else {
+      const { email, password } = formData;
+      const data = {  email, password };
       setFormData({ ...formData, loading: true })
 console.log(data);
       signin(data)
@@ -75,7 +81,7 @@ console.log(data);
                     {loading && <div className="text-center pb-4">{showLoading()}</div>}
                     <form onSubmit={handleSubmit}>
                       <div className="form-outline mb-2">
-                        <input name='phoneNr' value={phoneNr} onChange = {handleChange} type="text" id="form3Example3cg" placeholder='Enter Phone Number' className="form-control form-control-lg " style={{margin: "13px auto"}}required autoFocus/>
+                        <input name='email' value={email} onChange = {handleChange} type="text" id="form3Example3cg" placeholder='Enter email address' className="form-control form-control-lg " style={{margin: "13px auto"}} required autoFocus/>
                       </div>
                       <div className="form-outline mb-2">
                         <input name='password' value={password} onChange = {handleChange} type="password" placeholder='Enter your Password' id="form3Example4cg" className="form-control form-control-lg " required/>

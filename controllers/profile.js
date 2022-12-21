@@ -6,11 +6,11 @@ exports.update = async (req, res) => {
 
   try {
 
-    const phoneNrExist = await User.findOne({phoneNr});
+    const phoneNrExist = await User.findOne({email});
     console.log(phoneNrExist)
-    if (phoneNrExist && phoneNrExist._id != _id) {
+    if (email && phoneNrExist._id != _id) {
       return res.status(400).json({
-        error: 'This Phone Number already exist',
+        error: 'This email already exist',
       });
     }
 

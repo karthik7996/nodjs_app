@@ -10,6 +10,9 @@ import {CgProfile} from "react-icons/cg"
 import { Collapse } from "bootstrap"
 import {MdDashboard} from "react-icons/md"
 import {GiSplitCross} from "react-icons/gi"
+import {IoMdNotificationsOutline} from "react-icons/io"
+
+
 const Header = ({navigate}) => {
 
   var [toggle, setToggle] = useState(false);
@@ -54,10 +57,11 @@ const Header = ({navigate}) => {
       <p>
         <button className="btn btn-primary btn-lg" onClick={() => setToggle(toggle => !toggle)}>{  getLocalStorage("user").name}</button>
       </p> 
-      <div className="collapse bg-white rounded text-dark" id="collapseTarget" style={{position: "absolute", top:"70px", right: "0"}}>
+      <div className="collapse bg-white rounded text-dark navDashboard" id="collapseTarget">
         <div  className="d-flex flex-column align-items-start">
           <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Profile</NavLink>
           <NavLink  className="pl-3 pb-3 scale text-dark" to="/user/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
+          <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/notification" style={{color:"white", fontSize: "1.5em"}}><IoMdNotificationsOutline className="shake" style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Notification</NavLink>
           <button className='loginBtn searchBtn scale' onClick={handleLogout}>Logout</button>
         </div>
       </div> 
@@ -67,10 +71,11 @@ const Header = ({navigate}) => {
       <p>
         <button className="btn-primary btn-lg" onClick={() => setToggle(toggle => !toggle)}>{  getLocalStorage("user").name}</button>
       </p> 
-      <div className="collapse bg-white rounded text-dark" id="collapseTarget" style={{position: "absolute", top:"70px", right: "0"}}>
+      <div className="collapse bg-white rounded text-dark navDashboard" id="collapseTarget" >
           <div className="d-flex flex-column align-items-start">
           <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em", fontSize: "1.5em"}}/> Profile</NavLink>
           <NavLink className="pl-3 pb-3 scale text-dark" to="/admin/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
+          <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/notification" style={{color:"white", fontSize: "1.5em"}}><IoMdNotificationsOutline className="shake" style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Notification</NavLink>
           <button className='loginBtn searchBtn scale' onClick={handleLogout}>Logout</button>
           </div>
       </div>
