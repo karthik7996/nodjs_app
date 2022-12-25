@@ -93,3 +93,44 @@ export const deleteVerification = async (verificationId) => {
   );
   return response;
 };
+
+export const forgotPassword = async (email) => {
+  console.log(email)
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axios.post(
+    `/api/auth/forgotpassword`, email, config);
+  return response;
+};
+export const verifytoken = async (token) => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axios.get(
+    `/api/auth/resetPassword/${token}`,
+    config
+  );
+  return response;
+};
+export const changePassword = async (token,data) => {
+  console.log(data)
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  const response = await axios.post(`/api/auth/${token}`, data, config);
+  return response;
+};
+

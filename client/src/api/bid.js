@@ -41,3 +41,23 @@ export const getNotification = async () => {
   const response = await axios.get('/api/bid/notification', config);
   return response;
 }
+export const withDraw = async(data) => {
+  const config = {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  const response = await axios.post(`/api/bid/withdraw`, data, config);
+  return response
+}
+export const reject = async(data) => {
+  const config = {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  const response = await axios.post(`/api/bid/reject`, data, config);
+  return response
+}

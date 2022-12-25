@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  resetPasswordtoken: String,
   name: {
     type: String,
     trim: true,

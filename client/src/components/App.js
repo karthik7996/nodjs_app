@@ -13,6 +13,8 @@ import SingleProduct from "./SingleProduct";
 import Product from "./Product";
 import CategoryProduct from "./CategoryProduct"
 import Notification from "./Notification"
+import Reset from "./Reset";
+import ForgotPassword from "./ForgotPassword";
 const App = () => {
   return (
   <BrowserRouter>
@@ -31,6 +33,8 @@ const App = () => {
         <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
         <Route path="/notification" element={<Notification/>}/>
         <Route path="*" element = {<NotFound/>} />
+        <Route path="/reset" element={<Reset/>}/>
+        <Route path="/reset/:token" element={<ForgotPassword/>}/>
       </Routes>
     </main>
 

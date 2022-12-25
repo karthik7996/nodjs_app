@@ -124,3 +124,33 @@ exports.readNotification = async (req, res) => {
     notification
   })
 }
+
+exports.withDraw = async(req, res) =>{
+  const {_id} = req.user;
+  const {productId} = req.body;
+  console.log(productId)
+  try {
+  await User.findOneAndUpdate(_id,{ "$pull": { "onBid": { productId: productId } }})
+  const product = await Product.findOneAndUpdate({_id:productId}, { "$pull": { "bidder": { bidderId: _id } }})
+  return res.status(200).json({
+    message: "Your withdrawal request for" + product.productName + "is completed"
+  })
+  }
+catch(err){
+  console.log(err)
+}
+}
+exports.reject = async(req, res) =>{
+  const {productId, userId} = req.body;
+  console.log(productId, userId)
+  try {
+  await User.findOneAndUpdate({_id: userId},{ "$pull": { "onBid": { productId: productId } }})
+  const product = await Product.findOneAndUpdate({_id:productId}, { "$pull": { "bidder": { bidderId: userId } }})
+  return res.status(200).json({
+    message: "Bid rejection request approved "
+  })
+  }
+catch(err){
+  console.log(err)
+}
+}

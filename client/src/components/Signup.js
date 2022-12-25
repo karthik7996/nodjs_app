@@ -57,7 +57,7 @@ const handleCheck = (e) =>{
     //   setFormData({ ...formData, error: 'Invalid phone Number' })
     // } 
     else if (!equals(password, password2)) {
-      setFormData({ ...formData, error: 'Passwords do not match' })
+      setFormData({ ...formData, error: 'Passwords does not match' })
     } else {
       const { name, email, password } = formData;
       const data = { name, email, phoneNr, password, location};

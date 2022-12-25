@@ -87,6 +87,9 @@ console.log(data);
                         <input name='password' value={password} onChange = {handleChange} type="password" placeholder='Enter your Password' id="form3Example4cg" className="form-control form-control-lg " required/>
                         {/* <label className="form-label" htmlFor="form3Example4cg">Password</label> */}
                       </div>
+                      <div className='font-weight-bold  text-right mb-1'> 
+                        <Link to="/reset" className='text-decoration-none'>Forgot your password?</Link>
+                      </div>
                       <div className="d-flex justify-content-center">
                         <button type="submit" className="btn btn-block button glow" style={{margin: "10px 0px"}}><span className='font-weight-bold text-white'>Login</span></button>
                       </div>

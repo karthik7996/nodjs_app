@@ -7,7 +7,7 @@ import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 import {MdDashboard} from "react-icons/md"
-import {getUserBid, acceptBid} from '../api/bid'
+import {getUserBid, acceptBid, withDraw, reject} from '../api/bid'
 import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
@@ -504,6 +504,19 @@ const callRejectBid= (e)=>{
   
   console.log("rejectBid",e.target)
 }
+
+const withDrawMyBid = async(productId) =>{
+  await withDraw({productId:productId})
+  .then((response) => {
+    showAlert(response.data.message, "success")
+  }
+  )
+  .catch((error) => {
+    console.log('loadProducts error', error)
+  }
+  )
+}
+
 const showProducts = () => (
     <div className="row text-white bg-dark">
       <div className="col-md-12">
@@ -559,11 +572,10 @@ const showProducts = () => (
         <div className="card text-left mr-5 " style={{width: "28rem"}}>
           <img src= {bidProduct.images[0].url} className="card-img-top w-100" alt={bidProduct.productName} height="270px"/>
           <div className="card-body pb-2">
-            <h5 className="card-title h1">{bidProduct.productName}</h5>
+            <h5 className="card-title h1 text-dark">{bidProduct.productName}</h5>
             <p className="card-text text-muted"> Your Bid Amount: <span className='font-weight-bold pl-3'>₹ {bidProduct.bidAmount}</span></p>
-            <span className='mr-4 h3 text-muted align-middle'>Status</span><button type="button" class="btn btn-lg btn-outline-warning" disabled>pending</button>
             <p className='pt-3'><Link to={`/singleproduct/${bidProduct.productId}`} className="btn btn-lg scale btn-outline-primary float-left">Change Bid</Link>
-            <button type="button" class="btn btn-lg scale btn-outline-danger float-right">Cancel</button></p>
+            <button type="button" class="btn btn-lg scale btn-outline-danger float-right" onClick={()=>withDrawMyBid(bidProduct.productId)}>Withdraw</button></p>
           </div>
         </div>
         ))}
