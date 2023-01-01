@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useEffect, useState ,createContext, useReducer  } from "react";
 import { BrowserRouter, Routes , Route} from "react-router-dom";
 import Header from "./Header";
 import Home from "./Home";
@@ -15,8 +15,24 @@ import CategoryProduct from "./CategoryProduct"
 import Notification from "./Notification"
 import Reset from "./Reset";
 import ForgotPassword from "./ForgotPassword";
+import Chat from "./Chat";
+//socket.io configuration
+import { io } from "socket.io-client";
+import {initialState, reducer} from "../helpers/productReducer"
+
+export const ProductContext = createContext();
+
 const App = () => {
+
+  const [Socket, setSocket] = useState(null);
+  useEffect(() => {
+    const socket = io("http://localhost:5000");
+    setSocket(socket);
+  }, []);
+  const [state, dispatch] = useReducer(reducer, initialState)
+
   return (
+    <ProductContext.Provider value={{ state, dispatch}}>
   <BrowserRouter>
     <Header /> 
     <main>
@@ -35,10 +51,14 @@ const App = () => {
         <Route path="*" element = {<NotFound/>} />
         <Route path="/reset" element={<Reset/>}/>
         <Route path="/reset/:token" element={<ForgotPassword/>}/>
+        <Route path="/chat/:id" element={<Chat socket={Socket} />} />
+
       </Routes>
     </main>
 
   </BrowserRouter> 
+  </ProductContext.Provider>
+
   );
   }
 

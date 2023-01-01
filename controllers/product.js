@@ -5,7 +5,7 @@ const cloudinary = require("cloudinary");
 exports.create = async (req, res) => {
   try {
     const { _id } = req.user;
-console.log(req.body)
+    console.log(req.body)
     const user = await User.findOne({ _id });
     if (!user.accStatus) {
       return res.status(400).json({
@@ -38,8 +38,10 @@ console.log(req.body)
     const {
       productName,
       productDescription,
-      productPrice,
-      productCategory,
+      state,
+      city,
+      mainCategory,
+      subCategory,
       year,
     } = req.body;
 
@@ -49,8 +51,10 @@ console.log(req.body)
     product.images = imagesLink;
     product.productName = productName;
     product.productDescription = productDescription;
-    product.productPrice = productPrice;
-    product.productCategory = productCategory;
+    product.state = state;
+    product.city = city;
+    product.mainCategory = mainCategory;
+    product.subCategory = subCategory;
     product.year = year;
     await product.save().then((response) => {
       User.findOneAndUpdate(
@@ -119,7 +123,7 @@ console.log(req.body)
 exports.readAll = async (req, res) => {
 
   try {
-    let products = await Product.find({}).populate('productCategory', 'name')
+    let products = await Product.find({})
     res.status(200).json(
       products
     )
@@ -133,7 +137,7 @@ exports.readSingle = async (req, res) => {
   const { id } = req.params
   console.log(id)
   try {
-    let product = await Product.findOne({_id: id}).populate('productCategory', 'name')
+    let product = await Product.findOne({_id: id})
     console.log(product)
     res.status(200).json(
       product
@@ -148,7 +152,7 @@ exports.readSingle = async (req, res) => {
 exports.readCurrentUserProduct = async (req, res) => {
   try {
     const {_id} = req.user
-    let products = await Product.find({userId: _id}).populate('productCategory', 'name')
+    let products = await Product.find({userId: _id})
     res.status(200).json(
       products
     )
@@ -156,8 +160,9 @@ exports.readCurrentUserProduct = async (req, res) => {
   catch (error) {
     console.log(error)
   }
-
+ 
 }
+
 
 
 exports.delete = async (req, res) => {
@@ -188,7 +193,7 @@ exports.delete = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params
-  const { productName, productDescription, productPrice, productCategory, year } = req.body
+  const { productName, productDescription, productPrice, mainCategory, subCategory, year } = req.body
 
   try {
     let product = await Product
@@ -198,7 +203,8 @@ exports.update = async (req, res) => {
         response.productName = productName
         response.productDescription = productDescription
         response.productPrice = productPrice
-        response.productCategory = productCategory
+        response.mainCategory = mainCategory
+        response.subCategory = subCategory
         response.year = year
         response.save()
         res.status(200).json({

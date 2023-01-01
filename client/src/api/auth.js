@@ -133,4 +133,20 @@ export const changePassword = async (token,data) => {
   const response = await axios.post(`/api/auth/${token}`, data, config);
   return response;
 };
+//for chat purposes
+export const getLoggedInUser = async (id) => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
 
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axios.post(
+    "/api/profile/get/loggedin/user",
+    { id },
+    config
+  );
+  return response;
+};

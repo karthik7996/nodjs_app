@@ -28,4 +28,10 @@ router.post(
     authenticateJWT,
     verficationController.deleteVerification
   );
+
+  router.post(
+    "/get/loggedin/user",
+    authenticateJWT,
+    profileController.getLoggedInUser
+  );
 module.exports = router;

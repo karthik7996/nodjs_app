@@ -27,3 +27,10 @@ exports.update = async (req, res) => {
     });
   }
 }
+
+
+exports.getLoggedInUser = async (req, res) => {
+  const user = await User.findOne({ _id: req.user });
+
+  return res.status(201).json(user);
+};

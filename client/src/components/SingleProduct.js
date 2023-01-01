@@ -6,7 +6,8 @@ import { getSingleProduct } from '../api/product'
 import {placeBid} from '../api/bid'
 import { isAuthenticated} from '../helpers/auth';
 import Carousel from "react-material-ui-carousel";
-
+import { createMessage } from "../api/message";
+import { getLoggedInUser } from "../api/auth";
 import Alert from './Alert';
 import isEmpty from 'validator/lib/isEmpty';
 const SingleProduct = () => {
@@ -29,8 +30,21 @@ console.log(productId)
   const [loading, setLoading] = useState(false);
   const [p, setProduct] = useState('')
   const [categories, setCategories] = useState('')
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  const chatHandler = (reciever) => {
+    createMessage(reciever, loggedInUser && loggedInUser._id).then(function (
+      message
+    ) {
+      console.log(message);
+    });
+  };
+
   useEffect(() => {
     loadProduct()
+    getLoggedInUser().then(function (user) {
+      setLoggedInUser(user.data);
+    });
   }, [loading])
 
   const loadProduct = async () => {
@@ -128,16 +142,14 @@ console.log(productId)
         <div className='col-sm col-md-4 border rounded border-white text-left pt-3 border-bottom-0'>
           <p className='h1'>{p.productName}</p>
           {/* <p className='text-secondary pt-2'>Minimum bid<span className="ml-4 text-white font-weight-bold" >Rs. {p.productPrice}</span></p> */}
-          <p className='border-bottom text-center pt-3 pb-3'>Details</p>
           <hr />
-          <p>{p.productDescription}</p>
-          <div className="d-flex justify-content-around text-secondary pt-5">
+          <div className="d-flex justify-content-around text-secondary pt-2">
               <p>Category</p> 
               <p>Location</p>
               <p>Year old</p>
           </div>
           <div className="d-flex justify-content-around">
-              <p>{p.productCategory.name}</p> 
+              <p>{p.subCategory}</p> 
               <p>Delhi</p>
               <p>{p.year}</p>
           </div>
@@ -146,7 +158,25 @@ console.log(productId)
           <p className='h1 font-weight-bold'>Rs {p.productPrice}</p> */}
           <div className='text-center pt-5 pb-5'>
             <button className='btn btn-primary btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3' data-toggle='modal' data-target='#bidProduct' >Place a bid</button>
+            {loggedInUser && loggedInUser._id == p.userId ? (
+                  ""
+                ) : (
+                  <button
+                    onClick={() => {
+                      chatHandler(p.userId);
+                      navigate(`/chat/${p.userId}`);
+                    }}
+                    className="btn mt-3 btn-warning btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3"
+                    data-toggle="modal"
+                    data-target="#bidProduct"
+                  >
+                    Chat
+                  </button>
+                )}
           </div>
+          <p className='border-bottom text-center pt-3 pb-3'>Details</p>
+          <p>{p.productDescription}</p>
+
         </div>
     </div>
   }
@@ -171,6 +201,7 @@ console.log(productId)
       <div class="modal-footer">
         <button type="button" class="btn btn-lg btn-outline-secondary" data-dismiss="modal" >Close</button>
         <button class="btn btn-lg btn-outline-primary" onClick={bid} data-dismiss="modal">Place Bid</button>
+       
       </div>
     </div>
   </div>

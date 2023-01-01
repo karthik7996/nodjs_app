@@ -11,6 +11,4 @@ router.get('/:id', productController.readSingle)
 router.delete('/:id', authenticateJWT, productController.delete);
 router.put('/:productId', authenticateJWT, productController.update);
 
-
-
 module.exports = router;

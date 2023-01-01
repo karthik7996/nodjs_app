@@ -22,13 +22,14 @@ const ProductCard = () => {
     productName: '',
     productDescription: '',
     productPrice: '',
-    productCategory: '',
+    mainCategory: '',
+    subCategory: '',
     productQuantity: '',
   })
 
 
 
-  const {productImage, productName, productDescription, productPrice, productCategory, year} = productData;
+  const {productImage, productName, productDescription, productPrice, mainCategory,subCategory, year} = productData;
 
   const handleProductImage = (e) => {
     console.log(e.target.files[0])
@@ -57,8 +58,6 @@ const ProductCard = () => {
 
   const showProducts = () => (
     
-
-
     //product card
     <div className="row ">
         { products && products.map((p, i) => (
@@ -68,7 +67,7 @@ const ProductCard = () => {
               <h3 className='mt-3'>{p.productName}</h3>
               {/* <p>Current Bid: <span className='currentBid'>Rs {p.productPrice}</span></p> */}
               {/* <p className='descP'>{p.productDescription}</p> */}
-              <p className='mt-3'>{p.productCategory.name}</p>
+              <p className='mt-3'>{p.subCategory}</p>
             </div>
             <div style={{margin: "10px", position:'absolute', bottom:'5px'}}>
                 <button className="scale" onClick={()=>navigate(`/singleproduct/${p._id}`)}>Bid higher</button> 

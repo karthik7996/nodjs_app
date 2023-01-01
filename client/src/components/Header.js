@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {NavLink} from 'react-router-dom'
 import {getLocalStorage} from "../helpers/localStorage"
 import { isAuthenticated, logout } from '../helpers/auth';
@@ -11,12 +11,13 @@ import { Collapse } from "bootstrap"
 import {MdDashboard} from "react-icons/md"
 import {GiSplitCross} from "react-icons/gi"
 import {IoMdNotificationsOutline} from "react-icons/io"
-
+import { searchAndRefine } from "../api/product";
+import { ProductContext } from './App';
 
 const Header = ({navigate}) => {
-
+  const {state, dispatch} = useContext(ProductContext);
   var [toggle, setToggle] = useState(false);
-    
+  var [search, setSearch] = useState("");
   useEffect(() => {
     if(isAuthenticated()){
       console.log(isAuthenticated())
@@ -25,7 +26,24 @@ const Header = ({navigate}) => {
       toggle ? bsCollapse.show() : bsCollapse.hide()
     }
   })
-
+  // const searchProdct=(e)=>{
+  //   e.preventDefault()
+  //   searchAndRefine(search)
+  //   .then(async(response) => {
+  //   //  await dispatch({type:"USER", payload:response.data})
+  //     // navigate("/products/")
+  //     console.log("search,",state)
+  //   }
+  //   )
+  //   .catch((error) => {
+  //     console.log('loadproduct error', error)
+  //   }
+  //   )
+  // }
+  const searchProdct=(e)=>{
+    e.preventDefault()
+    navigate(`/products?search=${search}`)
+  }
   const handleLogout = () => {
     logout(() => {
       navigate('/signin')
@@ -37,8 +55,8 @@ const Header = ({navigate}) => {
         <p className="logoName"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy</p>
     </NavLink>
     <form>
-        <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...'/>
-        <button className='searchBtn scale'><BsSearch /></button>
+        <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...' onChange={(e)=>setSearch(e.target.value)}/>
+        <button className='searchBtn scale' onClick={searchProdct}><BsSearch /></button>
       </form>
     {!isAuthenticated() && (
       <div>

@@ -18,9 +18,12 @@ const ProductSchema = mongoose.Schema({
         bidderId: ObjectId,
         bidAmount: Number,
     }],
-    productPrice: { type: Number, required: true },
+    // productPrice: { type: Number, required: true },
     productDescription: { type: String, required: true, trim: true},
-    productCategory: { type: ObjectId, ref:'Category', required: true },
+    state: { type: String, required: true },
+    city: { type: String, required: true },
+    mainCategory: { type: String, required: true },
+    subCategory: {type: String, require: true},
     year: { type: String, required: true }
 }, { timestamps: true });
 

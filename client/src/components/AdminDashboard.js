@@ -11,6 +11,9 @@ import {getUserBid, acceptBid, withDraw, reject} from '../api/bid'
 import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
+import {CategoryData} from "../helpers/categoryData"
+import {LocationData} from "../helpers/StateAndCity"
+
 //changes for verification
 import { acceptVerification, allVerifications,deleteVerification } from "../api/auth";
 
@@ -24,9 +27,14 @@ const AdminDashboard = () => {
   const [images, setImages] = useState([]);
   const [used, setUsed] = useState('new');
   const [alert, setAlert] = useState(null);
+  const [mainCategory, setMainCategory] = useState("")
+  const [disSubCategory, setSubCategory] = useState([])
+  const [state, setState] = useState("");
+  const [cityArr, setCityArr] = useState([])
+  const [city, setCity] = useState("")
   //changes for verification
   const [showVeri, setShowVeri] = useState(false);
-  const [pendingVerification, setPendingVerification] = useState([]);
+  const [pendingVerification, setPendingVerification] = useState();
 
   const showAlert = (messsage, type) =>{
     setAlert({
@@ -38,8 +46,6 @@ const AdminDashboard = () => {
     }, 2000)
   }
 
-
-
   function usedChange(e){
    setUsed(document.getElementById("usedAndNew").value)
   }
@@ -48,13 +54,33 @@ const AdminDashboard = () => {
     productName: '',
     productDescription: '',
     productPrice: '',
-    productCategory: '',
+    mainCategory: '',
+    subCategory: '',
     year: 'New'
   })
 
+  const handleMajorCategoryChange=(index) =>{
+    if (index.target.value == ""){
+      setMainCategory("")
+      setSubCategory([])
+    }
+    else{
+      setMainCategory(CategoryData[index.target.value].title)
+      setSubCategory(CategoryData[index.target.value].subNav)
+    }
+  }
+  const handleStateChange=(index) =>{
+    if (index.target.value == ""){
+      setState("")
+      setCityArr([])
+    }
+    else{
+    setState(LocationData[index.target.value].state)
+    setCityArr(LocationData[index.target.value].districts)
+    }
+  }
 
-
-  const {productName, productDescription, productPrice, productCategory, year} = productData;
+  const {productName, productDescription, productPrice, subCategory, year} = productData;
 
   const handleProductImage = (e) => {
     // setProductData({ ...productData, productImage: e.target.files[0] });
@@ -91,7 +117,7 @@ const AdminDashboard = () => {
   const handleProductSubmit = (e) => {
     console.log("submitted");
     e.preventDefault();
-    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
+    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(mainCategory) || isEmpty(subCategory) || isEmpty(year) || isEmpty(state) || isEmpty(city)){
       showAlert('Please fill all fields', "danger")
     } else {
       let formData = new FormData();
@@ -110,8 +136,10 @@ const AdminDashboard = () => {
       createProduct({
         productName,
         productDescription,
-        productPrice,
-        productCategory,
+        state,
+        city,
+        mainCategory,
+        subCategory,
         productImage,
         year}
       )
@@ -120,8 +148,8 @@ const AdminDashboard = () => {
             productName: "",
             productDescription: "",
             productPrice: "",
-            productCategory: "",
-            year: "",
+            subCategory: "",
+            year: "New",
           });
         })
       .catch(err => {
@@ -261,11 +289,11 @@ const AdminDashboard = () => {
     <div className="bg-dark my-2 pt-3 pb-3">
       <div className="container">
         <div className="row pb3">
-          <div className="col-md-4 my-1">
+          {/* <div className="col-md-4 my-1">
             <button className="btn btn-outline-secondary btn-block" data-toggle='modal' data-target='#addCategoryModal'>
               <i className="fas fa-plus-circle"></i> Create Category
             </button>
-          </div>
+          </div> */}
           <div className="col-md-4 my-1">
             <button className="btn btn-outline-warning btn-block" data-toggle='modal' data-target='#addProductModal' >
               <i className="fas fa-plus-circle"></i> Add Product
@@ -290,49 +318,39 @@ const AdminDashboard = () => {
     </div>
   )
 
-  const showCategoryModal = () => (
-    <div className="modal fade" id="addCategoryModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-        <form onSubmit={handleCategorySubmit}>
+  // const showCategoryModal = () => (
+  //   <div className="modal fade" id="addCategoryModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  //     <div className="modal-dialog" role="document">
+  //       <div className="modal-content">
+  //       <form onSubmit={handleCategorySubmit}>
 
-          <div className="modal-header bg-info text-white">
-            <h5 className="modal-title" id="exampleModalLabel">Add New Category</h5>
-            <button type="button" className="close text-white" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-              <div className="form-group">
-                <label htmlFor="recipient-name" className="col-form-label" >Category Name:</label>
-                <input type="text" className="form-control" id="recipient-name" 
-                name='category' 
-                value={category} 
-                onChange={handleCategoryChange} />
-              </div>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" className="btn btn-primary">Add Category</button>
-          </div>
+  //         <div className="modal-header bg-info text-white">
+  //           <h5 className="modal-title" id="exampleModalLabel">Add New Category</h5>
+  //           <button type="button" className="close text-white" data-dismiss="modal" aria-label="Close">
+  //             <span aria-hidden="true">&times;</span>
+  //           </button>
+  //         </div>
+  //         <div className="modal-body">
+  //             <div className="form-group">
+  //               <label htmlFor="recipient-name" className="col-form-label" >Category Name:</label>
+  //               <input type="text" className="form-control" id="recipient-name" 
+  //               name='category' 
+  //               value={category} 
+  //               onChange={handleCategoryChange} />
+  //             </div>
+  //         </div>
+  //         <div className="modal-footer">
+  //           <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+  //           <button type="submit" className="btn btn-primary">Add Category</button>
+  //         </div>
 
-        </form>
-        </div>
-      </div> 
+  //       </form>
+  //       </div>
+  //     </div> 
       
-    </div>
-  )
-let accStatus = getLocalStorage("user").accStatus
-function accStatusCheck(){
-  console.log("hey")
-  if (!accStatus){
-    showAlert('Please verify from profile section before you upload any product', "danger")
-    return <div></div>
-}
-else {
-  return true
-}
-}
+  //   </div>
+  // )
+
 const showProductModal = () => (
   <div
     className="modal fade text-dark"
@@ -387,11 +405,11 @@ const showProductModal = () => (
                 id="recipient-name"
               />
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="recipient-name" className="col-form-label">
                 Product Minimum Bid:
               </label>
-              <div class="input-group mb-3">
+               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">
                   ₹
                 </span>
@@ -404,7 +422,34 @@ const showProductModal = () => (
                   aria-label="Username"
                   aria-describedby="basic-addon1"
                 />
-              </div>
+              </div> 
+            </div> */}
+            <div className="form-group">
+            <label htmlFor="recipient-name" className="col-form-label" style={{display: "block"}}>
+            CONFIRM YOUR LOCATION :
+              </label>
+            <label className='mt-2'>State</label>
+            <select className="custom-select mr-sm-2 " onChange={handleStateChange}>
+              <option value="" selected>Choose State</option>
+              { LocationData.map((state,index)=>{
+                return(
+                <option key={index} value={index}>{state.state}</option>
+                )
+              })
+              }
+            </select>
+            {state && 
+            <><label className='mt-3'>City</label><select className="custom-select mr-sm-2 " onChange={(e)=> setCity(e.target.value)}>
+                <option value="">Choose City</option>
+                { cityArr.length>0 && cityArr.map((city,index)=>{
+                    return (
+                      <option key={index} value={city}>{city}</option>
+                    )
+                })
+                }
+            </select>
+            </>
+            }
             </div>
             <div className="form-group">
               <label htmlFor="recipient-name" className="col-form-label">
@@ -425,7 +470,7 @@ const showProductModal = () => (
                 <label htmlFor="recipient-name" className="col-form-label">
                   Product Category:
                 </label>
-                <select
+                {/* <select
                   name="productCategory"
                   onChange={handleProductChange}
                   className="custom-select mr-sm-2"
@@ -439,7 +484,20 @@ const showProductModal = () => (
                         {c.name}
                       </option>
                     ))}
+                </select> */}
+                <select name="productCategory" className="custom-select mr-sm-2" onChange={handleMajorCategoryChange}>
+                <option  value="" selected>Choose Category</option>
+                {CategoryData && CategoryData.map((category,index)=>{
+                  return( <option value={index}>{category.title}</option>)
+                })}
                 </select>
+                {disSubCategory.length>0 &&  <select name="subCategory" className="custom-select mr-sm-2 mt-3" onChange={handleProductChange}>
+                <option value="" selected>Choose Sub Category</option>
+                {disSubCategory.map((subCategory,index)=>{
+                  return( <option key={index} value={subCategory.title}>{subCategory.title}</option>)
+                })} 
+                </select>
+                }
               </div>
               <div className="form-group col-md-6">
                 <label htmlFor="recipient-name" className="col-form-label">
@@ -449,7 +507,7 @@ const showProductModal = () => (
                   class="form-control"
                   id="usedAndNew"
                   onChange={usedChange}
-                >
+                > 
                   <option value="new">New</option>
                   <option value="old">Old</option>
                 </select>
@@ -532,7 +590,7 @@ const showProducts = () => (
                 <div className="card-body">
                   <h5 className="card-title">{p.productName}</h5>
                   <p className="card-text">{p.productDescription}</p>
-                  <p className="card-text"><small className="text-muted">Category: {p.productCategory.name}</small></p>
+                  <p className="card-text"><small className="text-muted">Category: {p.subCategory}</small></p>
                   <p className="card-text"><small className="text-muted">year: {p.year}</small></p>
                   {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}
                   <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
@@ -660,7 +718,7 @@ const showProducts = () => (
      <Alert alert={alert}/>
       {showHeader()}
       {showActionBtns()}
-      {showCategoryModal()}
+      {/* {showCategoryModal()} */}
       {showProductModal()}
       {showVeri ? showPendingVerifications() : hideshow && showProducts()}
       {!showVeri && !hideshow && showBidProducts()}
