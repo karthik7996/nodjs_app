@@ -46,25 +46,28 @@ const AdminDashboard = () => {
     }, 2000)
   }
 
-  function usedChange(e){
-   setUsed(document.getElementById("usedAndNew").value)
-  }
+
 
   const [productData, setProductData] = useState({
     productName: '',
     productDescription: '',
     productPrice: '',
-    mainCategory: '',
     subCategory: '',
-    year: 'New'
+    year: 0
   })
-
+  function usedChange(e){
+    setUsed(document.getElementById("usedAndNew").value)
+    if (document.getElementById("usedAndNew").value=="new"){
+     productData.year = 0;
+    }
+   }
   const handleMajorCategoryChange=(index) =>{
     if (index.target.value == ""){
       setMainCategory("")
       setSubCategory([])
     }
     else{
+
       setMainCategory(CategoryData[index.target.value].title)
       setSubCategory(CategoryData[index.target.value].subNav)
     }
@@ -117,22 +120,20 @@ const AdminDashboard = () => {
   const handleProductSubmit = (e) => {
     console.log("submitted");
     e.preventDefault();
-    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(mainCategory) || isEmpty(subCategory) || isEmpty(year) || isEmpty(state) || isEmpty(city)){
+    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(mainCategory) || isEmpty(subCategory)  || isEmpty(state) || isEmpty(city)){
       showAlert('Please fill all fields', "danger")
-    } else {
+    } 
+    
+    else if (year<0){
+      showAlert('Year cannot be negative', "danger")
+    }
+    else {
       let formData = new FormData();
       let productImage = [];
       console.log(images);
       images.forEach((i) => {
         productImage.push(i);
       });
-
-      // formData.append("productName", productName);
-      // formData.append("productDescription", productDescription);
-      // formData.append("productPrice", productPrice);
-      // formData.append("productCategory", productCategory);
-      // formData.append("year", year);
-      console.log(formData);
       createProduct({
         productName,
         productDescription,
@@ -149,7 +150,7 @@ const AdminDashboard = () => {
             productDescription: "",
             productPrice: "",
             subCategory: "",
-            year: "New",
+            year: 0,
           });
         })
       .catch(err => {
@@ -318,39 +319,6 @@ const AdminDashboard = () => {
     </div>
   )
 
-  // const showCategoryModal = () => (
-  //   <div className="modal fade" id="addCategoryModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  //     <div className="modal-dialog" role="document">
-  //       <div className="modal-content">
-  //       <form onSubmit={handleCategorySubmit}>
-
-  //         <div className="modal-header bg-info text-white">
-  //           <h5 className="modal-title" id="exampleModalLabel">Add New Category</h5>
-  //           <button type="button" className="close text-white" data-dismiss="modal" aria-label="Close">
-  //             <span aria-hidden="true">&times;</span>
-  //           </button>
-  //         </div>
-  //         <div className="modal-body">
-  //             <div className="form-group">
-  //               <label htmlFor="recipient-name" className="col-form-label" >Category Name:</label>
-  //               <input type="text" className="form-control" id="recipient-name" 
-  //               name='category' 
-  //               value={category} 
-  //               onChange={handleCategoryChange} />
-  //             </div>
-  //         </div>
-  //         <div className="modal-footer">
-  //           <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-  //           <button type="submit" className="btn btn-primary">Add Category</button>
-  //         </div>
-
-  //       </form>
-  //       </div>
-  //     </div> 
-      
-  //   </div>
-  // )
-
 const showProductModal = () => (
   <div
     className="modal fade text-dark"
@@ -508,7 +476,7 @@ const showProductModal = () => (
                   id="usedAndNew"
                   onChange={usedChange}
                 > 
-                  <option value="new">New</option>
+                  <option value="new" >New</option>
                   <option value="old">Old</option>
                 </select>
                 {used == "old" && (

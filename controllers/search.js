@@ -10,13 +10,36 @@ exports.searchAndRefine = async (req, res) => {
         $regex: req.query.search,
         $options: "i",
       },
-    }:{};
+    }:{}; 
       const sort = req.query.sort || "year";
-      const category = req.query.category || "";
-      const subCategory = req.query.subCategory || "";
-      console.log("category:", category)
-      console.log("subCategory:",subCategory)
-      const product = await Product.find({...search});
+      const category = req.query.category ? 
+      {
+        mainCategory:{
+          $regex: req.query.category,
+          $options: "i",
+      },
+    } : {};
+      const subCategory = req.query.subCategory  ? 
+      {
+        subCategory:{
+          $regex: req.query.subCategory,
+          $options: "i",
+      },
+    } : {};
+    let year = req.query.year ? 
+    {
+      year:{
+        $eq: 0
+    },
+  } : {};
+  if (req.query.year==99){
+    year ={
+      year:{
+        "$gt": 0
+      }
+   }
+  }
+      const product = await Product.find({$and:[{...search},{...category},{...subCategory},{...year}]});
       return res.status(200).json(
         product
       )  }

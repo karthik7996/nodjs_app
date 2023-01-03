@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {AiOutlineDown} from "react-icons/ai"
 const SidebarLink = styled(Link)`
@@ -61,9 +61,9 @@ const SubMenu = ({ item }) => {
       {subnav &&
         item.subNav.map((item, index) => {
           return (
-            <DropdownLink to={item.path} key={index}>
+            <DropdownLink to={`/products?subCategory=${item.title}`} key={index}>
               {item.icon}
-              <SidebarLabel>{item.title}</SidebarLabel>
+              <SidebarLabel >{item.title}</SidebarLabel>
             </DropdownLink>
           );
         })}

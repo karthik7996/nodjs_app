@@ -24,7 +24,7 @@ const ProductSchema = mongoose.Schema({
     city: { type: String, required: true },
     mainCategory: { type: String, required: true },
     subCategory: {type: String, require: true},
-    year: { type: String, required: true }
+    year: { type: Number, required: true, minimum: 0 }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', ProductSchema);

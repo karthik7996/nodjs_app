@@ -71,7 +71,7 @@ export const updateProduct = async (productId, data) => {
   const response = await axios.put(`/api/product/${productId}`, data, config);
   return response;
 }
-export const searchAndRefine = async (search,mainCategory="", subCategory="") => {
+export const searchAndRefine = async (search,mainCategory="", subCategory="", year="") => {
   const config = {
     // baseURL: "http://localhost:5000/",
     withCredentials: true,
@@ -79,6 +79,6 @@ export const searchAndRefine = async (search,mainCategory="", subCategory="") =>
     //   'Content-Type': 'application/json',
     // },
   }
-  const response = await axios.get(`/api/search/?search=${search}&category=${mainCategory}&subCategory=${subCategory}`, config);
+  const response = await axios.get(`/api/search/?search=${search}&category=${mainCategory}&subCategory=${subCategory}&year=${year}`, config);
   return response;
 }

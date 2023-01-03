@@ -108,7 +108,7 @@
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { CategoryData } from "../helpers/categoryData";
@@ -153,7 +153,7 @@ const SidebarWrap = styled.div`
 
 const Navbar = () => {
   const [sidebar, setSidebar] = useState(false);
-
+  const [mainCategory, setMainCategory] = useState("")
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
@@ -162,14 +162,14 @@ const Navbar = () => {
         <Nav>
           <NavIcon to='#'>
           <CgDetailsLess/><span  className="text-white ml-4" onClick={showSidebar} >All Categories</span>
-          <Link className='text-white scale pl-5' to="/category/Car">Car</Link>
-          <Link className='text-white scale pl-5' to="/category/Car">Mobile</Link>
-          <Link className='text-white scale pl-4' to="/category/Car">Bike</Link>
-          <Link className='text-white scale pl-5' to="/category/Car">Electronics & Appli...</Link>
-          <Link className='text-white scale pl-5' to="/category/Car">Furniture</Link>
-          <Link className='text-white scale pl-5' to="/category/Car">Books, Sport, & Hob...</Link>
-          <Link className='text-white scale pl-5' to="/category/Car">Fashion</Link>
-          <Link className='text-white scale pl-5' to="/category/Car">Pet</Link>
+          <Link className='text-white scale pl-5' to='/products?category=Cars'>Cars</Link>
+          <Link className='text-white scale pl-5' to="/products?category=Mobiles">Mobiles</Link>
+          <Link className='text-white scale pl-4' to="/products?category=Bikes">Bikes</Link>
+          <Link className='text-white scale pl-5' to="/products?category=Electronics And Appliances">Electronics & Appli...</Link>
+          <Link className='text-white scale pl-5' to="/products?category=Furniture">Furniture</Link>
+          <Link className='text-white scale pl-5' to="/products?category=Books, Sports And Hobbies">Books, Sport, & Hob...</Link>
+          <Link className='text-white scale pl-5' to="/products?category=Fashion">Fashion</Link>
+          <Link className='text-white scale pl-5' to="/products?category=Pets">Pets</Link>
           </NavIcon>
         </Nav>
         <SidebarNav sidebar={sidebar}>

@@ -151,7 +151,7 @@ console.log(productId)
           <div className="d-flex justify-content-around">
               <p>{p.subCategory}</p> 
               <p>Delhi</p>
-              <p>{p.year}</p>
+              <p>{p.year==0?"New":p.year}</p>
           </div>
           <p className="singleproducthr" ></p>
           {/* <p className="text-secondary">Minimum bid</p>

@@ -6,24 +6,28 @@ import { CgDetailsLess } from "react-icons/cg";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { searchAndRefine } from "../api/product";
+import { GiQueenCrown } from 'react-icons/gi';
 
 const Product = () => {
-  const [mainCategory, setMainCategory] = useState("All")
+
+  const query = new URLSearchParams(useLocation().search);
+  const search = query.get("search") || "";
+  const category = query.get("category") ? query.get("category") : "";
+  const subCategorytemp = query.get("subCategory") ? query.get("subCategory") : "";
+
+  const [mainCategory, setMainCategory] = useState(category)
   const [disSubCategory, setSubArrCategory] = useState([])
-  const [subCategory, setSubCategory] = useState("")
+  const [subCategory, setSubCategory] = useState(subCategorytemp)
   const [products, setProduct] = useState('')
   const [showFilter, setShowFilter] = useState(window.innerWidth)
+  const [year, setYear] = useState("")
   const navigate = useNavigate();
 
-const query = new URLSearchParams(useLocation().search);
-const search = query.get("search") || "";
-
-console.log("nadeem", search)
 useEffect(() => {
   searchProdct()
-}, [search,mainCategory, subCategory])
+}, [search,mainCategory, subCategory,year])
 const searchProdct=()=>{
-    searchAndRefine(search,mainCategory,subCategory)
+    searchAndRefine(search,mainCategory,subCategory,year)
     .then((response) => {
       setProduct(response.data)
       console.log(response.data)
@@ -65,7 +69,6 @@ const searchProdct=()=>{
         <div className='row'>
         {showFilter &&
           <div className='col-12 col-sm-3 border mt-4 rounded pb-3'>
-          {/* {!showFilter && <p>X</p>} */}
               <p className='border-bottom h1 p-3'>Filter</p>
               <p className='pl-3'>Category</p>
               <select name="productCategory" className="custom-select mr-sm-2 ml-2" onChange={handleMajorCategoryChange}>
@@ -84,10 +87,10 @@ const searchProdct=()=>{
                 <p className='pl-3 pt-3'>Fresh | Old</p>
                 <select
                   className="custom-select mr-sm-2 ml-2"
-                  id="usedAndNew"
+                  onChange={(e)=>setYear(e.target.value)}
                 > <option value="" selected>Both</option>
-                  <option value="new">Fresh</option>
-                  <option value="old">Old</option>
+                  <option value="0">Fresh</option>
+                  <option value="99">Old</option>
                 </select>
                 <p className='border-top border-bottom h1 p-3 mt-5'>Refine By</p>
                 {disSubCategory.length>0 && subCategory=="" &&         
@@ -111,7 +114,7 @@ const searchProdct=()=>{
         }
           <div className="col-sm-9 pl-5" >
           <div className="row ">
-        { products && products.map((p, i) => (
+        { products.length>0 ? products.map((p, i) => (
           <div style={{position:'relative'}} className='productCard border border-white border-top-0'>
           <img src= {p.images[0].url} className="card-img" alt={p.productName} />
             <div style={{padding: "0 10px"}}>
@@ -135,7 +138,11 @@ const searchProdct=()=>{
                 
             </div>
           </div>
-        ))}
+        )): <div className='col-12 text-center font-weight-bold mt-5'>
+      <p>Oops... we didn't find anything that matches this search :</p>
+      <p>Try search for something more general, change the filters or check for spelling mistakes</p>
+      <img className="mt-5"src="/images/browser.png" height="150px" width="150px"/>
+     </div>}
     </div>          </div>
           </div>
         </div>
