@@ -32,13 +32,12 @@ const handleCheck = (e) =>{
     phoneNr: '',
     password: '',
     password2: '',
-    location: '',
     error: '',
     success: false,
     loading: false
   })
   
-  const { name, email, phoneNr,password, password2,location, error, success, loading } = formData;
+  const { name, email, phoneNr,password, password2, error, success, loading } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, error: false, [e.target.name]: e.target.value, success: "", error: "" })
@@ -47,7 +46,7 @@ const handleCheck = (e) =>{
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (isEmpty(name) || isEmpty(email) || isEmpty(location)|| isEmpty(password) || isEmpty(password2)|| check) {
+    if (isEmpty(name) || isEmpty(email) || isEmpty(password) || isEmpty(password2)|| check) {
       setFormData({ ...formData, error: 'Fill all required fields' })
     } 
     else if (!validator.isEmail(email)){
@@ -60,7 +59,7 @@ const handleCheck = (e) =>{
       setFormData({ ...formData, error: 'Passwords does not match' })
     } else {
       const { name, email, password } = formData;
-      const data = { name, email, phoneNr, password, location};
+      const data = { name, email, phoneNr, password};
       setFormData({ ...formData, loading: true })
       signup(data)
         .then (response => {
@@ -71,7 +70,6 @@ const handleCheck = (e) =>{
             phoneNr: '',
             password: '',
             password2: '',
-            location: '',
             success: response.data.successMessage,
             loading: false
           })
@@ -121,10 +119,10 @@ const handleCheck = (e) =>{
                         <input name='password2' value={password2} onChange = {handleChange} type="password" id="form3Example4cdg" placeholder='Confirm Password' className="form-control form-control-lg" required/>
                         <label className="form-label" htmlFor="form3Example4cdg">Confirm password**</label>
                       </div>
-                      <div className="form-outline mb-2">
+                      {/* <div className="form-outline mb-2">
                       <input type="text" name='location' value={location} placeholder="Current city" onChange={handleChange} id="form3Example4cdg" className="form-control form-control-lg" required/>
                         <label className="form-label" htmlFor="form3Example4cdg">Current city**</label>
-                      </div>
+                      </div> */}
                       <div className="form-check text-center pb-3">
                       <input className="form-check-input " style={{marginLeft: "-2rem"}} type="checkbox" defaultValue id="flexCheckDefault" onclick = {handleCheck}value={check} required/>
                         <label className="form-check-label " for="flexCheckDefault">

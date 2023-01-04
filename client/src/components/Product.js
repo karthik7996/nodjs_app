@@ -14,7 +14,8 @@ const Product = () => {
   const search = query.get("search") || "";
   const category = query.get("category") ? query.get("category") : "";
   const subCategorytemp = query.get("subCategory") ? query.get("subCategory") : "";
-
+  const location = query.get("location") ||"";
+  const page = Number(query.get("page")) || 1;
   const [mainCategory, setMainCategory] = useState(category)
   const [disSubCategory, setSubArrCategory] = useState([])
   const [subCategory, setSubCategory] = useState(subCategorytemp)
@@ -22,15 +23,17 @@ const Product = () => {
   const [showFilter, setShowFilter] = useState(window.innerWidth)
   const [year, setYear] = useState("")
   const navigate = useNavigate();
+  const [sort, setSort] = useState("asc")
+  const [count, setCount] = useState(1);
 
 useEffect(() => {
   searchProdct()
-}, [search,mainCategory, subCategory,year])
+}, [location, search,mainCategory, subCategory,year,sort,page])
 const searchProdct=()=>{
-    searchAndRefine(search,mainCategory,subCategory,year)
+    searchAndRefine(location, search,page,mainCategory,subCategory,year,sort)
     .then((response) => {
-      setProduct(response.data)
-      console.log(response.data)
+      setProduct(response.data.product)
+      setCount(Math.ceil(response.data.productCount/4))
     }
     )
     .catch((error) => {
@@ -45,6 +48,7 @@ const searchProdct=()=>{
     if (index.target.value === ""){
       setMainCategory("")
       setSubArrCategory([])
+      setSubCategory("")
     }
     else{
       setMainCategory(CategoryData[index.target.value].title)
@@ -52,18 +56,19 @@ const searchProdct=()=>{
       setSubCategory("")
     }
   }
+  console.log("count", count)
   const handleSubCategoryChange=(e)=>{
     setSubCategory(e.target.value)
   }
   
   return (
     <div>
-        <div className='homeHeading'>
+        {/* <div className='homeHeading'>
             <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
             <NavLink><p className="homeHeading-p">Auction</p></NavLink>
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
             <NavLink><p className="homeHeading-p pt-3" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
-        </div>
+        </div> */}
         {window.innerWidth<576 && <div><p className='mr-5 h2 mt-4 ml-5' onClick={()=>setShowFilter(!showFilter)}><CgDetailsLess className='mr-4'/>Filter | Refine</p></div>}
         <div className='contatiner'>
         <div className='row'>
@@ -84,16 +89,16 @@ const searchProdct=()=>{
                 })} 
                 </select>
                 }
-                <p className='pl-3 pt-3'>Fresh | Old</p>
+                <p className='pl-3 pt-3'>New | Old</p>
                 <select
                   className="custom-select mr-sm-2 ml-2"
                   onChange={(e)=>setYear(e.target.value)}
                 > <option value="" selected>Both</option>
-                  <option value="0">Fresh</option>
+                  <option value="0">New</option>
                   <option value="99">Old</option>
                 </select>
                 <p className='border-top border-bottom h1 p-3 mt-5'>Refine By</p>
-                {disSubCategory.length>0 && subCategory=="" &&         
+                {/* {disSubCategory.length>0 && subCategory=="" &&         
                 <><p className='pl-3 mt-2'>Sub Category</p>
                 <select name="subCategory" className="custom-select mr-sm-2 mt-1 ml-2" >
                 <option value="" selected>Random</option>
@@ -102,19 +107,19 @@ const searchProdct=()=>{
                 })} 
                 </select>
                 </>
-                }                
+                }                 
+                */}
                 <p className='pl-3 mt-4'>Year</p>
-                  <select className='custom-select mr-sm-2 ml-2'>
-                    <option value="">Random</option>
-                    <option>Fresh top</option>
-                    <option>Old top</option>
+                  <select className='custom-select mr-sm-2 ml-2' onChange={(e)=>{setSort(e.target.value)}}>
+                    <option value="asc">New top</option>
+                    <option value="desc">Old top</option>
                   </select>
                   
           </div>
         }
           <div className="col-sm-9 pl-5" >
           <div className="row ">
-        { products.length>0 ? products.map((p, i) => (
+        { products.length>0 ? <>{products.map((p, i) => (
           <div style={{position:'relative'}} className='productCard border border-white border-top-0'>
           <img src= {p.images[0].url} className="card-img" alt={p.productName} />
             <div style={{padding: "0 10px"}}>
@@ -134,16 +139,28 @@ const searchProdct=()=>{
         )}
         placement="bottom"
       ><img src="images/i_icon.svg" className="info scale" style={{position:'absolute', right:'-142px'}}/>
-      </OverlayTrigger>
-                
+      </OverlayTrigger>               
             </div>
           </div>
-        )): <div className='col-12 text-center font-weight-bold mt-5'>
+        ))}
+        <div className='col-12 mt-3'>
+<nav >
+
+  <ul className='pagination justify-content-center'>
+  <li className={page==1 ?'page-item h4 disabled':'page-item h4'}><NavLink to={`/products?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&page=${page-1}`} className="page-link">&laquo;</NavLink></li>
+    { Array.from(Array(count), (e, i) => {
+      return <li key={i+1} className={page==i+1?"page-item h4 active": "page-item h4"} ><NavLink className="page-link" to={`/products?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&page=${i+1}`}>{i+1}</NavLink></li>
+    })}
+    <li className={page==count ?'page-item h4 disabled':'page-item h4'}><NavLink className="page-link" to={`/products?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&page=${page+1}`}>&raquo;</NavLink></li>
+  </ul>
+</nav>
+</div></>: <div className='col-12 text-center font-weight-bold mt-5'>
       <p>Oops... we didn't find anything that matches this search :</p>
       <p>Try search for something more general, change the filters or check for spelling mistakes</p>
       <img className="mt-5"src="/images/browser.png" height="150px" width="150px"/>
      </div>}
-    </div>          </div>
+    </div>          
+    </div>
           </div>
         </div>
         

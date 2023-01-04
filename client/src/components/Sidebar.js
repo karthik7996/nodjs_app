@@ -161,7 +161,7 @@ const Navbar = () => {
       <IconContext.Provider value={{ color: '#fff' }}>
         <Nav>
           <NavIcon to='#'>
-          <CgDetailsLess/><span  className="text-white ml-4" onClick={showSidebar} >All Categories</span>
+          <span  className="text-white ml-4" onClick={showSidebar} ><CgDetailsLess className='mr-4'/>All Categories</span>
           <Link className='text-white scale pl-5' to='/products?category=Cars'>Cars</Link>
           <Link className='text-white scale pl-5' to="/products?category=Mobiles">Mobiles</Link>
           <Link className='text-white scale pl-4' to="/products?category=Bikes">Bikes</Link>

@@ -190,7 +190,7 @@ const Profile = () => {
                   />
                 </div>
                 <div className="col-md-12 mt-2">
-                  <label className="labels mb-2 mt-2 h4">Email ID</label>
+                  <label className="labels mb-2 mt-2 h4">Email ID**</label>
                   <input
                     type="text"
                     className="form-control"
@@ -208,7 +208,7 @@ const Profile = () => {
                 </div>
                 <p id="phoneNrValidation">Not a valid Email</p>
               </div>
-              <div className="row mt-3">
+              {/* <div className="row mt-3">
                 <div className="col-md-12">
                   <label className="labels mb-2 mt-2 h4">
                     State/Location**
@@ -223,7 +223,7 @@ const Profile = () => {
                     required
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="mt-5 text-center">
                 <button
                   className="btn btn-primary profile-button fw-bold px-4"

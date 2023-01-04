@@ -6,7 +6,7 @@ const { sendMail } = require("../middlewares/sendMail");
 
 exports.signupController = async (req, res) => {
   console.log(req.body);
-  const { name, email, phoneNr,password , location } = req.body;
+  const { name, email, phoneNr,password } = req.body;
 
   try {
     const user = await User.findOne({  email });
@@ -22,7 +22,6 @@ exports.signupController = async (req, res) => {
     newUser.name = name;
     newUser.email = email;
     newUser.phoneNr = phoneNr;
-    newUser.location = location;
     newUser.address = ""
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
@@ -68,10 +67,10 @@ exports.signinController = async (req, res) => {
       if (err) {
         console.log('jwt error', err);
       }
-      const { _id, accStatus,role, name, email, phoneNr, location, address, } = user;
+      const { _id, accStatus,role, name, email, phoneNr,  address } = user;
       return res.json({
         token,
-        user: { _id, accStatus, role, name, email, phoneNr, location,address },
+        user: { _id, accStatus, role, name, email, phoneNr, address },
       });
     });
 

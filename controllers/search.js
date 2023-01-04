@@ -2,8 +2,21 @@ const Product = require('../models/Product');
 
 exports.searchAndRefine = async (req, res) => {
     try {
-      const page = parseInt(req.query.page) -1 || 0;
+      const currentPage = Number(req.query.page) || 1;
       const limit = 4;
+      const skip = limit*(currentPage-1);
+      const state = req.query.location ? {
+        state:{
+          $regex: req.query.location,
+        $options: "i",
+        }
+      }: {};
+      const city = req.query.location ? {
+        city:{
+          $regex: req.query.location,
+        $options: "i",
+        }
+      }: {};
       const search = req.query.search ? 
       {
         productName:{
@@ -11,7 +24,7 @@ exports.searchAndRefine = async (req, res) => {
         $options: "i",
       },
     }:{}; 
-      const sort = req.query.sort || "year";
+      const sort = req.query.sort || "asc";
       const category = req.query.category ? 
       {
         mainCategory:{
@@ -39,9 +52,13 @@ exports.searchAndRefine = async (req, res) => {
       }
    }
   }
-      const product = await Product.find({$and:[{...search},{...category},{...subCategory},{...year}]});
-      return res.status(200).json(
-        product
+      // const productCount = await Product.countDocuments();
+      const product = await Product.find({$and:[{...search},{...category},{...subCategory},{...year},{ $or: [{...state}, {...city}] }]}).sort({year: sort}).limit(limit).skip(skip);
+      const productCount = await Product.find({$and:[{...search},{...category},{...subCategory},{...year},{ $or: [{...state}, {...city}] }]}).countDocuments()
+      return res.status(200).json({
+        product,
+        productCount
+      }
       )  }
     catch (err) {
       console.log(err)

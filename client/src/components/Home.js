@@ -14,12 +14,12 @@ const Home = () => {
         <span>BidOnBuy.com its a platform to connect buyers and sellers</span>
         <span>BidOnBuy.com its an platform to connect buyers and sellers</span>
         </div>
-        <div className='homeHeading'>
+        {/* <div className='homeHeading'>
             <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
-            {/* <NavLink><p className="homeHeading-p">Auction</p></NavLink> */}
+            <NavLink><p className="homeHeading-p">Auction</p></NavLink> 
             <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
             <NavLink><p className="homeHeading-p pt-3" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
-        </div>
+        </div> */}
  <Navbar/>
         <div className='headerSection'>
             {/* <p className="headerSection-p">100% Safe And Free Auctions</p> */}

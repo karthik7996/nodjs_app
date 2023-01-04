@@ -33,7 +33,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  location: {type: String},
   products: [{type: ObjectId}],
   address: {type: String}, 
   notification: [

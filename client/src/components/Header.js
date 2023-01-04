@@ -17,7 +17,8 @@ import { ProductContext } from './App';
 const Header = ({navigate}) => {
   const {state, dispatch} = useContext(ProductContext);
   var [toggle, setToggle] = useState(false);
-  var [search, setSearch] = useState("");
+  const  [search, setSearch] = useState("");
+  const [location, setLocation] = useState("")
   useEffect(() => {
     if(isAuthenticated()){
       console.log(isAuthenticated())
@@ -42,7 +43,7 @@ const Header = ({navigate}) => {
   // }
   const searchProdct=(e)=>{
     e.preventDefault()
-    navigate(`/products?search=${search}`)
+    navigate(`/products?location=${location}&search=${search}&page=1`)
   }
   const handleLogout = () => {
     logout(() => {
@@ -55,6 +56,7 @@ const Header = ({navigate}) => {
         <p className="logoName"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy</p>
     </NavLink>
     <form>
+        <input className="searchBar mr-3 w-25"  type="text" placeholder="Location" onChange={(e)=> setLocation(e.target.value)}/>
         <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...' onChange={(e)=>setSearch(e.target.value)}/>
         <button className='searchBtn scale' onClick={searchProdct}><BsSearch /></button>
       </form>
