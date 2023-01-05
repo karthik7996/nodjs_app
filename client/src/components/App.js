@@ -19,7 +19,7 @@ import Chat from "./Chat";
 //socket.io configuration
 import { io } from "socket.io-client";
 import {initialState, reducer} from "../helpers/productReducer"
-
+import ProtectedRoute from "./ProtectedRoute";
 export const ProductContext = createContext();
 
 const App = () => {
@@ -42,21 +42,66 @@ const App = () => {
         <Route path="/" element = {<Home/>} />
         <Route path="/signup" element = {<Signup/>} />
         <Route path="/signin" element = {<Signin/>} />
-        <Route path="/user/dashboard" element = {<UserDashboard/>} />
-        <Route path="/admin/dashboard" element = {<AdminDashboard/>} />
-        <Route path="/profile" element={<Profile />}/>
+        <Route
+              path="/user/dashboard"
+              element={
+                <ProtectedRoute>
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
+         <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+       <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
         <Route path="/products" element={<Product />}/>
         <Route path="/singleproduct/:productId" element={<SingleProduct setSelectedChat={setSelectedChat} />}/>
         <Route path="/category/:categoryName" element={<CategoryProduct/>}/>
-        <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
-        <Route path="/notification" element={<Notification/>}/>
+       <Route
+              path="/admin/product/update/:productId"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <AdminUpdateProduct />
+                </ProtectedRoute>
+              }
+            />
+      <Route
+              path="/notification"
+              element={
+                <ProtectedRoute>
+                  <Notification />
+                </ProtectedRoute>
+              }
+            />
         <Route path="*" element = {<NotFound/>} />
         <Route path="/reset" element={<Reset/>}/>
         <Route path="/reset/:token" element={<ForgotPassword/>}/>
-        <Route path="/chat" element={<Chat socket={Socket}   selectedChat={selectedChat}
-                  setSelectedChat={setSelectedChat}
-                  notification={notification}
-                  setNotification={setNotification}/>} />
+        <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <Chat
+                    socket={Socket}
+                    selectedChat={selectedChat}
+                    setSelectedChat={setSelectedChat}
+                    notification={notification}
+                    setNotification={setNotification}
+                  />
+                </ProtectedRoute>
+              }
+            />
 
       </Routes>
     </main>
