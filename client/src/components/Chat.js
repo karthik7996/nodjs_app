@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
+import io from "socket.io-client";
+
 import {
   allChats,
   createChatNotification,
@@ -8,7 +10,7 @@ import {
 } from "../api/chat";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "./css/chat.css";
-import { getLoggedInUser } from "../api/auth";
+
 import {
   MainContainer,
   Sidebar,
@@ -23,16 +25,15 @@ import {
   Loader,
 } from "@chatscope/chat-ui-kit-react";
 import { getName, getSenderId } from "../helpers/message";
+var socket, selectedChatCompare;
 const Chat = (props) => {
-  const [loggedInUser, setLoggedInUser] = useState(null);
   const [messageInputValue, setMessageInputValue] = useState("");
   const [Chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allMessage, setAllMessage] = useState([]);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
-  const [allNotification, setAllNotification] = useState([]);
-  var selectedChatCompare;
+  const [socketConnected, setSocketConnected] = useState(null);
 
   //responsive side bar close and open
 
@@ -94,37 +95,40 @@ const Chat = (props) => {
   //end of side bar logic
 
   useEffect(() => {
-    props.socket &&
-      props.socket.emit("setup", loggedInUser && loggedInUser._id);
-  });
+    socket = io("http://localhost:5000");
+    socket.on("connect", (soc) => {
+      setSocketConnected(soc);
+    });
+
+    socket.emit("setup", props.user._id);
+  }, []);
 
   useEffect(() => {
     props.selectedChat && getAllMessages();
     selectedChatCompare = props.selectedChat;
   }, [props.selectedChat]);
-  console.log(props.notification);
-  useEffect(() => {
-    props.socket &&
-      props.socket.on("message received", (newMessageReceived) => {
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessageReceived.chatId._id
-        ) {
-        } else {
-          getAllMessages().then(function () {
-            setAllMessage([...allMessage, newMessageReceived]);
-          });
 
-          // setAllMessage([...allMessage, newMessageReceived]);
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chatId._id
+      ) {
+        if (!props.notification.includes()) {
+          props.setNotification([newMessageReceived, ...props.notification]);
         }
-      });
+      } else {
+        // getAllMessages().then(function () {
+        //   setAllMessage([...allMessage, newMessageReceived]);
+        // });
+
+        setAllMessage([...allMessage, newMessageReceived]);
+      }
+    });
   });
 
   useEffect(() => {
     fetchAllChats();
-    getLoggedInUser().then(function (data) {
-      setLoggedInUser(data.data);
-    });
   }, []);
 
   const fetchAllChats = async () => {
@@ -134,30 +138,24 @@ const Chat = (props) => {
         if (data) {
           setChats(data.data);
           setLoading(false);
-          console.log(data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   let sendMes = (content) => {
     setLoading2(true);
-    console.log(allMessage);
     sendMessage(content, props.selectedChat._id)
       .then(function (data) {
         if (data) {
           setMessageInputValue("");
           setAllMessage([...allMessage, data.data]);
-          props.setNotification([data.data]);
+
           setLoading2(false);
-          props.socket && props.socket.emit("new message", data.data);
+          socket.emit("new message", data.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   let addNotification = () => {
@@ -170,11 +168,9 @@ const Chat = (props) => {
           ? props.notification[0].chatId.users[1]
           : props.notification[0].chatId.users[0];
       createChatNotification(notificationId, userId)
-        .then(function (data) {
-          console.log(data.data);
-        })
+        .then(function (data) {})
         .catch((err) => {
-          console.log(err.response);
+          console.log(err);
         });
     }
   };
@@ -185,9 +181,8 @@ const Chat = (props) => {
       .then(function (data) {
         if (data) {
           setAllMessage(data.data);
-          props.socket &&
-            props.socket &&
-            props.socket.emit("join chat", props.selectedChat._id);
+
+          socket.emit("join chat", props.selectedChat._id);
           setLoading3(false);
         }
       })
@@ -222,11 +217,10 @@ const Chat = (props) => {
                     className="avataar d-flex align-items-center justify-content-center"
                     style={conversationAvatarStyle}
                   >
-                    {loggedInUser &&
-                      getName(loggedInUser._id, e.users)[0].toUpperCase()}
+                    {getName(props.user._id, e.users)[0].toUpperCase()}
                   </Avatar>
                   <Conversation.Content
-                    name={loggedInUser && getName(loggedInUser._id, e.users)}
+                    name={getName(props.user._id, e.users)}
                     style={conversationContentStyle}
                     info={e.latestMessage && e.latestMessage.content}
                   />
@@ -245,7 +239,7 @@ const Chat = (props) => {
                 style={{ backgroundColor: "whitesmoke" }}
               >
                 {getName(
-                  loggedInUser && loggedInUser._id,
+                  props.user._id,
                   props.selectedChat.users
                 )[0].toUpperCase()}
               </Avatar>
@@ -255,10 +249,7 @@ const Chat = (props) => {
             <ConversationHeader.Content
               userName={
                 props.selectedChat &&
-                getName(
-                  loggedInUser && loggedInUser._id,
-                  props.selectedChat.users
-                )
+                getName(props.user._id, props.selectedChat.users)
               }
             />
           </ConversationHeader>
@@ -279,9 +270,7 @@ const Chat = (props) => {
                     message: e.content,
 
                     direction:
-                      loggedInUser && e.sender._id == loggedInUser._id
-                        ? "outgoing"
-                        : "incoming",
+                      e.sender._id == props.user._id ? "outgoing" : "incoming",
                     position: "single",
                   }}
                 ></Message>
