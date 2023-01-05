@@ -29,7 +29,7 @@ router.post(
     verficationController.deleteVerification
   );
 
-  router.post(
+  router.get(
     "/get/loggedin/user",
     authenticateJWT,
     profileController.getLoggedInUser
