@@ -61,7 +61,7 @@ const Header = (props) => {
   //   )
   // }
   let deleteNotif = () => {
-    if (notification.length !== 0 && location.pathname == "/chat") {
+    if (notification.length !== 0 && routeLocation.pathname == "/chat") {
       deletechatnotification().then(function (data) {
         navigate("/chat");
       });
