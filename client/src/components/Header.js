@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from "react";
-import {NavLink} from 'react-router-dom'
+
 import {getLocalStorage} from "../helpers/localStorage"
 import { isAuthenticated, logout } from '../helpers/auth';
 import { withRouter } from "../helpers/withrouter";
@@ -13,20 +13,39 @@ import {GiSplitCross} from "react-icons/gi"
 import {IoMdNotificationsOutline} from "react-icons/io"
 import { searchAndRefine } from "../api/product";
 import { ProductContext } from './App';
-
-const Header = ({navigate}) => {
+//chat changes
+import { BsFillChatLeftDotsFill } from "react-icons/bs";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
+import {NavLink, useNavigate, useLocation } from "react-router-dom";
+import { getAllChatNotification } from "../api/chat";
+import { deletechatnotification } from "../api/chat";
+const Header = (props) => {
   const {state, dispatch} = useContext(ProductContext);
+  
+  //chat changes
+  const navigate = useNavigate();
+  const routeLocation = useLocation();
+  const [notification, setNotification] = useState([]);
   var [toggle, setToggle] = useState(false);
   const  [search, setSearch] = useState("");
   const [location, setLocation] = useState("")
   useEffect(() => {
     if(isAuthenticated()){
       console.log(isAuthenticated())
+      getAllChatNotification()
+      .then((data) => {
+        setNotification(data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    deleteNotif();
       var myCollapse = document.getElementById('collapseTarget')
       var bsCollapse = new Collapse(myCollapse, {toggle: false})
       toggle ? bsCollapse.show() : bsCollapse.hide()
     }
-  })
+  },[toggle,location.pathname]);
   // const searchProdct=(e)=>{
   //   e.preventDefault()
   //   searchAndRefine(search)
@@ -41,6 +60,13 @@ const Header = ({navigate}) => {
   //   }
   //   )
   // }
+  let deleteNotif = () => {
+    if (notification.length !== 0 && location.pathname == "/chat") {
+      deletechatnotification().then(function (data) {
+        navigate("/chat");
+      });
+    }
+  };
   const searchProdct=(e)=>{
     e.preventDefault()
     navigate(`/products?location=${location}&search=${search}&page=1`)
@@ -82,6 +108,32 @@ const Header = ({navigate}) => {
           <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Profile</NavLink>
           <NavLink  className="pl-3 pb-3 scale text-dark" to="/user/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
           <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/notification" style={{color:"white", fontSize: "1.5em"}}><IoMdNotificationsOutline className="shake" style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Notification</NavLink>
+          <NavLink
+                className="pt-2 pl-3 pb-3 scale text-dark"
+                style={{ color: "white", fontSize: "1.5em" }}
+                to="/chat"
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "2.7em",
+                  }}
+                >
+                  <NotificationBadge
+                    style={{ fontSize: "0.5em" }}
+                    count={notification.length}
+                    effect={Effect.SCALE}
+                  />
+                </div>
+                <BsFillChatLeftDotsFill
+                  style={{
+                    marginLeft: "0.3em",
+                    marginRight: "0.9em",
+                    fontSize: "1em",
+                  }}
+                />
+                Chat
+              </NavLink>
           <button className='loginBtn searchBtn scale' onClick={handleLogout}>Logout</button>
         </div>
       </div> 
@@ -96,6 +148,32 @@ const Header = ({navigate}) => {
           <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/profile" style={{color:"white", fontSize: "1.5em"}}><CgProfile style={{marginRight: "0.5em", fontSize: "1.5em"}}/> Profile</NavLink>
           <NavLink className="pl-3 pb-3 scale text-dark" to="/admin/dashboard" style={{marginRight: "1.5em", color:"white", fontSize: "16px"}}><MdDashboard style={{fontSize: "1.5em"}}/><span style={{marginLeft: "5px"}}>Dashboard</span></NavLink>
           <NavLink className="pt-2 pl-3 pb-3 scale text-dark" to="/notification" style={{color:"white", fontSize: "1.5em"}}><IoMdNotificationsOutline className="shake" style={{marginRight: "0.5em", fontSize: "1.5em"}}/>Notification</NavLink>
+          <NavLink
+                className="pt-2 pl-3 pb-3 scale text-dark"
+                style={{ color: "white", fontSize: "1.5em" }}
+                to="/chat"
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "2.7em",
+                  }}
+                >
+                  <NotificationBadge
+                    style={{ fontSize: "0.5em" }}
+                    count={notification.length}
+                    effect={Effect.SCALE}
+                  />
+                </div>
+                <BsFillChatLeftDotsFill
+                  style={{
+                    marginLeft: "0.3em",
+                    marginRight: "0.9em",
+                    fontSize: "1em",
+                  }}
+                />
+                Chat
+              </NavLink>
           <button className='loginBtn searchBtn scale' onClick={handleLogout}>Logout</button>
           </div>
       </div>

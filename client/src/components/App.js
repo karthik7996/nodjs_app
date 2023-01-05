@@ -25,6 +25,8 @@ export const ProductContext = createContext();
 const App = () => {
 
   const [Socket, setSocket] = useState(null);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [notification, setNotification] = useState([]);
   useEffect(() => {
     const socket = io("http://localhost:5000");
     setSocket(socket);
@@ -44,14 +46,17 @@ const App = () => {
         <Route path="/admin/dashboard" element = {<AdminDashboard/>} />
         <Route path="/profile" element={<Profile />}/>
         <Route path="/products" element={<Product />}/>
-        <Route path="/singleproduct/:productId" element={<SingleProduct/>}/>
+        <Route path="/singleproduct/:productId" element={<SingleProduct setSelectedChat={setSelectedChat} />}/>
         <Route path="/category/:categoryName" element={<CategoryProduct/>}/>
         <Route path="/admin/product/update/:productId" element={<AdminUpdateProduct/>}/>
         <Route path="/notification" element={<Notification/>}/>
         <Route path="*" element = {<NotFound/>} />
         <Route path="/reset" element={<Reset/>}/>
         <Route path="/reset/:token" element={<ForgotPassword/>}/>
-        <Route path="/chat/:id" element={<Chat socket={Socket} />} />
+        <Route path="/chat" element={<Chat socket={Socket}   selectedChat={selectedChat}
+                  setSelectedChat={setSelectedChat}
+                  notification={notification}
+                  setNotification={setNotification}/>} />
 
       </Routes>
     </main>

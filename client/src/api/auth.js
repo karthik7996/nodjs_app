@@ -143,9 +143,9 @@ export const getLoggedInUser = async (id) => {
       "Content-Type": "application/json",
     },
   };
-  const response = await axios.post(
+  const response = await axios.get(
     "/api/profile/get/loggedin/user",
-    { id },
+    
     config
   );
   return response;

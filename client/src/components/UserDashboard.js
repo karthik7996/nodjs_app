@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment';
 import isEmpty from 'validator/lib/isEmpty';
-import { getCategories } from '../api/category'
+// import { getCategories } from '../api/category'
 import { createProduct, getUserProduct, deleteProduct, updateProduct } from '../api/product'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
@@ -11,6 +11,8 @@ import {getUserBid, acceptBid, withDraw, reject } from '../api/bid'
 import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
+import {CategoryData} from "../helpers/categoryData"
+import {LocationData} from "../helpers/StateAndCity"
 
 const UserDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,11 @@ const UserDashboard = () => {
   const [images, setImages] = useState([]);
   const [used, setUsed] = useState('new');
   const [alert, setAlert] = useState(null);
- 
+  const [mainCategory, setMainCategory] = useState("")
+  const [disSubCategory, setSubCategory] = useState([])
+  const [state, setState] = useState("");
+  const [cityArr, setCityArr] = useState([])
+  const [city, setCity] = useState("")
 
   const showAlert = (messsage, type) =>{
     setAlert({
@@ -34,23 +40,42 @@ const UserDashboard = () => {
     }, 2000)
   }
 
-
-
-  function usedChange(e){
-   setUsed(document.getElementById("usedAndNew").value)
-  }
-
   const [productData, setProductData] = useState({
     productName: '',
     productDescription: '',
-    productPrice: '',
-    productCategory: '',
-    year: 'New'
+    subCategory: '',
+    year: 0
   })
+  function usedChange(e){
+    setUsed(document.getElementById("usedAndNew").value)
+    if (document.getElementById("usedAndNew").value=="new"){
+     productData.year = 0;
+    }
+   }
 
+  const handleMajorCategoryChange=(index) =>{
+    if (index.target.value == ""){
+      setMainCategory("")
+      setSubCategory([])
+    }
+    else{
 
+      setMainCategory(CategoryData[index.target.value].title)
+      setSubCategory(CategoryData[index.target.value].subNav)
+    }
+  }
+  const handleStateChange=(index) =>{
+    if (index.target.value == ""){
+      setState("")
+      setCityArr([])
+    }
+    else{
+    setState(LocationData[index.target.value].state)
+    setCityArr(LocationData[index.target.value].districts)
+    }
+  }
 
-  const {productName, productDescription, productPrice, productCategory, year} = productData;
+  const {productName, productDescription, subCategory, year} = productData;
 
   const handleProductImage = (e) => {
     // setProductData({ ...productData, productImage: e.target.files[0] });
@@ -76,32 +101,31 @@ const UserDashboard = () => {
 
   const handleProductChange = (e) => {
     setProductData({...productData, [e.target.name]: e.target.value})
-    console.log(productData)
   }
 
   const handleProductSubmit = (e) => {
     e.preventDefault();
-    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice) || isEmpty(productCategory) || isEmpty(year)) {
+    if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(mainCategory) || isEmpty(subCategory)  || isEmpty(state) || isEmpty(city)){
       showAlert('Please fill all fields', "danger")
-    } else {
+    } 
+    
+    else if (year<0){
+      showAlert('Year cannot be negative', "danger")
+    }
+    else {
       let formData = new FormData();
       let productImage = [];
       console.log(images);
       images.forEach((i) => {
         productImage.push(i);
       });
-
-      // formData.append("productName", productName);
-      // formData.append("productDescription", productDescription);
-      // formData.append("productPrice", productPrice);
-      // formData.append("productCategory", productCategory);
-      // formData.append("year", year);
-      console.log(formData);
       createProduct({
         productName,
         productDescription,
-        productPrice,
-        productCategory,
+        state,
+        city,
+        mainCategory,
+        subCategory,
         productImage,
         year}
       )
@@ -110,8 +134,8 @@ const UserDashboard = () => {
             productName: "",
             productDescription: "",
             productPrice: "",
-            productCategory: "",
-            year: "",
+            subCategory: "",
+            year: 0,
           });
         })
       .catch(err => {
@@ -121,22 +145,22 @@ const UserDashboard = () => {
     console.log(productData)
   }
 
-  useEffect(() => {
-    loadCategories()
-  }, [loading])
+  // useEffect(() => {
+  //   loadCategories()
+  // }, [loading])
 
-  const loadCategories = async () => {
-    await getCategories()
-    .then((response) => {
-      setCategories(response.data)
-      console.log('categories', response.data)
-    }
-    )
-    .catch((error) => {
-      console.log('loadCategories error', error)
-    }
-    )
-  }
+  // const loadCategories = async () => {
+  //   await getCategories()
+  //   .then((response) => {
+  //     setCategories(response.data)
+  //     console.log('categories', response.data)
+  //   }
+  //   )
+  //   .catch((error) => {
+  //     console.log('loadCategories error', error)
+  //   }
+  //   )
+  // }
 
   useEffect(() => {
     loadProducts()
@@ -235,161 +259,201 @@ const UserDashboard = () => {
   )
 
 
-const showProductModal = () => (
-  <div
-    className="modal fade text-dark"
-    id="addProductModal"
-    tabIndex="-1"
-    role="dialog"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
-    <div className="modal-dialog" role="document">
-      <div className="modal-content">
-        <form onSubmit={handleProductSubmit}>
-          <div className="modal-header bg-warning text-white">
-            <h5 className="modal-title" id="exampleModalLabel">
-              Add New Product
-            </h5>
-            <button
-              type="button"
-              className="close text-white"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <div className="form-group mb-3">
-              <label htmlFor="recipient-name" className="col-form-label">
-                Upload Image
-              </label>
-              <input
-                name="productImage"
-                onChange={handleProductImage}
-                class="form-control"
-                type="file"
-                id="formFile"
-                accept="image/*"
-                multiple
-              />
+  const showProductModal = () => (
+    <div
+      className="modal fade text-dark"
+      id="addProductModal"
+      tabIndex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <form onSubmit={handleProductSubmit}>
+            <div className="modal-header bg-warning text-white">
+              <h5 className="modal-title" id="exampleModalLabel">
+                Add New Product
+              </h5>
+              <button
+                type="button"
+                className="close text-white"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-
-            <div className="form-group">
-              <label htmlFor="recipient-name" className="col-form-label">
-                Product Name:
-              </label>
-              <input
-                type="text"
-                name="productName"
-                value={productName}
-                onChange={handleProductChange}
-                className="form-control"
-                id="recipient-name"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="recipient-name" className="col-form-label">
-                Product Minimum Bid:
-              </label>
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">
-                  ₹
-                </span>
+            <div className="modal-body">
+              <div className="form-group mb-3">
+                <label htmlFor="recipient-name" className="col-form-label">
+                  Upload Image
+                </label>
                 <input
-                  name="productPrice"
-                  value={productPrice}
+                  name="productImage"
+                  onChange={handleProductImage}
+                  class="form-control"
+                  type="file"
+                  id="formFile"
+                  accept="image/*"
+                  multiple
+                />
+              </div>
+  
+              <div className="form-group">
+                <label htmlFor="recipient-name" className="col-form-label">
+                  Product Name:
+                </label>
+                <input
+                  type="text"
+                  name="productName"
+                  value={productName}
+                  onChange={handleProductChange}
+                  className="form-control"
+                  id="recipient-name"
+                />
+              </div>
+              {/* <div className="form-group">
+                <label htmlFor="recipient-name" className="col-form-label">
+                  Product Minimum Bid:
+                </label>
+                 <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">
+                    ₹
+                  </span>
+                  <input
+                    name="productPrice"
+                    value={productPrice}
+                    onChange={handleProductChange}
+                    type="text"
+                    className="form-control"
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                  />
+                </div> 
+              </div> */}
+              <div className="form-group">
+              <label htmlFor="recipient-name" className="col-form-label" style={{display: "block"}}>
+              CONFIRM YOUR LOCATION :
+                </label>
+              <label className='mt-2'>State</label>
+              <select className="custom-select mr-sm-2 " onChange={handleStateChange}>
+                <option value="" selected>Choose State</option>
+                { LocationData.map((state,index)=>{
+                  return(
+                  <option key={index} value={index}>{state.state}</option>
+                  )
+                })
+                }
+              </select>
+              {state && 
+              <><label className='mt-3'>City</label><select className="custom-select mr-sm-2 " onChange={(e)=> setCity(e.target.value)}>
+                  <option value="">Choose City</option>
+                  { cityArr.length>0 && cityArr.map((city,index)=>{
+                      return (
+                        <option key={index} value={city}>{city}</option>
+                      )
+                  })
+                  }
+              </select>
+              </>
+              }
+              </div>
+              <div className="form-group">
+                <label htmlFor="recipient-name" className="col-form-label">
+                  Product Description:
+                </label>
+                <textarea
+                  name="productDescription"
+                  value={productDescription}
                   onChange={handleProductChange}
                   type="text"
                   className="form-control"
-                  aria-label="Username"
-                  aria-describedby="basic-addon1"
-                />
+                  id="recipient-name"
+                  rows="3"
+                ></textarea>
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="recipient-name" className="col-form-label">
-                Product Description:
-              </label>
-              <textarea
-                name="productDescription"
-                value={productDescription}
-                onChange={handleProductChange}
-                type="text"
-                className="form-control"
-                id="recipient-name"
-                rows="3"
-              ></textarea>
-            </div>
-            <div className="form-row" id="recipient-name">
-              <div className="form-group col-md-6">
-                <label htmlFor="recipient-name" className="col-form-label">
-                  Product Category:
-                </label>
-                <select
-                  name="productCategory"
-                  onChange={handleProductChange}
-                  className="custom-select mr-sm-2"
-                >
-                  <option value="" selected>
-                    Choose Category
-                  </option>
-                  {categories &&
-                    categories.map((c, i) => (
-                      <option key={i} value={c._id}>
-                        {c.name}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="form-group col-md-6">
-                <label htmlFor="recipient-name" className="col-form-label">
-                  Product Year:
-                </label>
-                <select
-                  class="form-control"
-                  id="usedAndNew"
-                  onChange={usedChange}
-                >
-                  <option value="new">New</option>
-                  <option value="old">Old</option>
-                </select>
-                {used == "old" && (
-                  <input
-                    name="year"
-                    value={year}
+              <div className="form-row" id="recipient-name">
+                <div className="form-group col-md-6">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Product Category:
+                  </label>
+                  {/* <select
+                    name="productCategory"
                     onChange={handleProductChange}
-                    type="number"
-                    min="1"
-                    className="form-control mt-3"
-                    id="recipient-name"
-                    placeholder="How many years old?"
-                  />
-                )}
+                    className="custom-select mr-sm-2"
+                  >
+                    <option value="" selected>
+                      Choose Category
+                    </option>
+                    {categories &&
+                      categories.map((c, i) => (
+                        <option key={i} value={c._id}>
+                          {c.name}
+                        </option>
+                      ))}
+                  </select> */}
+                  <select name="productCategory" className="custom-select mr-sm-2" onChange={handleMajorCategoryChange}>
+                  <option  value="" selected>Choose Category</option>
+                  {CategoryData && CategoryData.map((category,index)=>{
+                    return( <option value={index}>{category.title}</option>)
+                  })}
+                  </select>
+                  {disSubCategory.length>0 &&  <select name="subCategory" className="custom-select mr-sm-2 mt-3" onChange={handleProductChange}>
+                  <option value="" selected>Choose Sub Category</option>
+                  {disSubCategory.map((subCategory,index)=>{
+                    return( <option key={index} value={subCategory.title}>{subCategory.title}</option>)
+                  })} 
+                  </select>
+                  }
+                </div>
+                <div className="form-group col-md-6">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Product Year:
+                  </label>
+                  <select
+                    class="form-control"
+                    id="usedAndNew"
+                    onChange={usedChange}
+                  > 
+                    <option value="new" >New</option>
+                    <option value="old">Old</option>
+                  </select>
+                  {used == "old" && (
+                    <input
+                      name="year"
+                      value={year}
+                      onChange={handleProductChange}
+                      type="number"
+                      min="1"
+                      className="form-control mt-3"
+                      id="recipient-name"
+                      placeholder="How many years old?"
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-            >
-              Add Product
-            </button>
-          </div>
-        </form>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+              >
+                Add Product
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 
 const callAcceptBid= (e)=>{
   const obj = Object.assign({}, e.target.value.split(","))
@@ -440,8 +504,8 @@ const showProducts = () => (
                 <div className="card-body">
                   <h5 className="card-title">{p.productName}</h5>
                   <p className="card-text">{p.productDescription}</p>
-                  <p className="card-text"><small className="text-muted">Category: {p.productCategory.name}</small></p>
-                  <p className="card-text"><small className="text-muted">year: {p.year}</small></p>
+                  <p className="card-text"><small className="text-muted">Category: {p.subCategory}</small></p>
+                  <p className="card-text"><small className="text-muted">year: {p.year==0?"New":p.year}</small></p>
                   {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}
                   <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
                   <p className="card-text"><small className="text-muted">Last updated: {moment(p.updatedAt).fromNow()}</small></p>

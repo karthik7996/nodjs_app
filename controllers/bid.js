@@ -17,7 +17,10 @@ exports.placeBid = async (req, res) => {
         }
 
       // code for user already bided
-      const userAlreadyBid = await Product.findOne({_id: productId}).select({ bidder: {$elemMatch: {bidderId: _id}}});
+      const userAlreadyBid = await Product.findOne({_id: productId}).select({images: 0,bidder: {$elemMatch: {bidderId: _id}}});
+      
+      console.log("useralreadybid", userAlreadyBid)
+
         if(userAlreadyBid.bidder.length ===1){
         //   const findproduct_ = await Product.findOne({_id: productId})
         //   let max1 = 0
@@ -78,7 +81,8 @@ exports.readUserBid = async (req, res) => {
     const bidProducts = [];
     let user = await User.findOne({_id});
     for( const bidItem of user.onBid) {
-      const product = await Product.findOne({_id:bidItem.productId}).populate('productCategory', 'name');
+      const product = await Product.findOne({_id:bidItem.productId})
+      console.log(product)
       const item = {
           productId: bidItem.productId,
           productName: product.productName,
