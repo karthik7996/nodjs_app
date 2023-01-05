@@ -45,7 +45,7 @@ const Header = (props) => {
       var bsCollapse = new Collapse(myCollapse, {toggle: false})
       toggle ? bsCollapse.show() : bsCollapse.hide()
     }
-  },[toggle,location.pathname]);
+  },[toggle,routeLocation.pathname]);
   // const searchProdct=(e)=>{
   //   e.preventDefault()
   //   searchAndRefine(search)
