@@ -95,7 +95,6 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Chat
-                    user={isAuthenticated()}
                     selectedChat={selectedChat}
                     setSelectedChat={setSelectedChat}
                     notification={notification}
