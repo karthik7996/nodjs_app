@@ -237,7 +237,7 @@
     background-size: cover;
     display: flex;
     width: 100vw;
-    height: 100vh;
+    height: 80vh;
     justify-content: center;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -483,9 +483,13 @@ pre{
     position: static;
     height: auto;
     padding-bottom: 5px;
+    text-align: center;
   }
   .productAllCard{
     text-align: center;
+  }
+  .headerName{
+    margin-left: -40px;
   }
   .searchBar{
     width: 100%;
