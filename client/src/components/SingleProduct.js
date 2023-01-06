@@ -6,11 +6,13 @@ import { getSingleProduct } from '../api/product'
 import {placeBid} from '../api/bid'
 import { isAuthenticated} from '../helpers/auth';
 import Carousel from "react-material-ui-carousel";
-import { createMessage } from "../api/message";
-import { getLoggedInUser } from "../api/auth";
+
 import Alert from './Alert';
 import isEmpty from 'validator/lib/isEmpty';
-const SingleProduct = () => {
+//new changes
+import { getLoggedInUser } from "../api/auth";
+import { createChat } from "../api/chat";
+const SingleProduct = (props) => {
 
   const [alert, setAlert] = useState(null);
 
@@ -31,14 +33,7 @@ console.log(productId)
   const [p, setProduct] = useState('')
   const [categories, setCategories] = useState('')
   const [loggedInUser, setLoggedInUser] = useState(null);
-
-  const chatHandler = (reciever) => {
-    createMessage(reciever, loggedInUser && loggedInUser._id).then(function (
-      message
-    ) {
-      console.log(message);
-    });
-  };
+  const [chatLoading, setChatLoading] = useState(false);
 
   useEffect(() => {
     loadProduct()
@@ -163,14 +158,25 @@ console.log(productId)
                 ) : (
                   <button
                     onClick={() => {
-                      chatHandler(p.userId);
-                      navigate(`/chat/${p.userId}`);
+                      setChatLoading(true);
+                      createChat(p.userId)
+                        .then(function (data) {
+                          if (data) {
+                            console.log(data);
+
+                            props.setSelectedChat(data.data[0]);
+                            setChatLoading(false);
+
+                            navigate(`/chat`);
+                          }
+                        })
+                        .catch((err) => {
+                          console.log(err.response);
+                        });
                     }}
                     className="btn mt-3 btn-warning btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3"
-                    data-toggle="modal"
-                    data-target="#bidProduct"
                   >
-                    Chat
+                    {chatLoading ? "redirecting..." : "Chat"}
                   </button>
                 )}
           </div>

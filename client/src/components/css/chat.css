@@ -1,0 +1,12 @@
+@media only screen and (max-width: 600px) {
+    .main-div {
+      height: 76vh;
+    }
+  }
+  
+  .main-div {
+    height: 92.2vh;
+  }
+  .avataar {
+    background-color: whitesmoke;
+  }

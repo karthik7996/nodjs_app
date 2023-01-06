@@ -1,115 +1,291 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import io from "socket.io-client";
+
+import {
+  allChats,
+  createChatNotification,
+  fetchAllMessage,
+  getAllChatNotification,
+  sendMessage,
+} from "../api/chat";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import "./css/chat.css";
+
 import {
   MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageInput,
-  Avatar,
+  Sidebar,
   ConversationList,
   Conversation,
-  Sidebar,
-  Search,
+  Message,
+  MessageInput,
   ConversationHeader,
-  VoiceCallButton,
-  VideoCallButton,
-  InfoButton,
+  Avatar,
+  MessageList,
+  ChatContainer,
+  Loader,
 } from "@chatscope/chat-ui-kit-react";
-import { getLoggedInUser } from "../api/auth";
-import { getMessages, getAllMessages } from "../api/message";
-import { useParams } from "react-router-dom";
+import { getName, getSenderId } from "../helpers/message";
+var socket, selectedChatCompare;
 const Chat = (props) => {
-  const { id } = useParams();
-  console.log(id);
-  const [typedmessage, setTypedmessage] = useState(null);
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [getMessage, setGetMessage] = useState(null);
+  const [messageInputValue, setMessageInputValue] = useState("");
+  const [Chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [allMessage, setAllMessage] = useState([]);
+  const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(null);
+
+  //responsive side bar close and open
+
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [sidebarStyle, setSidebarStyle] = useState({});
+  const [chatContainerStyle, setChatContainerStyle] = useState({});
+  const [conversationContentStyle, setConversationContentStyle] = useState({});
+  const [conversationAvatarStyle, setConversationAvatarStyle] = useState({});
+  const [mainDivStyle, setMainDivStyle] = useState({});
+  const handleBackClick = () => setSidebarVisible(!sidebarVisible);
+
+  const handleConversationClick = useCallback(
+    (e) => {
+      props.setSelectedChat(e);
+      if (sidebarVisible) {
+        setSidebarVisible(false);
+      }
+    },
+    [sidebarVisible, setSidebarVisible]
+  );
+  useEffect(() => {
+    if (sidebarVisible) {
+      setSidebarStyle({
+        display: "flex",
+        flexBasis: "auto",
+        width: "100%",
+        maxWidth: "100%",
+      });
+      setConversationContentStyle({
+        display: "flex",
+      });
+      setConversationAvatarStyle({
+        fontSize: "1.5vmax",
+        marginRight: "2em",
+      });
+      setChatContainerStyle({
+        display: "none",
+      });
+      setMainDivStyle({
+        height: "76vh",
+        position: "relative",
+      });
+    } else {
+      setSidebarStyle({});
+      setConversationContentStyle({});
+      setConversationAvatarStyle({});
+      setChatContainerStyle({});
+      setMainDivStyle({});
+    }
+  }, [
+    sidebarVisible,
+    setSidebarVisible,
+    setConversationContentStyle,
+    setConversationAvatarStyle,
+    setSidebarStyle,
+    setChatContainerStyle,
+  ]);
+
+  //end of side bar logic
 
   useEffect(() => {
-    if (loggedInUser === null) {
-      getLoggedInUser(id).then(function (user) {
-        setLoggedInUser(user.data);
-      });
-    }
-    getMessages(id).then(function (data) {
-      setGetMessage(data.data);
+    socket = io("http://localhost:5000");
+    socket.on("connect", (soc) => {
+      setSocketConnected(soc);
     });
-  }, [typedmessage]);
-  console.log(getMessage);
-  let sendHandler = (e) => {
-    setTypedmessage(e);
-    props.socket &&
-      props.socket.emit("sent-message", {
-        message: e,
-        senderId: loggedInUser._id,
-        sentTo: id,
-      });
+
+    socket.emit("setup", props.user._id);
+  }, []);
+
+  useEffect(() => {
+    props.selectedChat && getAllMessages();
+    selectedChatCompare = props.selectedChat;
+  }, [props.selectedChat]);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chatId._id
+      ) {
+        if (!props.notification.includes()) {
+          props.setNotification([newMessageReceived, ...props.notification]);
+        }
+      } else {
+        // getAllMessages().then(function () {
+        //   setAllMessage([...allMessage, newMessageReceived]);
+        // });
+
+        setAllMessage([...allMessage, newMessageReceived]);
+      }
+    });
+  });
+
+  useEffect(() => {
+    fetchAllChats();
+  }, []);
+
+  const fetchAllChats = async () => {
+    setLoading(true);
+    allChats()
+      .then(function (data) {
+        if (data) {
+          setChats(data.data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {});
   };
 
-  let messageList =
-    getMessage &&
-    getMessage.messages.map((e) => (
-      <Message
-        model={{
-          message: e.message,
-          sentTime: "just now",
-          sender: "Joe",
-          direction:
-            e.userIdSent._id !== loggedInUser._id ? "incoming" : "outgoing",
-          position: "single",
-        }}
-      ></Message>
-    ));
-  console.log(loggedInUser);
-  let conversationList;
-  //   // allMessage &&
-  //   // allMessage.map((e, i) => (
-  //   //   <Conversation
-  //   //     style={{ fontSize: "1vmax" }}
-  //   //     name={e.userA._id !== loggedInUser._id ? e.userA.name : e.userB.name}
-  //   //     info="Yes i can do it for you"
-  //   //     unreadCnt={3}
-  //   //   >
-  //   //     <Avatar src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHVzZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60" />
-  //   //   </Conversation>
-  //   ));
+  let sendMes = (content) => {
+    setLoading2(true);
+    sendMessage(content, props.selectedChat._id)
+      .then(function (data) {
+        if (data) {
+          setMessageInputValue("");
+          setAllMessage([...allMessage, data.data]);
+
+          setLoading2(false);
+          socket.emit("new message", data.data);
+        }
+      })
+      .catch((err) => {});
+  };
+
+  let addNotification = () => {
+    if (props.notification.length !== 0) {
+      let notificationId = props.notification && props.notification[0]._id;
+      let userId =
+        props.notification &&
+        props.notification[0].chatId.users[0] ===
+          props.notification[0].sender._id
+          ? props.notification[0].chatId.users[1]
+          : props.notification[0].chatId.users[0];
+      createChatNotification(notificationId, userId)
+        .then(function (data) {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  let getAllMessages = () => {
+    setLoading3(true);
+    fetchAllMessage(props.selectedChat._id)
+      .then(function (data) {
+        if (data) {
+          setAllMessage(data.data);
+
+          socket.emit("join chat", props.selectedChat._id);
+          setLoading3(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    addNotification();
+  }, [props.notification]);
+
   return (
-    <div>
-      <MainContainer responsive style={{ height: "45vmax" }}>
-        <Sidebar
-          style={{ fontSize: "1vmax" }}
-          position="left"
-          scrollable={true}
-          className="w-50"
-        >
-          <Search placeholder="Search..." />
-          <ConversationList>{conversationList}</ConversationList>
+    <div className="main-div" style={mainDivStyle}>
+      <MainContainer responsive>
+        <Sidebar position="left" scrollable={true} style={sidebarStyle}>
+          <ConversationList className="p-3">
+            {loading ? (
+              <Loader />
+            ) : !Chats.length ? (
+              <h4>No chats yet !!</h4>
+            ) : (
+              Chats.map((e, i) => (
+                <Conversation
+                  key={e._id}
+                  onClick={() => {
+                    handleConversationClick(e);
+                  }}
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ fontSize: "1.4em" }}
+                >
+                  <Avatar
+                    className="avataar d-flex align-items-center justify-content-center"
+                    style={conversationAvatarStyle}
+                  >
+                    {getName(props.user._id, e.users)[0].toUpperCase()}
+                  </Avatar>
+                  <Conversation.Content
+                    name={getName(props.user._id, e.users)}
+                    style={conversationContentStyle}
+                    info={e.latestMessage && e.latestMessage.content}
+                  />
+                </Conversation>
+              ))
+            )}
+          </ConversationList>
         </Sidebar>
-        <ChatContainer>
-          <ConversationHeader style={{ fontSize: "1vmax" }}>
-            <ConversationHeader.Back />
-            <Avatar
-              src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fHVzZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60"
-              name="Zoe"
-            />
+
+        <ChatContainer style={chatContainerStyle}>
+          <ConversationHeader style={{ fontSize: "1.3em" }}>
+            <ConversationHeader.Back onClick={handleBackClick} />
+            {props.selectedChat ? (
+              <Avatar
+                className="d-flex align-items-center justify-content-center"
+                style={{ backgroundColor: "whitesmoke" }}
+              >
+                {getName(
+                  props.user._id,
+                  props.selectedChat.users
+                )[0].toUpperCase()}
+              </Avatar>
+            ) : (
+              ""
+            )}
             <ConversationHeader.Content
-              userName={id}
-              info="Active 10 mins ago"
+              userName={
+                props.selectedChat &&
+                getName(props.user._id, props.selectedChat.users)
+              }
             />
-            <ConversationHeader.Actions>
-              <VideoCallButton />
-              <InfoButton />
-            </ConversationHeader.Actions>
           </ConversationHeader>
-          <MessageList style={{ padding: "2vmax", fontSize: "1vmax" }}>
-            {messageList}
+          <MessageList>
+            {!props.selectedChat ? (
+              <h4 className="mt-4">Select a User to continue Chatting !</h4>
+            ) : loading3 ? (
+              <Loader className="m-5 " />
+            ) : !allMessage.length ? (
+              <h3 className="mt-4">No messages yet !</h3>
+            ) : (
+              allMessage.map((e) => (
+                <Message
+                  key={e._id}
+                  className="mt-3"
+                  style={{ fontSize: "1.4em" }}
+                  model={{
+                    message: e.content,
+
+                    direction:
+                      e.sender._id == props.user._id ? "outgoing" : "incoming",
+                    position: "single",
+                  }}
+                ></Message>
+              ))
+            )}
           </MessageList>
+
           <MessageInput
-            onSend={sendHandler}
-            attachButton={false}
-            style={{ fontSize: "1.2vmax" }}
+            onSend={() => {
+              props.selectedChat && sendMes(messageInputValue);
+            }}
+            style={{ fontSize: "1.5em" }}
             placeholder="Type message here"
+            value={messageInputValue}
+            onChange={(val) => setMessageInputValue(val)}
           />
         </ChatContainer>
       </MainContainer>

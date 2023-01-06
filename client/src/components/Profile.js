@@ -7,11 +7,16 @@ import { setLocalStorage } from "../helpers/localStorage";
 import { BsArrowRightSquare } from "react-icons/bs";
 import { VscUnverified } from "react-icons/vsc";
 import Camera from "./Camera";
+import { useNavigate } from "react-router-dom";
+
 const Profile = () => {
   const [imageInputValue, setImageInputValue] = useState(null);
   const [aadhar, setaadhar] = useState(null);
   const [isShown, setIsShown] = useState(false);
   const [cameraUrl, setCameraUrl] = useState(null);
+  //new changes
+  const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
   function handleisShown() {
     setIsShown(!isShown);
   }
@@ -52,11 +57,19 @@ const Profile = () => {
   };
   let verifySubmitHandler = (e) => {
     e.preventDefault();
+    setLoader(true);
     if (cameraUrl && aadhar) {
       console.log(cameraUrl);
       console.log(aadhar);
-      verification({ profileImage: cameraUrl, aadhar });
+      verification({ profileImage: cameraUrl, aadhar }).then(function (data) {
+        setLoader(false);
+        navigate("/");
+      })
+      .catch(err=>{
+        console.log(err);
+      });
     } else {
+      setLoader(false);
       alert("We require your image and your aadhar card for verifying!!");
     }
   };
@@ -85,7 +98,15 @@ const Profile = () => {
       )}
       {isShown && (
         <div className="container mt-5">
-          <form onSubmit={verifySubmitHandler}>
+         {loader? <div className="d-flex justify-content-center">
+              <div
+                className="spinner-border"
+                style={{ width: "5vmax", height: "5vmax" }}
+                role="status"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>: <form onSubmit={verifySubmitHandler}>
             <div
               className="row justify-content-md-center"
               style={{
@@ -122,7 +143,7 @@ const Profile = () => {
                 Submit
               </button>
             </div>
-          </form>
+          </form>}
         </div>
       )}
       <div

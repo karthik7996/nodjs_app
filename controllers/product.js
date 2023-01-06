@@ -74,52 +74,6 @@ exports.create = async (req, res) => {
   }
 };
 
-//backup code
-// exports.create = async (req, res) => {
-
-//   console.log( 'req.file', req.file)
-//   console.log(req.body)
-//   console.log(req.user)
-//   const {_id} = req.user;
-
-//   const { filename } = req.file
-  
-//   const { productName, productDescription, productPrice, productCategory, year } = req.body
-
-//   try {
-//     const user = await User.findOne({ _id});
-//     if (!user.accStatus) {
-//       return res.status(400).json({
-//         error: 'Please verify from profile section before you upload any product',
-//       });
-//     }
-//     let product = new Product()
-//     product.userId = _id
-//     product.fileName = filename
-//     product.productName = productName
-//     product.productDescription = productDescription
-//     product.productPrice = productPrice
-//     product.productCategory = productCategory
-//     product.year = year
-//     await product.save()
-//     .then(response => {
-//       User.findOneAndUpdate({_id},{$push: {products: response._id}}, function(err, foundUser){
-//         if(err)
-//             console.log(err);
-//     });
-//       res.status(201).json({
-//         message: 'Product created successfully',
-//         product: response
-//       })
-//     })
-    
-//   } catch (error) {
-//     console.log(error)
-//   }
-
-
-// }
-
 exports.readAll = async (req, res) => {
 
   try {
@@ -190,31 +144,43 @@ exports.delete = async (req, res) => {
   }
 }
 
-
 exports.update = async (req, res) => {
-  const { id } = req.params
-  const { productName, productDescription, productPrice, mainCategory, subCategory, year } = req.body
+  let images = [];
+  if (typeof req.body.productImage === "string") {
+    images.push(req.body.productImage);
+  } else {
+    images = req.body.productImage;
+  }
+
+  const imagesLink = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "productImages",
+    });
+
+    imagesLink.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+
+  console.log(imagesLink);
+  const { productId } = req.params;
+  const { productName, productDescription, productPrice, productQuantity } =
+    req.body;
 
   try {
-    let product = await Product
-      .findById
-      (productId)
-      .then(response => {
-        response.productName = productName
-        response.productDescription = productDescription
-        response.productPrice = productPrice
-        response.mainCategory = mainCategory
-        response.subCategory = subCategory
-        response.year = year
-        response.save()
-        res.status(200).json({
-          message: 'Product updated successfully',
-          product: response
-        })
-      }
-      )
+    let product = await Product.findByIdAndUpdate(productId, {
+      productName,
+      productDescription,
+      productPrice,
+      productQuantity,
+      images: imagesLink,
+    });
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(500).json(error);
   }
-  catch (error) {
-    console.log(error)
-  }
-}
+};
+

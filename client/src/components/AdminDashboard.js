@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment';
+
 import isEmpty from 'validator/lib/isEmpty';
-import { createCategory, getCategories } from '../api/category'
+// import { createCategory, getCategories } from '../api/category'
 import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/product'
 import { showErrorMessage, showSuccessMessage } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
@@ -13,7 +14,7 @@ import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
 import {CategoryData} from "../helpers/categoryData"
 import {LocationData} from "../helpers/StateAndCity"
-
+import { TailSpin } from "react-loader-spinner";
 //changes for verification
 import { acceptVerification, allVerifications,deleteVerification } from "../api/auth";
 
@@ -35,7 +36,7 @@ const AdminDashboard = () => {
   //changes for verification
   const [showVeri, setShowVeri] = useState(false);
   const [pendingVerification, setPendingVerification] = useState();
-
+  const [loader, setLoader] = useState(false);
   const showAlert = (messsage, type) =>{
     setAlert({
       msg: messsage,
@@ -51,7 +52,6 @@ const AdminDashboard = () => {
   const [productData, setProductData] = useState({
     productName: '',
     productDescription: '',
-    productPrice: '',
     subCategory: '',
     year: 0
   })
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
     }
   }
 
-  const {productName, productDescription, productPrice, subCategory, year} = productData;
+  const {productName, productDescription, subCategory, year} = productData;
 
   const handleProductImage = (e) => {
     // setProductData({ ...productData, productImage: e.target.files[0] });
@@ -114,12 +114,11 @@ const AdminDashboard = () => {
 
   const handleProductChange = (e) => {
     setProductData({...productData, [e.target.name]: e.target.value})
-    console.log(productData)
   }
 
   const handleProductSubmit = (e) => {
-    console.log("submitted");
     e.preventDefault();
+    setLoader(true);
     if (images.length==0 || isEmpty(productName) || isEmpty(productDescription) || isEmpty(mainCategory) || isEmpty(subCategory)  || isEmpty(state) || isEmpty(city)){
       showAlert('Please fill all fields', "danger")
     } 
@@ -152,8 +151,10 @@ const AdminDashboard = () => {
             subCategory: "",
             year: 0,
           });
+          setLoader(false);
         })
       .catch(err => {
+        setLoader(false);
         showAlert(err.response.data.error, "danger")
       })      
     }
@@ -168,22 +169,22 @@ const AdminDashboard = () => {
       setShowVeri(!showVeri);
     });
   };
-  useEffect(() => {
-    loadCategories()
-  }, [loading])
+  // useEffect(() => {
+  //   loadCategories()
+  // }, [loading])
 
-  const loadCategories = async () => {
-    await getCategories()
-    .then((response) => {
-      setCategories(response.data)
-      console.log('categories', response.data)
-    }
-    )
-    .catch((error) => {
-      console.log('loadCategories error', error)
-    }
-    )
-  }
+  // const loadCategories = async () => {
+  //   await getCategories()
+  //   .then((response) => {
+  //     setCategories(response.data)
+  //     console.log('categories', response.data)
+  //   }
+  //   )
+  //   .catch((error) => {
+  //     console.log('loadCategories error', error)
+  //   }
+  //   )
+  // }
 
   useEffect(() => {
     loadProducts()
@@ -245,28 +246,28 @@ const AdminDashboard = () => {
   }
 
 
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value)
-    // console.log(category)
-  }
+  // const handleCategoryChange = (e) => {
+  //   setCategory(e.target.value)
+  //   // console.log(category)
+  // }
 
-  const handleCategorySubmit = (e) => {
-    e.preventDefault()
-    if (isEmpty(category)) {
-      alert('Please enter a category')
-    } else {
-      const data = { name: category }
-      createCategory(data)
-        .then(response => {
-          setCategory('')
-          console.log(response)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-      }
+  // const handleCategorySubmit = (e) => {
+  //   e.preventDefault()
+  //   if (isEmpty(category)) {
+  //     alert('Please enter a category')
+  //   } else {
+  //     const data = { name: category }
+  //     createCategory(data)
+  //       .then(response => {
+  //         setCategory('')
+  //         console.log(response)
+  //       })
+  //       .catch(error => {
+  //         console.log(error)
+  //       })
+  //     }
 
-  }
+  // }
 
   function setBid_Products(){
     setHideShow(!hideshow)
@@ -344,7 +345,18 @@ const showProductModal = () => (
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div className="modal-body">
+          {loader?<div className="d-flex justify-content-center">
+                <TailSpin
+                  height="450"
+                  width="100"
+                  color="gray"
+                  ariaLabel="tail-spin-loading"
+                  radius="0.5"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              </div>:<Fragment><div className="modal-body">
             <div className="form-group mb-3">
               <label htmlFor="recipient-name" className="col-form-label">
                 Upload Image
@@ -508,7 +520,7 @@ const showProductModal = () => (
             >
               Add Product
             </button>
-          </div>
+          </div></Fragment>}
         </form>
       </div>
     </div>
@@ -559,7 +571,7 @@ const showProducts = () => (
                   <h5 className="card-title">{p.productName}</h5>
                   <p className="card-text">{p.productDescription}</p>
                   <p className="card-text"><small className="text-muted">Category: {p.subCategory}</small></p>
-                  <p className="card-text"><small className="text-muted">year: {p.year}</small></p>
+                  <p className="card-text"><small className="text-muted">year: {p.year==0?"New":p.year}</small></p>
                   {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}
                   <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
                   <p className="card-text"><small className="text-muted">Last updated: {moment(p.updatedAt).fromNow()}</small></p>

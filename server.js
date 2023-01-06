@@ -19,35 +19,30 @@ const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const profileRoutes = require('./routes/profile');
 const bidRoutes = require('./routes/bid');
+const chatRoutes = require("./routes/chatRoutes");
 const cloudinary = require("cloudinary");
 const fileUpload = require("express-fileupload");
-const messageModel = require("./models/messageModel");
+
 const searchRoutes = require("./routes/search");
 io.on("connection", function (socket) {
-  console.log(socket.id, " connected!");
 
-  socket.on("sent-message", async (data) => {
-    console.log(data.message, data.senderId, data.sentTo);
-
-    let mesmodel = await messageModel.findOne({
-      userA: data.senderId,
-      userB: data.sentTo,
-    });
-    if (!mesmodel) {
-      mesmodel = await messageModel.findOne({
-        userA: data.sentTo,
-        userB: data.senderId,
-      });
-    }
-
-    mesmodel.messages.push({
-      userIdSent: data.senderId,
-      message: data.message,
-    });
-    await mesmodel.save();
-    mesmodel.populate({ path: "messages", populate: { path: "userIdSent" } });
-    console.log(mesmodel);
+  socket.on("setup", (userId) => {
+    socket.join(userId);
   });
+  socket.on("join chat", (room) => {
+    socket.join(room);
+  });
+  socket.on("new message", (newMessage) => {
+    var chat = newMessage.chatId;
+
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user) => {
+      if (user === newMessage.sender._id) return;
+      socket.in(user).emit("message received", newMessage);
+    });
+  });
+ 
 
   socket.on("disconnect", function () {
     console.log(socket.id, " disconnected!");
@@ -86,6 +81,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/bid', bidRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/search', searchRoutes)
+app.use("/api/chat", chatRoutes);
 connectDB();
 
 app.get('/', (req, res) => {

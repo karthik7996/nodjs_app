@@ -11,3 +11,15 @@ export const showSuccessMessage = (msg) => (
   {msg}
   </div>
 );
+
+export const getName = (lgUser, chatParticipants) => {
+  return chatParticipants[0]._id == lgUser
+    ? chatParticipants[1].name
+    : chatParticipants[0].name;
+};
+
+export const getSenderId = (lgUser, chatParticipants) => {
+  return chatParticipants[0]._id == lgUser
+    ? chatParticipants[1]._id
+    : chatParticipants[0]._id;
+};
