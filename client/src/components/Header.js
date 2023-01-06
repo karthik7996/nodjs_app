@@ -20,9 +20,11 @@ import { Effect } from "react-notification-badge";
 import {NavLink, useNavigate, useLocation } from "react-router-dom";
 import { getAllChatNotification } from "../api/chat";
 import { deletechatnotification } from "../api/chat";
+import { BsList } from "react-icons/bs";
 const Header = (props) => {
   const {state, dispatch} = useContext(ProductContext);
-  
+  const [showNavbar, setShowNavbar] = useState(window.innerWidth)
+
   //chat changes
   const navigate = useNavigate();
   const routeLocation = useLocation();
@@ -30,6 +32,11 @@ const Header = (props) => {
   var [toggle, setToggle] = useState(false);
   const  [search, setSearch] = useState("");
   const [location, setLocation] = useState("")
+
+  useEffect(()=>{if(window.innerWidth<576){
+    setShowNavbar(!showNavbar)
+  }},[])
+
   useEffect(() => {
     if(isAuthenticated()){
       console.log(isAuthenticated())
@@ -45,7 +52,7 @@ const Header = (props) => {
       var bsCollapse = new Collapse(myCollapse, {toggle: false})
       toggle ? bsCollapse.show() : bsCollapse.hide()
     }
-  },[toggle,routeLocation.pathname]);
+  },[toggle,location.pathname]);
   // const searchProdct=(e)=>{
   //   e.preventDefault()
   //   searchAndRefine(search)
@@ -78,11 +85,13 @@ const Header = (props) => {
   }
   const showNavigation  = () => (
     <>
-    <NavLink to="/" className="text-decoration-none">
+    <NavLink to="/" className="text-decoration-none headerName">
         <p className="logoName"><span className="logoImage"><TbHeartHandshake className="glow"/></span>BidOnBuy</p>
     </NavLink>
+    {window.innerWidth<576 && <div><p  style={{position: "absolute", right:"10px", top:"15px"}} onClick={()=>setShowNavbar(!showNavbar)}><BsList className='text-white h1 ml-5'/></p></div>}
+    {showNavbar && <>
     <form>
-        <input className="searchBar mr-3 w-25"  type="text" placeholder="Location" onChange={(e)=> setLocation(e.target.value)}/>
+        <input className="searchBar mr-3 w-25 mb-2"  type="text" placeholder="Location" onChange={(e)=> setLocation(e.target.value)}/>
         <input className="searchBar" type="text" placeholder='Find Cars, Mobile Phones and more...' onChange={(e)=>setSearch(e.target.value)}/>
         <button className='searchBtn scale' onClick={searchProdct}><BsSearch /></button>
       </form>
@@ -178,7 +187,8 @@ const Header = (props) => {
           </div>
       </div>
   </>)}
-    </>
+  </>}
+      </>
   )
   return <MainHeader id="header" className="header" style={{position:"relative", zIndex:"20"}}>{showNavigation()}</MainHeader>
 }

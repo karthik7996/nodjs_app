@@ -117,7 +117,7 @@ const searchProdct=()=>{
                   
           </div>
         }
-          <div className="col-sm-9 pl-5" >
+          <div className="col pl-5" >
           <div className="row ">
         { products.length>0 ? <>{products.map((p, i) => (
           <div style={{position:'relative'}} className='productCard border border-white border-top-0'>
