@@ -25,7 +25,7 @@ import {
   Loader,
 } from "@chatscope/chat-ui-kit-react";
 import { getName, getSenderId } from "../helpers/message";
-var socket, selectedChatCompare;
+var socket, selectedChatCompare, user;
 const Chat = (props) => {
   const [messageInputValue, setMessageInputValue] = useState("");
   const [Chats, setChats] = useState([]);
@@ -33,7 +33,7 @@ const Chat = (props) => {
   const [allMessage, setAllMessage] = useState([]);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
-  const [socketConnected, setSocketConnected] = useState(null);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   //responsive side bar close and open
 
@@ -96,13 +96,12 @@ const Chat = (props) => {
 
   useEffect(() => {
     socket = io("http://localhost:5000");
-    socket.on("connect", (soc) => {
-      setSocketConnected(soc);
+    socket.on("connected", () => {
+      setSocketConnected(true);
     });
-
-    socket.emit("setup", props.user._id);
+    user = JSON.parse(localStorage.getItem("user"));
+    socket.emit("setup", user._id);
   }, []);
-
   useEffect(() => {
     props.selectedChat && getAllMessages();
     selectedChatCompare = props.selectedChat;
@@ -140,7 +139,9 @@ const Chat = (props) => {
           setLoading(false);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   let sendMes = (content) => {
@@ -149,10 +150,10 @@ const Chat = (props) => {
       .then(function (data) {
         if (data) {
           setMessageInputValue("");
+          socket.emit("new message", data.data);
           setAllMessage([...allMessage, data.data]);
 
           setLoading2(false);
-          socket.emit("new message", data.data);
         }
       })
       .catch((err) => {});
@@ -217,10 +218,10 @@ const Chat = (props) => {
                     className="avataar d-flex align-items-center justify-content-center"
                     style={conversationAvatarStyle}
                   >
-                    {getName(props.user._id, e.users)[0].toUpperCase()}
+                    {getName(user && user._id, e.users)[0].toUpperCase()}
                   </Avatar>
                   <Conversation.Content
-                    name={getName(props.user._id, e.users)}
+                    name={getName(user && user._id, e.users)}
                     style={conversationContentStyle}
                     info={e.latestMessage && e.latestMessage.content}
                   />
@@ -239,7 +240,7 @@ const Chat = (props) => {
                 style={{ backgroundColor: "whitesmoke" }}
               >
                 {getName(
-                  props.user._id,
+                  user && user._id,
                   props.selectedChat.users
                 )[0].toUpperCase()}
               </Avatar>
@@ -249,17 +250,15 @@ const Chat = (props) => {
             <ConversationHeader.Content
               userName={
                 props.selectedChat &&
-                getName(props.user._id, props.selectedChat.users)
+                getName(user && user._id, props.selectedChat.users)
               }
             />
           </ConversationHeader>
           <MessageList>
             {!props.selectedChat ? (
-              <h4 className="mt-4">Select a User to continue Chatting !</h4>
-            ) : loading3 ? (
-              <Loader className="m-5 " />
-            ) : !allMessage.length ? (
-              <h3 className="mt-4">No messages yet !</h3>
+              <h4 className="m-4">Select a user to continue chatting</h4>
+            ) : allMessage.length == 0 ? (
+              <h4 className="m-4">No messages yet !!</h4>
             ) : (
               allMessage.map((e) => (
                 <Message
@@ -270,7 +269,7 @@ const Chat = (props) => {
                     message: e.content,
 
                     direction:
-                      e.sender._id == props.user._id ? "outgoing" : "incoming",
+                      e.sender._id == user._id ? "outgoing" : "incoming",
                     position: "single",
                   }}
                 ></Message>
@@ -294,3 +293,4 @@ const Chat = (props) => {
 };
 
 export default Chat;
+
