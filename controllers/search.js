@@ -45,7 +45,7 @@ exports.searchAndRefine = async (req, res) => {
         $eq: 0
     },
   } : {};
-  if (req.query.year==99){
+  if (Number(req.query.year)==99){
     year ={
       year:{
         "$gt": 0

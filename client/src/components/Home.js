@@ -12,11 +12,14 @@ import { searchAndRefine } from "../api/product";
 const Home = () => {
     const [bidonbuySelect, setBidonbuySelect] = useState("");
     const [newProduct, setNewProduct] = useState("")
+    const [oldProduct, setOldProduct] = useState("")
+
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         loadProducts()
-        searchProdct()
+        searchNewProduct()
+        searchOldProduct()
       }, [loading])
     const loadProducts = async () => {
         await gethomeProduct()
@@ -30,7 +33,7 @@ const Home = () => {
         )
       }
 
-      const searchProdct=()=>{
+      const searchNewProduct=()=>{
         let location="",search="",page=1,mainCategory="",subCategory="",year=0,sort="",limit=4;
         searchAndRefine(location="", search="",page=1,mainCategory="",subCategory="",year=0,sort="",limit=4)
         .then((response) => {
@@ -38,7 +41,19 @@ const Home = () => {
         }
         )
         .catch((error) => {
-          console.log('loadproduct error', error)
+          console.log('loadNewproduct error', error)
+        }
+        )
+      }
+      const searchOldProduct=()=>{
+        let location="",search="",page=1,mainCategory="",subCategory="",year=99,sort="",limit=4;
+        searchAndRefine(location="", search="",page=1,mainCategory="",subCategory="",year=99,sort="",limit=4)
+        .then((response) => {
+            setOldProduct(response.data.product)
+        }
+        )
+        .catch((error) => {
+          console.log('loadOldproduct error', error)
         }
         )
       }
@@ -88,6 +103,19 @@ const Home = () => {
             </div>
         </section>
         }
+        { oldProduct &&
+        <section style={{padding: "20px"}}>
+            <div>
+            <h1 className="popularBidding-h1">Old Products</h1>
+            <NavLink className ="bsplay" to="/products?year=99"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
+            </div>
+            <div className="row justify-content-center" >
+            { oldProduct.map((p, i) => (
+                <ProductCard p = {p}/>
+            ))}
+            </div>
+        </section>
+        }
     {/* <section style={{padding: "20px"}}>
             <div>
             <h1 className="popularBidding-h1">Popular Biddings</h1>
@@ -124,7 +152,7 @@ const Home = () => {
             <button className='getStartedBtn sellHover'>Get Started</button>
             </NavLink>
         </div>
-        <div className='account text-center  border-top'>
+        <div className='account text-center'>
         <h3  style={{paddingBottom: "20px", paddingTop: "8px"}}>Follow Us</h3>
         <div style={{paddingBottom: "20px"}}>
             <NavLink className="px-3"><img src="/images/instagram_icon.svg"/></NavLink>
