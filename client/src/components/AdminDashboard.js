@@ -5,11 +5,8 @@ import moment from 'moment';
 import isEmpty from 'validator/lib/isEmpty';
 // import { createCategory, getCategories } from '../api/category'
 import { createProduct, getProduct, deleteProduct, updateProduct } from '../api/product'
-import { showErrorMessage, showSuccessMessage } from '../helpers/message';
-import { showLoading } from '../helpers/loading';
 import {MdDashboard} from "react-icons/md"
 import {getUserBid, acceptBid, withDraw, reject} from '../api/bid'
-import {getLocalStorage} from "../helpers/localStorage"
 import Alert from './Alert';
 import {CgProfile} from "react-icons/cg"
 import {CategoryData} from "../helpers/categoryData"
@@ -19,6 +16,7 @@ import { TailSpin } from "react-loader-spinner";
 import { acceptVerification, allVerifications,deleteVerification } from "../api/auth";
 
 const AdminDashboard = () => {
+  
   const [loading, setLoading] = useState(false);
   const [hideshow, setHideShow] = useState(true)
   const [category , setCategory] = useState('')
@@ -37,6 +35,7 @@ const AdminDashboard = () => {
   const [showVeri, setShowVeri] = useState(false);
   const [pendingVerification, setPendingVerification] = useState();
   const [loader, setLoader] = useState(false);
+
   const showAlert = (messsage, type) =>{
     setAlert({
       msg: messsage,
@@ -106,11 +105,6 @@ const AdminDashboard = () => {
     });
     console.log(images)
   };
-
-  // const handleProductImage = (e) => {
-  //   console.log(e.target.files[0])
-  //   setProductData({...productData, productImage: e.target.files[0]})
-  // }
 
   const handleProductChange = (e) => {
     setProductData({...productData, [e.target.name]: e.target.value})
@@ -565,11 +559,17 @@ const showProducts = () => (
             <div className="row no-gutters">
               <div className="col-md-4">
               <img src= {p.images[0].url} className="card-img" alt={p.productName} />
+              {/* <p className="card-text ml-4 mt-2">{isReadMore ? p.productDescription.slice(0, 150) : p.productDescription}
+                  <span onClick={toggleReadMore} className="read-or-hide text-info" style={{cursor: "pointer"}}>
+                    {isReadMore ? "...read more" : " show less"}
+                  </span>
+              </p> */}
+              <p className='card-text ml-4 mt-2'>{p.productDescription.slice(0,200)}{p.productDescription.length>200?"....":""}</p>
               </div>
               <div className="col-md-4">
                 <div className="card-body">
-                  <h5 className="card-title">{p.productName}</h5>
-                  <p className="card-text">{p.productDescription}</p>
+                  <h5 className="card-title h2">{p.productName}</h5>
+                  <p className="card-text"><small className='text-muted h3 mr-3'>Views: </small>{p.views}</p>
                   <p className="card-text"><small className="text-muted">Category: {p.subCategory}</small></p>
                   <p className="card-text"><small className="text-muted">year: {p.year==0?"New":p.year}</small></p>
                   {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}

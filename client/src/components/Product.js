@@ -3,10 +3,7 @@ import {useNavigate, NavLink, useLocation} from "react-router-dom"
 import ProductCard from './ProductCard'
 import {CategoryData} from "../helpers/categoryData"
 import { CgDetailsLess } from "react-icons/cg";
-import Tooltip from 'react-bootstrap/Tooltip';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { searchAndRefine } from "../api/product";
-import { GiQueenCrown } from 'react-icons/gi';
 
 const Product = () => {
 
@@ -21,7 +18,7 @@ const Product = () => {
   const [subCategory, setSubCategory] = useState(subCategorytemp)
   const [products, setProduct] = useState('')
   const [showFilter, setShowFilter] = useState(window.innerWidth)
-  const [year, setYear] = useState("")
+  const [year, setYear] = useState(query.get("year") ||"")
   const navigate = useNavigate();
   const [sort, setSort] = useState("asc")
   const [count, setCount] = useState(1);
@@ -54,11 +51,13 @@ const searchProdct=()=>{
       setMainCategory(CategoryData[index.target.value].title)
       setSubArrCategory(CategoryData[index.target.value].subNav)
       setSubCategory("")
+      navigate(`/products?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&page=1`)
     }
   }
   console.log("count", count)
   const handleSubCategoryChange=(e)=>{
     setSubCategory(e.target.value)
+    navigate(`/products?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&page=1`)
   }
   
   return (
@@ -98,17 +97,6 @@ const searchProdct=()=>{
                   <option value="99">Old</option>
                 </select>
                 <p className='border-top border-bottom h1 p-3 mt-5'>Refine By</p>
-                {/* {disSubCategory.length>0 && subCategory=="" &&         
-                <><p className='pl-3 mt-2'>Sub Category</p>
-                <select name="subCategory" className="custom-select mr-sm-2 mt-1 ml-2" >
-                <option value="" selected>Random</option>
-                {disSubCategory.map((subCategory,index)=>{
-                  return( <option key={index} value={subCategory.title}>{subCategory.title}</option>)
-                })} 
-                </select>
-                </>
-                }                 
-                */}
                 <p className='pl-3 mt-4'>Year</p>
                   <select className='custom-select mr-sm-2 ml-2' onChange={(e)=>{setSort(e.target.value)}}>
                     <option value="asc">New top</option>
@@ -120,30 +108,9 @@ const searchProdct=()=>{
           <div className="col pl-5" >
           <div className="row ">
         { products.length>0 ? <>{products.map((p, i) => (
-          <div style={{position:'relative'}} className='productCard border border-white border-top-0'>
-          <img src= {p.images[0].url} className="card-img" alt={p.productName} />
-            <div style={{padding: "0 10px"}}>
-              <h3 className='mt-3'>{p.productName}</h3>
-              {/* <p>Current Bid: <span className='currentBid'>Rs {p.productPrice}</span></p> */}
-              {/* <p className='descP'>{p.productDescription}</p> */}
-              <p className='mt-3'>{p.subCategory}</p>
-            </div>
-            <div style={{margin: "10px", position:'absolute', bottom:'5px'}}>
-                <button className="scale" onClick={()=>navigate(`/singleproduct/${p._id}`)}>Bid higher</button> 
-                <OverlayTrigger 
-        delay={{ hide: 450, show: 300 }}
-        overlay={(props) => (
-          <Tooltip {...props} > 
-            {p.productDescription}
-          </Tooltip>
-        )}
-        placement="bottom"
-      ><img src="images/i_icon.svg" className="info scale" style={{position:'absolute', right:'-142px'}}/>
-      </OverlayTrigger>               
-            </div>
-          </div>
-        ))}
-        <div className='col-12 mt-3'>
+          <ProductCard p = {p}/>
+        ))}        
+        <div className='col-12 mt-5'>
 <nav >
 
   <ul className='pagination justify-content-center'>

@@ -55,6 +55,7 @@ exports.create = async (req, res) => {
     product.city = city;
     product.mainCategory = mainCategory;
     product.subCategory = subCategory;
+    product.views = 0;
     product.year = year;
     await product.save().then((response) => {
       User.findOneAndUpdate(
@@ -92,6 +93,7 @@ exports.readSingle = async (req, res) => {
   console.log(id)
   try {
     let product = await Product.findOne({_id: id})
+    await Product.findByIdAndUpdate({_id: id},{views: product.views+1});
     console.log(product)
     res.status(200).json(
       product

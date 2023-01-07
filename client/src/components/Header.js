@@ -11,7 +11,6 @@ import { Collapse } from "bootstrap"
 import {MdDashboard} from "react-icons/md"
 import {GiSplitCross} from "react-icons/gi"
 import {IoMdNotificationsOutline} from "react-icons/io"
-import { searchAndRefine } from "../api/product";
 import { ProductContext } from './App';
 //chat changes
 import { BsFillChatLeftDotsFill } from "react-icons/bs";
@@ -53,20 +52,7 @@ const Header = (props) => {
       toggle ? bsCollapse.show() : bsCollapse.hide()
     }
   },[toggle,location.pathname]);
-  // const searchProdct=(e)=>{
-  //   e.preventDefault()
-  //   searchAndRefine(search)
-  //   .then(async(response) => {
-  //   //  await dispatch({type:"USER", payload:response.data})
-  //     // navigate("/products/")
-  //     console.log("search,",state)
-  //   }
-  //   )
-  //   .catch((error) => {
-  //     console.log('loadproduct error', error)
-  //   }
-  //   )
-  // }
+
   let deleteNotif = () => {
     if (notification.length !== 0 && routeLocation.pathname == "/chat") {
       deletechatnotification().then(function (data) {

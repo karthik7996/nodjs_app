@@ -24,6 +24,7 @@ const ProductSchema = mongoose.Schema({
     city: { type: String, required: true },
     mainCategory: { type: String, required: true },
     subCategory: {type: String, require: true},
+    views: {type: Number},
     year: { type: Number, required: true, minimum: 0 }
 }, { timestamps: true });
 

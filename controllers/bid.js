@@ -18,9 +18,11 @@ exports.placeBid = async (req, res) => {
 
       // code for user already bided
       const userAlreadyBid = await Product.findOne({_id: productId}).select({images: 0,bidder: {$elemMatch: {bidderId: _id}}});
-      
-      console.log("useralreadybid", userAlreadyBid)
-
+      if (userAlreadyBid.userId == _id){
+        return res.status(400).json({
+          error: 'You cannot bid for your own product'
+        });
+      }
         if(userAlreadyBid.bidder.length ===1){
         //   const findproduct_ = await Product.findOne({_id: productId})
         //   let max1 = 0

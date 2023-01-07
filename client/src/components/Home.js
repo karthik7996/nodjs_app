@@ -1,27 +1,56 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom';
 import HeaderCard from './HeaderCard'
 import {FaGreaterThan} from "react-icons/fa"
 import ProductCard from './ProductCard';
 import Footer from './Footer';
 import Navbar from './Sidebar';
-const Home = () => {
+import { isAuthenticated} from '../helpers/auth';
+import { gethomeProduct} from '../api/product'
+import { searchAndRefine } from "../api/product";
 
+const Home = () => {
+    const [bidonbuySelect, setBidonbuySelect] = useState("");
+    const [newProduct, setNewProduct] = useState("")
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        loadProducts()
+        searchProdct()
+      }, [loading])
+    const loadProducts = async () => {
+        await gethomeProduct()
+        .then((response) => {
+            setBidonbuySelect(response.data)
+        }
+        )
+        .catch((error) => {
+          console.log('loadProducts error', error)
+        }
+        )
+      }
+
+      const searchProdct=()=>{
+        let location="",search="",page=1,mainCategory="",subCategory="",year=0,sort="";
+        searchAndRefine(location="", search="",page=1,mainCategory="",subCategory="",year=0,sort="")
+        .then((response) => {
+            setNewProduct(response.data.product)
+        }
+        )
+        .catch((error) => {
+          console.log('loadproduct error', error)
+        }
+        )
+      }
   return (
     <div>
         <div class="ticker-title" >
-        <span>BidOnBuy.com its a platform to connect buyers and sellers</span>
-        <span>BidOnBuy.com its a platform to connect buyers and sellers</span>
-        <span>BidOnBuy.com its an platform to connect buyers and sellers</span>
+        <span>BidOnBuy.com is a platform to connect buyers and sellers</span>
+        <span>BidOnBuy.com is a platform to connect buyers and sellers</span>
+        <span>BidOnBuy.com is an platform to connect buyers and sellers</span>
         </div>
-        {/* <div className='homeHeading'>
-            <NavLink><p className="homeHeading-p">How  It Works</p></NavLink>
-            <NavLink><p className="homeHeading-p">Auction</p></NavLink> 
-            <NavLink><p className="homeHeading-p">Sell your product</p></NavLink>
-            <NavLink><p className="homeHeading-p pt-3" style={{marginBottom: "0"}}>Services and Support</p></NavLink>
-        </div> */}
- <Navbar/>
-        <div className='headerSection'>
+        <Navbar/>
+        {!isAuthenticated() && <div className='headerSection'>
             {/* <p className="headerSection-p">100% Safe And Free Auctions</p> */}
             <div className="allHeaderCard row">
                 <HeaderCard serial="1" heading="Register" info="Sign up on our site to start bidding." />
@@ -32,7 +61,34 @@ const Home = () => {
             <button className='searchBtn'>Register to Start Bidding<span style={{marginRight: "20px"}}></span><FaGreaterThan /></button>
         </NavLink>
         </div>
+        }
+        { bidonbuySelect &&
         <section style={{padding: "20px"}}>
+            <div>
+            <h1 className="popularBidding-h1">Bidonbuy Selects</h1>
+            <NavLink className ="bsplay" to="/products"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
+            </div>
+            <div className="row justify-content-center" >
+            { bidonbuySelect.map((p, i) => (
+                <ProductCard p = {p}/>
+            ))}
+            </div>
+        </section>
+        }
+        { newProduct &&
+        <section style={{padding: "20px"}}>
+            <div>
+            <h1 className="popularBidding-h1">New Products</h1>
+            <NavLink className ="bsplay" to="/products?year=0"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
+            </div>
+            <div className="row justify-content-center" >
+            { newProduct.map((p, i) => (
+                <ProductCard p = {p}/>
+            ))}
+            </div>
+        </section>
+        }
+    {/* <section style={{padding: "20px"}}>
             <div>
             <h1 className="popularBidding-h1">Popular Biddings</h1>
             <NavLink className ="bsplay" to="/products"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
@@ -40,7 +96,20 @@ const Home = () => {
             <div>
                 <ProductCard />
             </div>
+        </section> */}
+{/* 
+        <section style={{padding: "20px"}}>
+            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>BidOnBuy Selects</h1>            
+            <div>
+                <ProductCard />
+            </div>
         </section>
+        <section style={{padding: "20px"}}>
+            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>New Arrivals</h1>            
+            <div>
+                <ProductCard/>
+            </div>
+        </section> */}
         <div className='sellWithUs'>
             {/* <img src="/images/layered.svg" alt="layered imgage"style={{width: "100%"}}/> */}
             <h3 className='pt-5'>Advertise with us</h3>
@@ -55,18 +124,6 @@ const Home = () => {
             <button className='getStartedBtn sellHover'>Get Started</button>
             </NavLink>
         </div>
-        <section style={{padding: "20px"}}>
-            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>BidOnBuy Selects</h1>            
-            <div>
-                <ProductCard />
-            </div>
-        </section>
-        <section style={{padding: "20px"}}>
-            <h1 style={{fontWeight: "700",fontSize: "32px", color: "#0457D4", paddingLeft: "2.3rem" , display: "inline"}}>New Arrivals</h1>            
-            <div>
-                <ProductCard/>
-            </div>
-        </section>
         <div className='account text-center  border-top'>
         <h3  style={{paddingBottom: "20px", paddingTop: "8px"}}>Follow Us</h3>
         <div style={{paddingBottom: "20px"}}>

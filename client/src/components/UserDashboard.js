@@ -490,53 +490,59 @@ const withDrawMyBid = async(productId) =>{
   )
 }
 const showProducts = () => (
-    <div className="row text-white bg-dark">
-      <div className="col-md-12">
-        <h2 className="text-center">Total {products.length} products</h2>
-        <hr />
-        { products && products.map((p, i) => (
-          <div className="card mb-3 bg-dark border" key={i}>
-            <div className="row no-gutters">
-              <div className="col-md-4">
-              <img src= {p.images[0].url} className="card-img" alt={p.productName} />
-              </div>
-              <div className="col-md-4">
-                <div className="card-body">
-                  <h5 className="card-title">{p.productName}</h5>
-                  <p className="card-text">{p.productDescription}</p>
-                  <p className="card-text"><small className="text-muted">Category: {p.subCategory}</small></p>
-                  <p className="card-text"><small className="text-muted">year: {p.year==0?"New":p.year}</small></p>
-                  {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}
-                  <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
-                  <p className="card-text"><small className="text-muted">Last updated: {moment(p.updatedAt).fromNow()}</small></p>
-                  <Link to={`/admin/product/update/${p._id}`} className="btn btn-outline-warning btn-sm mr-2 scale">Update</Link>
-                  <button onClick={() => destroy(p._id)} className="btn btn-outline-danger btn-sm scale">Delete</button>
-                </div>
-              </div>
-              <div className='col-md-4 mt-4'>
-                { p.bidder.length>0 ? p.bidder.reverse().map((b, i) => (
-                  i<10 &&
-                    <div className='d-flex justify-content-between'>
-                      <div style={{width: "65px"}}>
-                      <span className="mr-3 align-top h2">{i+1}</span>
-                      <CgProfile className="text-black h1 float-right" />
-                      </div>
-                      <p className="ml-3 flex-grow-1 align-self-center h5">Bid Amount: ₹<strong>{b.bidAmount}</strong></p>
-                      <div>
-                        <button type="button" className="btn btn-outline-success mr-3 scale" onClick={callAcceptBid} value={[b.bidderId,p._id]}>Accept</button>
-                        <button type="button" className="btn btn-outline-danger mr-3 scale" onClick={()=>callRejectBid(b.bidderId,p._id)} >Reject</button>
-                      </div>
-                    </div>
-                ))
-                : <p className='text-black ml-3'>No bidder yet...hope you will soon find a good bidder</p>
-                }
+  <div className="row text-white bg-dark">
+    <div className="col-md-12">
+      <h2 className="text-center">Total {products.length} products</h2>
+      <hr />
+      { products && products.map((p, i) => (
+        <div className="card mb-3 bg-dark border" key={i}>
+          <div className="row no-gutters">
+            <div className="col-md-4">
+            <img src= {p.images[0].url} className="card-img" alt={p.productName} />
+            {/* <p className="card-text ml-4 mt-2">{isReadMore ? p.productDescription.slice(0, 150) : p.productDescription}
+                <span onClick={toggleReadMore} className="read-or-hide text-info" style={{cursor: "pointer"}}>
+                  {isReadMore ? "...read more" : " show less"}
+                </span>
+            </p> */}
+            <p className='card-text ml-4 mt-2'>{p.productDescription.slice(0,200)}{p.productDescription.length>200?"....":""}</p>
+            </div>
+            <div className="col-md-4">
+              <div className="card-body">
+                <h5 className="card-title h2">{p.productName}</h5>
+                <p className="card-text"><small className='text-muted h3 mr-3'>Views: </small>{p.views}</p>
+                <p className="card-text"><small className="text-muted">Category: {p.subCategory}</small></p>
+                <p className="card-text"><small className="text-muted">year: {p.year==0?"New":p.year}</small></p>
+                {/* <p className="card-text"><small className="text-muted">Minimum Bid: ₹{p.productPrice}</small></p> */}
+                <p className="card-text"><small className="text-muted">Added on: {moment(p.createdAt).fromNow()}</small></p>
+                <p className="card-text"><small className="text-muted">Last updated: {moment(p.updatedAt).fromNow()}</small></p>
+                <Link to={`/admin/product/update/${p._id}`} className="btn btn-outline-warning btn-sm mr-2 scale">Update</Link>
+                <button onClick={() => destroy(p._id)} className="btn btn-outline-danger btn-sm scale">Delete</button>
               </div>
             </div>
+            <div className='col-md-4 mt-4'>
+              { p.bidder.length>0 ? p.bidder.reverse().map((b, i) => (
+                i<10 &&
+                  <div className='d-flex justify-content-between'>
+                    <div style={{width: "65px"}}>
+                    <span className="mr-3 align-top h2">{i+1}</span>
+                    <CgProfile className="text-black h1 float-right" />
+                    </div>
+                    <p className="ml-3 flex-grow-1 align-self-center h5">Bid Amount: ₹<strong>{b.bidAmount}</strong></p>
+                    <div>
+                      <button type="button" className="btn btn-outline-success mr-3 scale" onClick={callAcceptBid} value={[b.bidderId,p._id]}>Accept</button>
+                      <button type="button" className="btn btn-outline-danger mr-3 scale" onClick={callRejectBid} value={b.bidderId}>Reject</button>
+                    </div>
+                  </div>
+              ))
+              : <p className='text-black ml-3'>No bidder yet...hope you will soon find a good bidder</p>
+              }
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
-  )
+  </div>
+)
   const showBidProducts = ()=>(
     <div className="container-fluid pl-5 pt-3 text-center text-white">
       <div className='row text-center'>

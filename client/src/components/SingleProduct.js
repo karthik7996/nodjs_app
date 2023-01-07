@@ -14,6 +14,11 @@ import { getLoggedInUser } from "../api/auth";
 import { createChat } from "../api/chat";
 const SingleProduct = (props) => {
 
+  const [isReadMore, setIsReadMore] = useState(true);
+  const toggleReadMore = () => {
+    setIsReadMore(!isReadMore);
+  };
+
   const [alert, setAlert] = useState(null);
 
   const showAlert = (messsage, type) =>{
@@ -81,22 +86,7 @@ console.log(productId)
   }
 }
   }
-  useEffect(() => {
-    loadCategories()
-  }, [loading])
 
-  const loadCategories = async () => {
-    await getCategories()
-    .then((response) => {
-      setCategories(response.data)
-      console.log('categories', response.data)
-    }
-    )
-    .catch((error) => {
-      console.log('loadCategories error', error)
-    }
-    )
-  }
 
   return (
   <><Alert alert={alert}/>
@@ -136,7 +126,6 @@ console.log(productId)
             </div>
         <div className='col-sm col-md-4 border rounded border-white text-left pt-3 border-bottom-0'>
           <p className='h1'>{p.productName}</p>
-          {/* <p className='text-secondary pt-2'>Minimum bid<span className="ml-4 text-white font-weight-bold" >Rs. {p.productPrice}</span></p> */}
           <hr />
           <div className="d-flex justify-content-around text-secondary pt-2">
               <p>Category</p> 
@@ -149,8 +138,6 @@ console.log(productId)
               <p>{p.year==0?"New":p.year}</p>
           </div>
           <p className="singleproducthr" ></p>
-          {/* <p className="text-secondary">Minimum bid</p>
-          <p className='h1 font-weight-bold'>Rs {p.productPrice}</p> */}
           <div className='text-center pt-5 pb-5'>
             <button className='btn btn-primary btn-lg w-75 rounded-pill font-weight-bold pt-3 pb-3' data-toggle='modal' data-target='#bidProduct' >Place a bid</button>
             {loggedInUser && loggedInUser._id == p.userId ? (
@@ -163,10 +150,8 @@ console.log(productId)
                         .then(function (data) {
                           if (data) {
                             console.log(data);
-
                             props.setSelectedChat(data.data[0]);
                             setChatLoading(false);
-
                             navigate(`/chat`);
                           }
                         })
@@ -181,7 +166,11 @@ console.log(productId)
                 )}
           </div>
           <p className='border-bottom text-center pt-3 pb-3'>Details</p>
-          <p>{p.productDescription}</p>
+              <p >{isReadMore ? p.productDescription.slice(0, 300) : p.productDescription}
+                  <span onClick={toggleReadMore} className="read-or-hide text-info" style={{cursor: "pointer"}}>
+                    {isReadMore ? "...read more" : " show less"}
+                  </span>
+              </p>
 
         </div>
     </div>

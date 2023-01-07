@@ -24,6 +24,17 @@ export const getProduct = async () => {
   const response = await axios.get('/api/product', config);
   return response;
 }
+export const gethomeProduct = async () => {
+  const config = {
+    // baseURL: "http://localhost:5000/",
+    withCredentials: true,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }
+  const response = await axios.get('/api/search/homepage', config);
+  return response;
+}
 export const getSingleProduct = async (id) => {
   const config = {
     // baseURL: "http://localhost:5000/",

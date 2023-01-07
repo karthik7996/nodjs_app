@@ -488,6 +488,9 @@ pre{
   .productAllCard{
     text-align: center;
   }
+  .productCard{
+    margin: 20px 10px;
+  }
   .headerName{
     margin-left: -40px;
   }
