@@ -93,7 +93,7 @@ const Home = () => {
         { newProduct &&
         <section style={{padding: "20px"}}>
             <div>
-            <h1 className="popularBidding-h1">New Products</h1>
+            <h1 className="popularBidding-h1">Newly Listed</h1>
             <NavLink className ="bsplay" to="/products?year=0"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
             </div>
             <div className="row justify-content-center" >
@@ -106,7 +106,7 @@ const Home = () => {
         { oldProduct &&
         <section style={{padding: "20px"}}>
             <div>
-            <h1 className="popularBidding-h1">Old Products</h1>
+            <h1 className="popularBidding-h1">Listed products</h1>
             <NavLink className ="bsplay" to="/products?year=99"><i class="fa-solid fa-play fa-2xl"></i></NavLink>
             </div>
             <div className="row justify-content-center" >
@@ -142,7 +142,7 @@ const Home = () => {
             {/* <img src="/images/layered.svg" alt="layered imgage"style={{width: "100%"}}/> */}
             <h3 className='pt-5'>Advertise with us</h3>
             <p className="mb-4">Promote your bussiness on Bidonbuy. Reach millions of customer on bid on buy.</p>
-            <p>Customers come to us site for seeling and buying goods across from wide range which including cars, homes, mobiles, furniture. Advertising with us is aunique opportunity to reach a huge global audience in a creative and compelling way. We present your brand's message in a bigger, bolder, and more beautiful way</p>
+            <p>Customers come to us site for selling and buying goods across from wide range which including cars, homes, mobiles, furniture. Advertising with us is a unique opportunity to reach a huge global audience in a creative and compelling way. We present your brand's message in a bigger, bolder, and more beautiful way</p>
             <ul>
                 <li><span>✓</span>No Hidden Charge</li>
                 <li><span>✓</span>24 X 7 support</li>

@@ -25,6 +25,7 @@ exports.searchAndRefine = async (req, res) => {
       },
     }:{}; 
       const sort = req.query.sort || "asc";
+      console.log("sort",sort)
       const category = req.query.category ? 
       {
         mainCategory:{
@@ -42,7 +43,7 @@ exports.searchAndRefine = async (req, res) => {
     let year = req.query.year ? 
     {
       year:{
-        $eq: 0
+        "$eq": 0
     },
   } : {};
   if (Number(req.query.year)==99){
