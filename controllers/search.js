@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 exports.searchAndRefine = async (req, res) => {
     try {
       const currentPage = Number(req.query.page) || 1;
-      const limit = 3;
+      const limit = Number(req.query.limit)|| 3;
       const skip = limit*(currentPage-1);
       const state = req.query.location ? {
         state:{

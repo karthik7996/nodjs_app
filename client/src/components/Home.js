@@ -31,8 +31,8 @@ const Home = () => {
       }
 
       const searchProdct=()=>{
-        let location="",search="",page=1,mainCategory="",subCategory="",year=0,sort="";
-        searchAndRefine(location="", search="",page=1,mainCategory="",subCategory="",year=0,sort="")
+        let location="",search="",page=1,mainCategory="",subCategory="",year=0,sort="",limit=4;
+        searchAndRefine(location="", search="",page=1,mainCategory="",subCategory="",year=0,sort="",limit=4)
         .then((response) => {
             setNewProduct(response.data.product)
         }

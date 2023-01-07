@@ -30,7 +30,7 @@ const searchProdct=()=>{
     searchAndRefine(location, search,page,mainCategory,subCategory,year,sort)
     .then((response) => {
       setProduct(response.data.product)
-      setCount(Math.ceil(response.data.productCount/4))
+      setCount(Math.ceil(response.data.productCount/3))
     }
     )
     .catch((error) => {

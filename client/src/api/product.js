@@ -82,7 +82,7 @@ export const updateProduct = async (productId, data) => {
   const response = await axios.put(`/api/product/${productId}`, data, config);
   return response;
 }
-export const searchAndRefine = async (location, search,page=1,mainCategory="", subCategory="", year="", sort="asc") => {
+export const searchAndRefine = async (location, search,page=1,mainCategory="", subCategory="", year="", sort="asc",limit=3) => {
   const config = {
     // baseURL: "http://localhost:5000/",
     withCredentials: true,
@@ -90,6 +90,6 @@ export const searchAndRefine = async (location, search,page=1,mainCategory="", s
     //   'Content-Type': 'application/json',
     // },
   }
-  const response = await axios.get(`/api/search/?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&year=${year}&sort=${sort}&page=${page}`, config);
+  const response = await axios.get(`/api/search/?location=${location}&search=${search}&category=${mainCategory}&subCategory=${subCategory}&year=${year}&sort=${sort}&page=${page}&limit=${limit}`, config);
   return response;
 }
