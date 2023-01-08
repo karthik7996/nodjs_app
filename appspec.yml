@@ -4,8 +4,8 @@ os: linux
 files:
   - source: /
     destination: /usr/share/ngnix/html/
+    overwrite: true
 file_exists_behavior: OVERWRITE
-
 
 hooks:
 
