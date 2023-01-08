@@ -2,8 +2,8 @@ version: 0.0
 os: linux
 
 files:
-  - source: /client/build/*
-    destination: /usr/share/ngnix/html/
+  - source: /
+    destination: /
     overwrite: true
 file_exists_behavior: OVERWRITE
 
