@@ -8,15 +8,30 @@ jobs:
     steps:
       - checkout
 
-      # Install Docker
-      - setup_remote_docker:
-          version: 19.03.13
-          docker_layer_caching: true
-
-      # Build Docker image
+      # Install AWS CLI
       - run:
-          name: Build Docker image
+          name: Install AWS CLI
           command: |
-            docker build -t nginx:latest .
+            apt-get update && apt-get install -y awscli
+
+      # Configure AWS credentials
+      - run:
+          name: Configure AWS credentials
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region $AWS_DEFAULT_REGION
+
+      # Your additional steps, e.g., Docker build and push to ECR
+      - run:
+          name: Build and push Docker image to ECR
+          command: |
+             docker build -t nginx:latest .
+
+
+
+
+
+
 
 
