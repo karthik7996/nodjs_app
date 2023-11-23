@@ -1,5 +1,13 @@
 version: 2.1
+
 jobs:
   build:
     docker:
       - image: nginx
+
+    steps:
+      - checkout
+      - run:
+          name: Display NGINX version
+          command: nginx -v
+
