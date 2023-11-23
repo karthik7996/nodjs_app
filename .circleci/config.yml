@@ -44,7 +44,7 @@ jobs:
             ls
             echo "hello"
             echo "$CIRCLE_BUILD_NUM"
-            sed -i "s/tag: .*/tag: $CIRCLE_BUILD_NUM/" ./vehicle/values.yaml"
+            sed -i "s/tag: /tag: $CIRCLE_BUILD_NUM/g" ./vehicle/values.yaml"
             git add ./vehicle/values.yaml"
             git status
             git commit -m "CI/CD pipeline updated $CIRCLE_BUILD_NUM image to new image tag"
