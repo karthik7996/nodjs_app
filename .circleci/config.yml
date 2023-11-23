@@ -41,7 +41,7 @@ jobs:
             #curl -X POST -H "Content-Type: application/json" -d '{"branch":"main"}' -u "${d1f842c34d80ffaf0fb0973fd087234d32a2b0a3}:" https://circleci.com/api/v2/project/github/karthik7996/rapyder/pipeline
             #git clone git@github.com:karthik7996/nodjs_app.git
             ls
-            git clone git@github.com:karthik7996/rapyder.git
+            git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
             #git pull origin 'main'
             ls
             echo "hello"
