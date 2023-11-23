@@ -43,11 +43,11 @@ jobs:
             git pull origin 'main'
             ls
             echo "hello"
-            echo "$BUILD_NUMBER"
-            sed -i "s/tag: .*/tag: $BUILD_NUMBER/" ./vehicle/values.yaml"
+            echo "$CIRCLE_BUILD_NUM"
+            sed -i "s/tag: .*/tag: $CIRCLE_BUILD_NUM/" ./vehicle/values.yaml"
             git add ./vehicle/values.yaml"
             git status
-            git commit -m "CI/CD pipeline updated $BUILD_TAG image to new image tag"
+            git commit -m "CI/CD pipeline updated $CIRCLE_BUILD_NUM image to new image tag"
             #git config --global credential.helper cache'
             git push origin 'main'
 
