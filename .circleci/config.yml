@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-            apt-get update && apt-get install -y awscli
+            apk update && apk add --no-cache aws-cli
 
       # Configure AWS credentials
       - run:
