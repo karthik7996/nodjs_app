@@ -32,25 +32,20 @@ jobs:
           name: Build and push Docker image to ECR
           command: |
             docker build -t nginx:latest .
-
-      # Trigger another CircleCI pipeline
+run_feature_tests:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/my-app-backend
+      - add_ssh_keys:
+          fingerprints:
+            - "<here's the finger print>"
       - run:
-          name: Trigger Another Pipeline
-          command: |
-            apk --no-cache add curl git
-            ls
+          name: Clone frontend repository
+          command: >-
             GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_fingerprint'
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
-            #git pull origin 'main'
-            ls
-            echo "hello"
-            echo "$CIRCLE_BUILD_NUM"
-            sed -i "s/tag: /tag: $CIRCLE_BUILD_NUM/g" ./vehicle/values.yaml"
-            git add ./vehicle/values.yaml"
-            git status
-            git commit -m "CI/CD pipeline updated $CIRCLE_BUILD_NUM image to new image tag"
-            #git config --global credential.helper cache'
-            git push origin 'main'
 
 
 
