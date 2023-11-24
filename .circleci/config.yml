@@ -47,6 +47,12 @@ jobs:
             ls
             cd rapyder
             ls -la
+            sed -i "s/tag: .*/tag: $BUILD_TAG/" ./vehicle/values.yaml
+            git add ./vehicle/values.yaml
+            git status
+            git commit -m "CI/CD pipeline updated $BUILD_TAG image to new image tag"
+            #git config --global credential.helper cache
+            git push origin 'main'
 workflows:
   GitOpsflow:
     jobs:
