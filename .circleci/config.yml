@@ -53,11 +53,11 @@ jobs:
             sed -i "s/tag: /tag: $CIRCLE_BUILD_NUM/" ./vehicle/values.yaml
             git add ./vehicle/values.yaml
             git status
-            git commit -m "CI/CD pipeline updated $BUILD_TAG image to new image tag"
+            git commit -m "CI/CD pipeline updated $CIRCLE_BUILD_NUM image to new image tag"
             #git config --global credential.helper cache
-            git config --global http.postBuffer 524288000  # Set the buffer size to 500 MB (adjust as needed)
-            git config --global http.lowSpeedLimit 0       # Disable low-speed limit
-            git config --global http.lowSpeedTime 999999    # Set low-speed time limit to a large value
+            #git config --global http.postBuffer 524288000  # Set the buffer size to 500 MB (adjust as needed)
+            #git config --global http.lowSpeedLimit 0       # Disable low-speed limit
+            #git config --global http.lowSpeedTime 999999    # Set low-speed time limit to a large value
             git push -q https://$git@github.com/karthik7996/rapyder.git main 
 workflows:
   GitOpsflow:
