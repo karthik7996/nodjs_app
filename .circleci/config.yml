@@ -6,6 +6,26 @@ defaults: &defaults
     - image: docker:19.03.13
 
 jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      - run:
+          name: Install AWS CLI and Configure Credentials
+          command: |
+            apk update && apk add --no-cache aws-cli
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region $AWS_DEFAULT_REGION
+      - run:
+          name: Build and push Docker image to ECR
+          command: |
+            aws s3 ls
+            docker build -t nginx:latest .
+
   run_feature_tests:
     <<: *defaults
     steps:
@@ -22,9 +42,16 @@ jobs:
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             aws configure set default.region $AWS_DEFAULT_REGION
-
       - run:
           name: Clone frontend repository
           command: >-
             GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_fingerprint'
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
+            ls
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - run_feature_tests
