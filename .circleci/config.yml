@@ -45,3 +45,10 @@ jobs:
             ((TAG--))
             git clone https://github.com/karthik7996/rapyder.git
             ls
+workflows:
+  GitOpsflow:
+    jobs:
+      - build
+      - Update_menifest:
+          requires:
+            - build           
