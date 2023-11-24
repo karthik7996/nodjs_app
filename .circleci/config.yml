@@ -43,6 +43,7 @@ jobs:
             echo "Post-Test Job is running"
             #ls -l ~/my-app-frontend
             #cat ~/my-app-frontend/README.md
+            apk --no-cache add git
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontendddd
             ls
 
