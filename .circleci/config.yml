@@ -1,7 +1,6 @@
-version: 2
+version: 2.1
 
 defaults: &defaults
-  working_directory: ~/my-app-backend
   docker:
     - image: docker:19.03.13
 
@@ -10,21 +9,33 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+
+      # Install Docker
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
+
+      # Install AWS CLI
       - run:
-          name: Install AWS CLI and Configure Credentials
+          name: Install AWS CLI
           command: |
             apk update && apk add --no-cache aws-cli
+
+      # Configure AWS credentials
+      - run:
+          name: Configure AWS credentials
+          command: |
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             aws configure set default.region $AWS_DEFAULT_REGION
+
+      # Your additional steps, e.g., Docker build and push to ECR
       - run:
           name: Build and push Docker image to ECR
           command: |
             aws s3 ls
             docker build -t nginx:latest .
+            git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
 
   run_feature_tests:
     <<: *defaults
@@ -36,23 +47,10 @@ jobs:
           fingerprints:
             - "<here's the finger print>"
       - run:
-          name: Install AWS CLI and Configure Credentials
-          command: |
-            apk update && apk add --no-cache aws-cli
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-            aws configure set default.region $AWS_DEFAULT_REGION
-      - run:
           name: Clone frontend repository
           command: >-
-            apk --no-cache add curl git
-            #export GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_fingerprint'
-            git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
-            ls
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - run_feature_tests
+            GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_fingerprint' 
+			      git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
+      - run:
+          name: List files in frontend directory
+          command: ls ~/my-app-frontend
