@@ -33,6 +33,7 @@ jobs:
       - run:
           name: Build and push Docker image to ECR
           command: |
+            aws s3 ls
             docker build -t nginx:latest .
 
   run_feature_tests:
