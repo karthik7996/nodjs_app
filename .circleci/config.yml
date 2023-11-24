@@ -41,8 +41,8 @@ jobs:
           name: Debugging Info
           command: |
             echo "Post-Test Job is running"
-            ls -l ~/my-app-frontend
-            cat ~/my-app-frontend/README.md
+            #ls -l ~/my-app-frontend
+            #cat ~/my-app-frontend/README.md
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontendddd
             ls
 
