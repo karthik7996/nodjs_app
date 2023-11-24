@@ -10,6 +10,11 @@ jobs:
     steps:
       - checkout
 
+      # Install Git
+      - run:
+          name: Install Git
+          command: apk --no-cache add git
+
       # Install Docker
       - setup_remote_docker:
           version: 19.03.13
