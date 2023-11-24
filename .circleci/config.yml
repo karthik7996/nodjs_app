@@ -55,7 +55,7 @@ jobs:
             git status
             git commit -m "CI/CD pipeline updated $BUILD_TAG image to new image tag"
             #git config --global credential.helper cache
-            git push -q https://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@github.com/karthik7996/rapyder.git main 
+            git push -q https://$git@github.com/karthik7996/rapyder.git main 
 workflows:
   GitOpsflow:
     jobs:
