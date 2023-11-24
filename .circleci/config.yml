@@ -4,11 +4,9 @@ defaults: &defaults
   working_directory: ~/my-app-backend
   docker:
     - image: docker:19.03.13
-      environment:
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-            aws configure set default.region $AWS_DEFAULT_REGION
-run_feature_tests:
+
+jobs:
+  run_feature_tests:
     <<: *defaults
     steps:
       - checkout
@@ -17,6 +15,14 @@ run_feature_tests:
       - add_ssh_keys:
           fingerprints:
             - "<here's the finger print>"
+      - run:
+          name: Install AWS CLI and Configure Credentials
+          command: |
+            apk update && apk add --no-cache aws-cli
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region $AWS_DEFAULT_REGION
+
       - run:
           name: Clone frontend repository
           command: >-
