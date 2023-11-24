@@ -45,6 +45,8 @@ jobs:
             ((TAG--))
             git clone https://github.com/karthik7996/rapyder.git
             ls
+            cd rapyder
+            ls -la
 workflows:
   GitOpsflow:
     jobs:
