@@ -9,32 +9,22 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-
-      # Install Git
       - run:
           name: Install Git
           command: apk --no-cache add git
-
-      # Install Docker
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
-
-      # Install AWS CLI
       - run:
           name: Install AWS CLI
           command: |
             apk update && apk add --no-cache aws-cli
-
-      # Configure AWS credentials
       - run:
           name: Configure AWS credentials
           command: |
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             aws configure set default.region $AWS_DEFAULT_REGION
-
-      # Your additional steps, e.g., Docker build and push to ECR
       - run:
           name: Build and push Docker image to ECR
           command: |
@@ -42,12 +32,25 @@ jobs:
             docker build -t nginx:latest .
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
             ls
+
   post_test:
     <<: *defaults
     steps:
       - checkout
       - run:
-          name: Post-Test Actions
+          name: Debugging Info
           command: |
+            echo "Post-Test Job is running"
+            ls -l ~/my-app-frontend
+            cat ~/my-app-frontend/README.md
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontendddd
             ls
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - post_test:
+          requires:
+            - build
