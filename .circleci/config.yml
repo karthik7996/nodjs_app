@@ -42,3 +42,12 @@ jobs:
             docker build -t nginx:latest .
             git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontend
             ls
+  post_test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Post-Test Actions
+          command: |
+            git clone git@github.com:karthik7996/rapyder.git ~/my-app-frontendddd
+            ls
