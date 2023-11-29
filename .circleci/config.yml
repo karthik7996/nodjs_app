@@ -10,8 +10,25 @@ executors:
       - image: openjdk:11    
 
 jobs:
-  build:
-    <<: *defaults
+  build
+   <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install Sonarqube scanner
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873.zip
+            unzip sonar-scanner-cli-4.2.0.1873.zip
+      - run:
+          name: Run Sonarscanner
+          command: |
+            export SONAR_SCANNER_OPTS="-Xmx2048m"
+            ./sonar-scanner-4.2.0.1873/bin/sonar-scanner \
+              -Dsonar.projectKey=projectKey \
+              -Dsonar.host.url=$SONAR_SERVER \
+              -Dsonar.sources=$SONAR_SOURCES \
+              -Dsonar.login=$SONAR_TOKEN
+  build
     steps:
       - checkout
       - run:
@@ -62,25 +79,7 @@ jobs:
             git commit -m "CI/CD pipeline updated $CIRCLE_BUILD_NUM image to a new image tag"
             git push -q https://$git@github.com/karthik7996/rapyder.git main
 
-  check-code-quality:
-    docker:
-      - image: openjdk:11
-    steps:
-      - checkout
-      - run:
-          name: Install Sonarqube scanner
-          command: |
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873.zip
-            unzip sonar-scanner-cli-4.2.0.1873.zip
-      - run:
-          name: Run Sonarscanner
-          command: |
-            export SONAR_SCANNER_OPTS="-Xmx2048m"
-            ./sonar-scanner-4.2.0.1873/bin/sonar-scanner \
-              -Dsonar.projectKey=projectKey \
-              -Dsonar.host.url=$SONAR_SERVER \
-              -Dsonar.sources=$SONAR_SOURCES \
-              -Dsonar.login=$SONAR_TOKEN
+
 
 workflows:
   version: 2
