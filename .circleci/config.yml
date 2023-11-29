@@ -29,7 +29,7 @@ jobs:
               -Dsonar.sources=$SONAR_SOURCES \
               -Dsonar.login=$SONAR_TOKEN
 
-  build:
+  build:  # Corrected indentation
     steps:
       - checkout
       - run:
@@ -79,7 +79,6 @@ jobs:
             git status
             git commit -m "CI/CD pipeline updated $CIRCLE_BUILD_NUM image to a new image tag"
             git push -q https://$git@github.com/karthik7996/rapyder.git main
-
 
 workflows:
   version: 2
