@@ -28,10 +28,6 @@ jobs:
               -Dsonar.host.url=$SONAR_SERVER \
               -Dsonar.sources=$SONAR_SOURCES \
               -Dsonar.login=$SONAR_TOKEN
-
-  build:  # Corrected indentation
-    steps:
-      - checkout
       - run:
           name: Install Git
           command: apk --no-cache add git
