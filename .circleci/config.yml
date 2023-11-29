@@ -10,8 +10,8 @@ executors:
       - image: openjdk:11    
 
 jobs:
-  build
-   <<: *defaults
+  build:
+    <<: *defaults
     steps:
       - checkout
       - run:
@@ -28,7 +28,8 @@ jobs:
               -Dsonar.host.url=$SONAR_SERVER \
               -Dsonar.sources=$SONAR_SOURCES \
               -Dsonar.login=$SONAR_TOKEN
-  build
+
+  build:
     steps:
       - checkout
       - run:
@@ -80,15 +81,11 @@ jobs:
             git push -q https://$git@github.com/karthik7996/rapyder.git main
 
 
-
 workflows:
   version: 2
   GitOpsflow:
     jobs:
       - build
       - Update_menifest:
-          requires:
-            - build
-      - check-code-quality:
           requires:
             - build
